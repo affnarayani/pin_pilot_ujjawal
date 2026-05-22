@@ -33,9 +33,15 @@ jobs:
       # 4. Playwright के सिस्टम डिपेंडेंसी और Chromium ब्राउज़र को इंस्टॉल करना
       - name: Install Playwright Browsers & Deps
         run: |
+          # Ubuntu 24.04 (ubuntu-latest) ke libasound2 missing package issue ka fix
+          sudo apt-get update
+          sudo apt-get install -y libasound2t64
+          sudo ln -s /usr/lib/x86_64-linux-gnu/libasound.so.2.0.0 /usr/lib/x86_64-linux-gnu/libasound.so.2 || true
+          
+          # Ab bina kisi error ke playwright install hoga
           playwright install chromium --with-deps
 
-      # 5. आपकी मेन स्क्रिप्ट रन करना (Secrets पास करने के साथ)
+      # 5. आपकी मेन脚本 रन करना (Secrets पास करने के साथ)
       - name: Run Cover Generation Script
         env:
           DECRYPT_KEY: ${{ secrets.DECRYPT_KEY }}
