@@ -1,6 +1,6 @@
-python-dotenv==1.0.1
-cryptography==42.0.5
-requests==2.31.0
-playwright==1.42.0
-huggingface-hub==0.21.4
-playwright-stealth==1.0.6
+playwright
+requests
+huggingface-hub
+python-dotenv
+cryptography
+playwright-stealth
