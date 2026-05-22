@@ -228,18 +228,8 @@ def run():
         print("[STEP] Clicking 'Share this image' button...", flush=True)
         share_button.click()
         
-        # Pop-up load hone ke liye chhota sa wait
+        # Clipboard sync buffer wait
         time.sleep(3)
-
-        # HACK: Agar 'Copy link' button wala pop-up aata hai toh uspar click karega
-        try:
-            copy_link_btn = page.get_by_role('button', name='Copy link').first
-            if copy_link_btn.is_visible():
-                print("[INFO] 'Copy link' pop-up detected. Clicking it explicitly...", flush=True)
-                copy_link_btn.click()
-                time.sleep(2)  # URL properly copy hone ke liye thoda wait
-        except Exception as pop_err:
-            print("[INFO] No pop-up button found, continuing with direct copy...", flush=True)
 
         # 4. Extract and print copied shared URL
         public_shared_url = page.evaluate("() => navigator.clipboard.readText()")
