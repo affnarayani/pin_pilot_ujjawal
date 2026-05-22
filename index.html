@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dopamine Detox — Reset Your Brain. Reclaim Your Life.</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --warm-bg: #f5ede0;
+      --cream: #fdf8f2;
+      --dark: #1a1410;
+      --brown: #8b5e3c;
+      --brown-light: #c4956a;
+      --orange: #d4622a;
+      --orange-light: #e8834f;
+      --text-muted: #6b5b4e;
+      --border: #ddd0bf;
+      --card-bg: #fffcf7;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--warm-bg);
+      color: var(--dark);
+      overflow-x: hidden;
+    }
+
+    /* ─── URGENCY BAR ─── */
+    .urgency-bar {
+      background: var(--dark);
+      color: white;
+      text-align: center;
+      padding: 12px 20px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+
+    .urgency-bar strong { color: #f0a96b; }
+
+    #countdown {
+      display: inline-block;
+      background: var(--orange);
+      color: white;
+      padding: 2px 10px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 1px;
+      margin-left: 6px;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      background: var(--cream);
+      position: relative;
+      padding: 90px 5% 80px;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px; right: -200px;
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, #e8c9a8 0%, transparent 70%);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      max-width: 1160px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 60px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #fff3e8;
+      border: 1px solid #f0c898;
+      color: var(--orange);
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+
+    .eyebrow::before { content: '🔥'; font-size: 14px; }
+
+    .hero-headline {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(42px, 5.5vw, 76px);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -1.5px;
+      margin-bottom: 22px;
+    }
+
+    .hero-headline em {
+      font-style: italic;
+      color: var(--orange);
+    }
+
+    .hero-sub {
+      font-size: 19px;
+      color: var(--text-muted);
+      line-height: 1.65;
+      margin-bottom: 16px;
+      max-width: 560px;
+    }
+
+    .hero-warning {
+      background: #fff3e8;
+      border-left: 4px solid var(--orange);
+      padding: 14px 18px;
+      border-radius: 0 12px 12px 0;
+      font-size: 15px;
+      color: var(--dark);
+      margin-bottom: 34px;
+      max-width: 560px;
+    }
+
+    .hero-warning strong { color: var(--orange); }
+
+    .cta-block {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .btn-main {
+      display: inline-block;
+      background: var(--orange);
+      color: white;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      padding: 20px 40px;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      transition: all 0.25s;
+      box-shadow: 0 8px 30px rgba(212, 98, 42, 0.4);
+      position: relative;
+      overflow: hidden;
+      letter-spacing: 0.2px;
+    }
+
+    .btn-main::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.1), transparent);
+    }
+
+    .btn-main:hover {
+      background: #c0541f;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(212, 98, 42, 0.5);
+    }
+
+    .btn-main span {
+      display: block;
+      font-size: 12px;
+      font-weight: 400;
+      opacity: 0.85;
+      margin-top: 2px;
+    }
+
+    .guarantee-micro {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .guarantee-micro::before { content: '🔒'; font-size: 14px; }
+
+    /* HERO BOOK */
+    .book-wrap {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .book-wrap::before {
+      content: '';
+      position: absolute;
+      width: 360px; height: 360px;
+      background: radial-gradient(circle, #d4a57a55 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .book-wrap img {
+      width: 320px;
+      border-radius: 20px;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 30px 70px rgba(0,0,0,0.22), 0 0 0 1px rgba(0,0,0,0.05);
+      transform: perspective(800px) rotateY(-6deg) rotateX(2deg);
+      transition: transform 0.4s;
+    }
+
+    .book-wrap img:hover {
+      transform: perspective(800px) rotateY(-2deg) rotateX(0deg);
+    }
+
+    .social-proof-pill {
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      white-space: nowrap;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      z-index: 2;
+    }
+
+    .avatars { display: flex; }
+
+    .avatars span {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      border: 2px solid white;
+      background: var(--brown-light);
+      color: white;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      margin-left: -8px;
+    }
+
+    .avatars span:first-child { margin-left: 0; }
+
+    .social-proof-pill p {
+      font-size: 12px;
+      color: var(--dark);
+      font-weight: 600;
+    }
+
+    .social-proof-pill p span { color: var(--orange); }
+
+    /* ─── AS SEEN ON ─── */
+    .as-seen {
+      background: var(--dark);
+      padding: 24px 5%;
+      text-align: center;
+    }
+
+    .as-seen p {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #666;
+      margin-bottom: 16px;
+    }
+
+    .logo-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 36px;
+      flex-wrap: wrap;
+      opacity: 0.5;
+    }
+
+    .logo-row span {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      color: white;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+
+    /* ─── PAIN SECTION ─── */
+    .pain-section {
+      background: var(--warm-bg);
+      padding: 100px 5%;
+    }
+
+    .section-label {
+      text-align: center;
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--orange);
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    .section-h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(34px, 4vw, 58px);
+      text-align: center;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    .section-sub {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 18px;
+      max-width: 640px;
+      margin: 0 auto 60px;
+      line-height: 1.6;
+    }
+
+    .pain-grid {
+      max-width: 1100px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .pain-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 30px 32px;
+      display: flex;
+      gap: 18px;
+      align-items: flex-start;
+      transition: box-shadow 0.2s;
+    }
+
+    .pain-card:hover { box-shadow: 0 10px 30px rgba(0,0,0,0.06); }
+
+    .pain-icon {
+      font-size: 34px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .pain-card h4 {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .pain-card p {
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    .pain-bottom {
+      max-width: 700px;
+      margin: 50px auto 0;
+      text-align: center;
+      background: #fff3e8;
+      border: 1px solid #f0c898;
+      border-radius: 20px;
+      padding: 30px 34px;
+    }
+
+    .pain-bottom p {
+      font-size: 18px;
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    .pain-bottom strong { color: var(--orange); }
+
+    /* ─── WHAT'S INSIDE ─── */
+    .inside-section {
+      background: var(--dark);
+      color: white;
+      padding: 100px 5%;
+    }
+
+    .inside-inner {
+      max-width: 1100px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .inside-book {
+      position: relative;
+    }
+
+    .inside-book img {
+      width: 100%;
+      max-width: 320px;
+      border-radius: 18px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+    }
+
+    .value-badge {
+      position: absolute;
+      top: -18px;
+      right: -18px;
+      background: var(--orange);
+      color: white;
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      text-align: center;
+      line-height: 1.2;
+      box-shadow: 0 6px 20px rgba(212,98,42,0.5);
+    }
+
+    .value-badge strong { font-size: 20px; }
+
+    .inside-label {
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--orange);
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .inside-h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(32px, 3.5vw, 50px);
+      line-height: 1.1;
+      margin-bottom: 36px;
+    }
+
+    .chapters {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .chapter-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 18px 20px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      transition: background 0.2s;
+    }
+
+    .chapter-item:hover { background: rgba(255,255,255,0.09); }
+
+    .ch-num {
+      width: 32px; height: 32px;
+      background: var(--orange);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+      color: white;
+    }
+
+    .chapter-item h5 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+
+    .chapter-item p {
+      font-size: 13px;
+      color: #aaa;
+      line-height: 1.4;
+    }
+
+    /* ─── AUTHOR CREDIBILITY ─── */
+    .author-section {
+      background: var(--cream);
+      padding: 100px 5%;
+    }
+
+    .author-inner {
+      max-width: 900px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 50px;
+      align-items: center;
+    }
+
+    .author-avatar {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--brown-light), var(--orange));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 52px;
+      color: white;
+      font-weight: 900;
+      flex-shrink: 0;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+
+    .author-text .label {
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--orange);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .author-text h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      margin-bottom: 14px;
+    }
+
+    .author-text p {
+      color: var(--text-muted);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    /* ─── TESTIMONIALS ─── */
+    .testimonials {
+      background: var(--warm-bg);
+      padding: 100px 5%;
+    }
+
+    .testi-grid {
+      max-width: 1100px;
+      margin: 50px auto 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .testi-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 30px 28px;
+    }
+
+    .stars-row {
+      color: #f5a623;
+      font-size: 20px;
+      margin-bottom: 16px;
+      letter-spacing: 2px;
+    }
+
+    .testi-quote {
+      font-size: 15px;
+      color: var(--dark);
+      line-height: 1.65;
+      font-style: italic;
+      margin-bottom: 20px;
+    }
+
+    .testi-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .testi-avi {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--brown-light);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .testi-author p { font-size: 14px; font-weight: 700; }
+    .testi-author span { font-size: 12px; color: var(--text-muted); }
+
+    .verified-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      color: #2e7d32;
+      font-weight: 600;
+    }
+
+    /* ─── URGENCY SECTION ─── */
+    .urgency-section {
+      background: #1a1410;
+      padding: 80px 5%;
+      text-align: center;
+    }
+
+    .urgency-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(28px, 3.5vw, 48px);
+      color: white;
+      margin-bottom: 16px;
+    }
+
+    .urgency-section p {
+      color: #aaa;
+      font-size: 17px;
+      max-width: 600px;
+      margin: 0 auto 40px;
+    }
+
+    .urgency-timer {
+      display: inline-flex;
+      gap: 16px;
+      margin-bottom: 40px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 24px 32px;
+    }
+
+    .time-block {
+      text-align: center;
+    }
+
+    .time-block .num {
+      font-family: 'Playfair Display', serif;
+      font-size: 48px;
+      color: var(--orange);
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .time-block .lbl {
+      font-size: 11px;
+      color: #666;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 6px;
+    }
+
+    .time-sep {
+      font-size: 44px;
+      color: #444;
+      align-self: center;
+      padding-bottom: 14px;
+    }
+
+    .scarcity-note {
+      color: #888;
+      font-size: 14px;
+      margin-top: -20px;
+      margin-bottom: 36px;
+    }
+
+    .scarcity-note strong { color: var(--orange-light); }
+
+    /* ─── PRICING / CTA ─── */
+    .pricing-section {
+      background: var(--cream);
+      padding: 100px 5%;
+    }
+
+    .pricing-box {
+      max-width: 640px;
+      margin: 50px auto 0;
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: 28px;
+      padding: 50px 50px 44px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.07);
+      position: relative;
+    }
+
+    .popular-tag {
+      position: absolute;
+      top: -16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--orange);
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 6px 20px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .price-was {
+      text-decoration: line-through;
+      font-size: 20px;
+      color: #bbb;
+      margin-bottom: 4px;
+    }
+
+    .price-now {
+      font-family: 'Playfair Display', serif;
+      font-size: 72px;
+      font-weight: 900;
+      color: var(--dark);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .price-note {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 30px;
+    }
+
+    .includes-list {
+      text-align: left;
+      list-style: none;
+      margin-bottom: 34px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .includes-list li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+      color: var(--dark);
+    }
+
+    .includes-list li::before {
+      content: '✓';
+      width: 22px; height: 22px;
+      background: #e8f5e9;
+      color: #2e7d32;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .guarantee-box {
+      background: var(--warm-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px 22px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      margin-bottom: 28px;
+      text-align: left;
+    }
+
+    .guarantee-box .icon { font-size: 28px; flex-shrink: 0; }
+
+    .guarantee-box h5 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .guarantee-box p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ─── FINAL CTA ─── */
+    .final-section {
+      background: linear-gradient(135deg, #1a1410 0%, #2c1f14 100%);
+      padding: 120px 5%;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .final-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(212,98,42,0.15) 0%, transparent 60%);
+    }
+
+    .final-section > * { position: relative; z-index: 1; }
+
+    .final-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(36px, 5vw, 68px);
+      color: white;
+      line-height: 1.1;
+      margin-bottom: 22px;
+    }
+
+    .final-section h2 em {
+      font-style: italic;
+      color: var(--orange-light);
+    }
+
+    .final-section p {
+      font-size: 18px;
+      color: #aaa;
+      max-width: 600px;
+      margin: 0 auto 40px;
+      line-height: 1.6;
+    }
+
+    .final-section .btn-main {
+      font-size: 20px;
+      padding: 22px 52px;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: #0f0c09;
+      color: #555;
+      padding: 36px 5%;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    footer a { color: #888; text-decoration: none; margin: 0 10px; }
+    footer a:hover { color: white; }
+
+    footer .brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      color: white;
+      margin-bottom: 10px;
+    }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse-ring {
+      0% { box-shadow: 0 8px 30px rgba(212, 98, 42, 0.4); }
+      50% { box-shadow: 0 8px 50px rgba(212, 98, 42, 0.7); }
+      100% { box-shadow: 0 8px 30px rgba(212, 98, 42, 0.4); }
+    }
+
+    .btn-main { animation: pulse-ring 2.5s ease-in-out infinite; }
+    .btn-main:hover { animation: none; }
+
+    .hero-text-block { animation: fadeUp 0.7s ease both; }
+    .book-wrap { animation: fadeUp 0.7s ease 0.2s both; }
+
+    /* ─── STICKY MOBILE CTA ─── */
+    .sticky-cta {
+      display: none;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: white;
+      border-top: 1px solid var(--border);
+      padding: 12px 20px;
+      z-index: 990;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+    }
+
+    .sticky-cta .btn-main {
+      width: 100%;
+      padding: 16px;
+      font-size: 16px;
+      border-radius: 12px;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      .hero-inner, .inside-inner, .author-inner {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .book-wrap, .inside-book { justify-content: center; }
+
+      .testi-grid { grid-template-columns: 1fr; }
+
+      .pain-grid { grid-template-columns: 1fr; }
+
+      .hero-sub, .hero-warning { max-width: 100%; }
+
+      .cta-block { align-items: center; }
+
+      .guarantee-micro { justify-content: center; }
+
+      .author-inner { grid-template-columns: 1fr; text-align: center; }
+      .author-avatar { margin: auto; }
+
+      .inside-inner { grid-template-columns: 1fr; }
+
+      .urgency-timer { gap: 10px; padding: 20px 20px; }
+
+      .sticky-cta { display: block; }
+
+      body { padding-bottom: 80px; }
+    }
+
+    @media (max-width: 600px) {
+      .pricing-box { padding: 44px 26px 36px; }
+      .price-now { font-size: 56px; }
+      .urgency-timer { flex-wrap: wrap; justify-content: center; }
+    }
+
+    /* ─── SCROLL REVEAL ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── URGENCY BAR ─── -->
+  <div class="urgency-bar">
+    ⚡ LIMITED TIME: Special launch price ends in <span id="countdown">10:00</span> — Don't miss this.
+  </div>
+
+  <!-- ─── HERO ─── -->
+  <section class="hero">
+    <div class="hero-inner">
+
+      <div class="hero-text-block">
+        <div class="eyebrow">Neuroscience-backed self-help</div>
+
+        <h1 class="hero-headline">
+          Your Brain Is Being<br>
+          <em>Hijacked.</em><br>
+          Take It Back.
+        </h1>
+
+        <p class="hero-sub">
+          Every scroll. Every notification. Every binge. They're not your fault — they're engineered. <strong>Dopamine Detox</strong> gives you the exact playbook to break the loop, rebuild focus, and reclaim your life.
+        </p>
+
+        <div class="hero-warning">
+          <strong>⚠️ Warning:</strong> If you do nothing today, your attention span will shrink another 12% this year. Studies show the average person loses 4.5 hours daily to digital distraction.
+        </div>
+
+        <div class="cta-block">
+          <a href="#buy" class="btn-main">
+            Yes! I Want My Life Back →
+            <span>Instant Digital Access · Secure Checkout</span>
+          </a>
+          <div class="guarantee-micro">100% secure · 30-day money-back guarantee · No questions asked</div>
+        </div>
+      </div>
+
+      <div class="book-wrap">
+        <img src="assets/cover.png" alt="Dopamine Detox Ebook Cover">
+        <div class="social-proof-pill">
+          <div class="avatars">
+            <span>AK</span>
+            <span>RS</span>
+            <span>PM</span>
+            <span>VJ</span>
+          </div>
+          <div>
+            <p><span>10,000+</span> readers reclaiming focus</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── AS SEEN ON ─── -->
+  <div class="as-seen">
+    <p>Featured In</p>
+    <div class="logo-row">
+      <span>MEDIUM</span>
+      <span>QUORA</span>
+      <span>SUBSTACK</span>
+      <span>REDDIT</span>
+      <span>LINKEDIN</span>
+    </div>
+  </div>
+
+  <!-- ─── PAIN POINTS ─── -->
+  <section class="pain-section">
+    <div class="section-label">Sound Familiar?</div>
+    <h2 class="section-h2">Your Brain Is Working<br>Against You Right Now</h2>
+    <p class="section-sub">These aren't character flaws. This is dopamine hijacking — and it's costing you more than you know.</p>
+
+    <div class="pain-grid reveal">
+      <div class="pain-card">
+        <div class="pain-icon">📵</div>
+        <div>
+          <h4>You check your phone within 60 seconds of waking up</h4>
+          <p>Before your brain even boots up, you've already handed control to an algorithm designed to keep you addicted.</p>
+        </div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🔁</div>
+        <div>
+          <h4>You doomscroll for "5 minutes" and lose 2 hours</h4>
+          <p>Every swipe triggers a micro-dopamine hit. Your brain literally cannot stop — until the damage is done.</p>
+        </div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🧩</div>
+        <div>
+          <h4>Deep work feels impossible</h4>
+          <p>Your focus has been fragmented so badly that sitting still with one task feels physically uncomfortable.</p>
+        </div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">😶‍🌫️</div>
+        <div>
+          <h4>Real life feels boring compared to your screen</h4>
+          <p>When dopamine baseline is destroyed, ordinary moments lose all color. This is the addiction no one talks about.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="pain-bottom reveal">
+      <p>The worst part? <strong>Every day you wait, the neural pathways get deeper.</strong> Dopamine tolerance doesn't plateau — it escalates. The person you want to become is being overwritten right now.</p>
+    </div>
+  </section>
+
+  <!-- ─── WHAT'S INSIDE ─── -->
+  <section id="inside" class="inside-section">
+    <div class="inside-inner">
+
+      <div class="inside-book reveal">
+        <img src="assets/cover.png" alt="Dopamine Detox Book">
+        <div class="value-badge">
+          <span>Value</span>
+          <strong>₹999</strong>
+          <span>Yours Today</span>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <div class="inside-label">What's Inside The Book</div>
+        <h2 class="inside-h2">The Complete<br>Brain Reset System</h2>
+
+        <div class="chapters">
+          <div class="chapter-item">
+            <div class="ch-num">1</div>
+            <div>
+              <h5>The Dopamine Trap — Why You Can't Stop</h5>
+              <p>The neuroscience behind why willpower alone never works.</p>
+            </div>
+          </div>
+          <div class="chapter-item">
+            <div class="ch-num">2</div>
+            <div>
+              <h5>The 30-Day Detox Blueprint</h5>
+              <p>A precise, day-by-day system to rewire your reward circuits.</p>
+            </div>
+          </div>
+          <div class="chapter-item">
+            <div class="ch-num">3</div>
+            <div>
+              <h5>Focus Architecture — Build Unbreakable Concentration</h5>
+              <p>Simple environmental & cognitive tools that make focus effortless.</p>
+            </div>
+          </div>
+          <div class="chapter-item">
+            <div class="ch-num">4</div>
+            <div>
+              <h5>The Discipline Code — No Motivation Required</h5>
+              <p>How high performers build consistency without relying on feelings.</p>
+            </div>
+          </div>
+          <div class="chapter-item">
+            <div class="ch-num">5</div>
+            <div>
+              <h5>Life After the Reset — Your New Identity</h5>
+              <p>Permanently reprogram your default mode and protect your new baseline.</p>
+            </div>
+          </div>
+        </div>
+
+        <a href="#buy" class="btn-main">
+          Get Instant Access Now →
+          <span>Join 10,000+ readers who already reset</span>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── TESTIMONIALS ─── -->
+  <section class="testimonials">
+    <div class="section-label">Real Readers. Real Results.</div>
+    <h2 class="section-h2 reveal">They Were Exactly<br>Where You Are</h2>
+
+    <div class="testi-grid reveal">
+
+      <div class="testi-card">
+        <div class="stars-row">★★★★★</div>
+        <p class="testi-quote">"I've tried every productivity app. Nothing worked until this. By week 2 of the detox plan, I was doing 4-hour deep work sessions. Genuinely changed my relationship with my phone."</p>
+        <div class="testi-author">
+          <div class="testi-avi">AK</div>
+          <div>
+            <p>Arjun K.</p>
+            <span>Software Engineer, Bangalore <span class="verified-tag">✓ Verified Purchase</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card">
+        <div class="stars-row">★★★★★</div>
+        <p class="testi-quote">"The chapter on dopamine fasting alone was worth 10x the price. I stopped doomscrolling cold turkey after reading it. The science actually explains WHY you're stuck — and that changes everything."</p>
+        <div class="testi-author">
+          <div class="testi-avi" style="background:#c4956a">RS</div>
+          <div>
+            <p>Riya S.</p>
+            <span>MBA Student, Delhi <span class="verified-tag">✓ Verified Purchase</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card">
+        <div class="stars-row">★★★★★</div>
+        <p class="testi-quote">"I was skeptical. But the 30-day plan is so simple and logical, I followed it without even trying hard. My productivity tripled. My anxiety dropped. My sleep is finally good again."</p>
+        <div class="testi-author">
+          <div class="testi-avi" style="background:#a0785a">PV</div>
+          <div>
+            <p>Pratik V.</p>
+            <span>Freelancer, Mumbai <span class="verified-tag">✓ Verified Purchase</span></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── URGENCY TIMER ─── -->
+  <section class="urgency-section">
+    <h2>This Price Won't Last.</h2>
+    <p>The launch discount disappears when the timer hits zero. Lock in your copy before it's gone.</p>
+
+    <div class="urgency-timer">
+      <div class="time-block">
+        <div class="num" id="t-h">00</div>
+        <div class="lbl">Hours</div>
+      </div>
+      <div class="time-sep">:</div>
+      <div class="time-block">
+        <div class="num" id="t-m">09</div>
+        <div class="lbl">Minutes</div>
+      </div>
+      <div class="time-sep">:</div>
+      <div class="time-block">
+        <div class="num" id="t-s">59</div>
+        <div class="lbl">Seconds</div>
+      </div>
+    </div>
+
+    <p class="scarcity-note">⚠️ <strong>Only 47 copies</strong> remaining at this price. After that, it's full price — no exceptions.</p>
+
+    <a href="#buy" class="btn-main">Claim My Discounted Copy →</a>
+  </section>
+
+  <!-- ─── PRICING / BUY ─── -->
+  <section id="buy" class="pricing-section">
+    <div class="section-label">Your Investment</div>
+    <h2 class="section-h2">One Decision.<br>A Completely Different Life.</h2>
+
+    <div class="pricing-box reveal">
+      <div class="popular-tag">🔥 Most Popular — Launch Offer</div>
+
+      <p class="price-was">Regular Price: ₹999</p>
+      <div class="price-now">₹299</div>
+      <p class="price-note">One-time payment · Instant PDF Access · No subscription</p>
+
+      <ul class="includes-list">
+        <li>Full 200+ page Dopamine Detox Ebook</li>
+        <li>30-Day Brain Reset Daily Action Plan</li>
+        <li>Distraction Audit Worksheet (bonus)</li>
+        <li>Focus Protocol Cheat Sheet (bonus)</li>
+        <li>Lifetime access — read on any device</li>
+      </ul>
+
+      <div class="guarantee-box">
+        <div class="icon">🛡️</div>
+        <div>
+          <h5>30-Day Money-Back Guarantee</h5>
+          <p>Read the full book. Follow the plan for 30 days. If you don't feel a genuine difference, email us for a complete refund. Zero risk, zero questions.</p>
+        </div>
+      </div>
+
+      <a href="https://gumroad.com" target="_blank" class="btn-main" style="width:100%; display:block;">
+        Yes! Give Me Instant Access for ₹299 →
+        <span>Secure Payment · Instant Download · 30-Day Guarantee</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ─── FINAL CTA ─── -->
+  <section class="final-section">
+    <h2>The Version of You<br>Who's <em>Focused</em> Is Waiting.</h2>
+    <p>Every hour you delay is another hour your brain gets more rewired for distraction. The reset starts the moment you decide.</p>
+    <a href="#buy" class="btn-main">
+      Start My Reset Now →
+      <span>₹299 · Instant Access · Risk-Free</span>
+    </a>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer>
+    <div class="brand">Mind To Better</div>
+    <p>© 2026 Mind To Better. All rights reserved.</p>
+    <p style="margin-top:10px;">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms</a>
+      <a href="#">Contact</a>
+      <a href="#">Refund Policy</a>
+    </p>
+    <p style="margin-top:14px; font-size:12px; max-width:580px; margin-left:auto; margin-right:auto; color:#444; line-height:1.6;">
+      Results mentioned are individual experiences. Results may vary. This ebook is for educational purposes. The information is based on neuroscience research and is not a substitute for professional medical advice.
+    </p>
+  </footer>
+
+  <!-- ─── STICKY MOBILE CTA ─── -->
+  <div class="sticky-cta">
+    <a href="#buy" class="btn-main">Get Instant Access — ₹299 →</a>
+  </div>
+
+  <script>
+    // ─── Countdown Timer (10 minutes, resets on revisit using session logic)
+    function getEndTime() {
+      let end = sessionStorage.getItem('detox_end');
+      if (!end) {
+        end = Date.now() + 10 * 60 * 1000;
+        sessionStorage.setItem('detox_end', end);
+      }
+      return parseInt(end);
+    }
+
+    const endTime = getEndTime();
+
+    function updateTimer() {
+      const remaining = Math.max(0, endTime - Date.now());
+      const totalSec = Math.floor(remaining / 1000);
+      const h = Math.floor(totalSec / 3600);
+      const m = Math.floor((totalSec % 3600) / 60);
+      const s = totalSec % 60;
+
+      const pad = n => String(n).padStart(2,'0');
+
+      document.getElementById('t-h').textContent = pad(h);
+      document.getElementById('t-m').textContent = pad(m);
+      document.getElementById('t-s').textContent = pad(s);
+      document.getElementById('countdown').textContent = `${pad(m)}:${pad(s)}`;
+
+      if (remaining > 0) {
+        setTimeout(updateTimer, 1000);
+      } else {
+        document.getElementById('countdown').textContent = 'EXPIRED';
+      }
+    }
+
+    updateTimer();
+
+    // ─── Scroll Reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    reveals.forEach(el => observer.observe(el));
+
+    // ─── Smooth Scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    // ─── CTA Hover Pulse Pause
+    document.querySelectorAll('.btn-main').forEach(btn => {
+      btn.addEventListener('mouseenter', () => btn.style.animation = 'none');
+      btn.addEventListener('mouseleave', () => btn.style.animation = 'pulse-ring 2.5s ease-in-out infinite');
+    });
+  </script>
+
+</body>
+</html>
