@@ -21,7 +21,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6 # (या डिफ़ॉल्ट setup-python@v5)
         with:
-          python-version: '3.10'
+          python-version: '3.11'
           cache: 'pip' # बार-बार डाउनलोड से बचने के लिए कैशिंग
 
       # 3. requirements.txt फ़ाइल इंस्टॉल करना
