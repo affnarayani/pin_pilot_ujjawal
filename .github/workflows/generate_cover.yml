@@ -39,6 +39,7 @@ jobs:
       - name: Run Cover Generation Script
         env:
           DECRYPT_KEY: ${{ secrets.DECRYPT_KEY }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           python generate_cover.py
 
