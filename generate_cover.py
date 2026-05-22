@@ -229,7 +229,7 @@ def run():
         share_button.click()
         
         # Pop-up load hone ke liye chhota sa wait
-        time.sleep(3)
+        custom_random_wait(15, 30)
 
         # HACK: Agar 'Copy link' button wala pop-up aata hai toh uspar click karega
         try:
