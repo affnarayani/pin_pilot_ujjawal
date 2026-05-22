@@ -22,7 +22,7 @@ jobs:
         uses: actions/setup-python@v6 # (या डिफ़ॉल्ट setup-python@v5)
         with:
           python-version: '3.11'
-          cache: 'pip' # बार-बार डाउनलोड से बचने के लिए कैशिंग
+          cache: 'pip' # बार-बार डाउनलोड से बचने के लिए कायैशिंग
 
       # 3. requirements.txt फ़ाइल इंस्टॉल करना
       - name: Install Dependencies
@@ -30,18 +30,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # 4. Playwright के सिस्टम डिपेंडेंसी और Chromium ब्राउज़र को इंस्टॉल करना
-      - name: Install Playwright Browsers & Deps
+      # 4. Playwright के Chromium ब्राउज़र को इंस्टॉल करना (बिना --with-deps के, ताकि apt-get error न आए)
+      - name: Install Playwright Browsers
         run: |
-          # Ubuntu 24.04 (ubuntu-latest) ke libasound2 missing package issue ka fix
-          sudo apt-get update
-          sudo apt-get install -y libasound2t64
-          sudo ln -s /usr/lib/x86_64-linux-gnu/libasound.so.2.0.0 /usr/lib/x86_64-linux-gnu/libasound.so.2 || true
-          
-          # Ab bina kisi error ke playwright install hoga
-          playwright install chromium --with-deps
+          python -m playwright install chromium
 
-      # 5. आपकी मेन脚本 रन करना (Secrets पास करने के साथ)
+      # 5. आपकी मेन स्क्रिप्ट रन करना (Secrets पास करने के साथ)
       - name: Run Cover Generation Script
         env:
           DECRYPT_KEY: ${{ secrets.DECRYPT_KEY }}
