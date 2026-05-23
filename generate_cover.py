@@ -28,8 +28,7 @@ from playwright_stealth import Stealth
 # =========================
 HEADLESS = True
 
-PINTEREST_COOKIES_FILE = "cookies.json.encrypted"
-POSTED_CONTENT_FILE = "posted_content.json"
+CHATGPT_COOKIES_FILE = "chatgpt_cookies.json.encrypted"
 
 IMAGE_DIR = Path("image")
 IMAGE_DIR.mkdir(exist_ok=True)
@@ -136,7 +135,7 @@ def load_cookies(file_path: Path) -> List[Dict[str, Any]]:
 def run():
     print("[START] Script started", flush=True)
 
-    cookies = load_cookies(Path(PINTEREST_COOKIES_FILE))
+    cookies = load_cookies(Path(CHATGPT_COOKIES_FILE))
 
     print(f"[OK] Total cookies loaded: {len(cookies)}", flush=True)
 
