@@ -369,25 +369,26 @@ def clear_image_folder():
     
     # Check karein ki folder exist karta hai ya nahi
     if not folder_path.exists():
-        print(f"[INFO] '{folder_path}' nam ka koi folder nahi mila.")
+        print(f"[INFO] '{folder_path}' nam ka koi folder nahi mila.", flush=True)
         return
 
-    print(f"[START] '{folder_path}' folder ko khali kiya ja raha hai...")
+    print(f"[START] '{folder_path}' folder ko khali kiya ja raha hai...", flush=True)
     
     # Folder ke andar ke saare contents par loop chalayein
     for item in folder_path.iterdir():
         try:
             if item.is_file() or item.is_symlink():
                 item.unlink()  # File ya link ko delete karne ke liye
-                print(f"[DEL] File delete ho gayi: {item.name}")
+                print(f"[DEL] File delete ho gayi: {item.name}", flush=True)
             elif item.is_dir():
                 shutil.rmtree(item)  # Pura sub-folder delete karne ke liye
-                print(f"[DEL] Sub-folder delete ho gaya: {item.name}")
+                print(f"[DEL] Sub-folder delete ho gaya: {item.name}", flush=True)
         except Exception as e:
-            print(f"❌ Error aaya {item.name} ko delete karte waqt: {e}")
+            print(f"❌ Error aaya {item.name} ko delete karte waqt: {e}", flush=True)
 
-    print("[SUCCESS] 'image' folder ke andar ke saare contents saaf ho gaye hain!")
+    print("[SUCCESS] 'image' folder ke andar ke saare contents saaf ho gaye hain!", flush=True)
 
 if __name__ == "__main__":
     run()
     clear_image_folder()
+    custom_random_wait(30, 60)
