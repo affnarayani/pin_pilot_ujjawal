@@ -363,6 +363,31 @@ def run():
 
         print("[DONE] Script execution phase closed. Terminating process context cleanly.", flush=True)
 
+def clear_image_folder():
+    # Folder ka path set karein
+    folder_path = Path("image")
+    
+    # Check karein ki folder exist karta hai ya nahi
+    if not folder_path.exists():
+        print(f"[INFO] '{folder_path}' nam ka koi folder nahi mila.")
+        return
+
+    print(f"[START] '{folder_path}' folder ko khali kiya ja raha hai...")
+    
+    # Folder ke andar ke saare contents par loop chalayein
+    for item in folder_path.iterdir():
+        try:
+            if item.is_file() or item.is_symlink():
+                item.unlink()  # File ya link ko delete karne ke liye
+                print(f"[DEL] File delete ho gayi: {item.name}")
+            elif item.is_dir():
+                shutil.rmtree(item)  # Pura sub-folder delete karne ke liye
+                print(f"[DEL] Sub-folder delete ho gaya: {item.name}")
+        except Exception as e:
+            print(f"❌ Error aaya {item.name} ko delete karte waqt: {e}")
+
+    print("[SUCCESS] 'image' folder ke andar ke saare contents saaf ho gaye hain!")
 
 if __name__ == "__main__":
     run()
+    clear_image_folder()
