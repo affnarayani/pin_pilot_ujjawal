@@ -11,16 +11,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. रिपॉजिटरी से लेटेस्ट कोड को पुल (Fetch) करना
-      # नोट: यहाँ actions/checkout@v4 का उपयोग किया गया है जो पूरी तरह स्टेबल है
+      # 1. रिपॉजिटरी से लेटेस्ट कोड को पुल (Fetch) करना (आपके ओरिजिनल v5 के साथ)
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }} # अगर PAT_TOKEN उपलब्ध है तो उसे यूज़ करेगा, नहीं तो डिफ़ॉल्ट टोकन
 
-      # 2. पाइथन एनवायरनमेंट सेटअप करना
+      # 2. पाइथन एनवायरनमेंट सेटअप करना (आपके ओरिजिनल v6 के साथ)
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.11'
           cache: 'pip' # बार-बार डाउनलोड से बचने के लिए कैशिंग
@@ -31,7 +30,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # 4. Playwright Chromium और उसके सिस्टम डिपेंडेंसीज इंस्टॉल करना (ताकि Linux रनर पर ब्राउज़र क्रैश न हो)
+      # 4. Playwright Chromium और उसके सिस्टम डिपेंडेंसीज इंस्टॉल करना
       - name: Install Playwright and System Dependencies
         run: |
           python -m playwright install --with-deps chromium
@@ -61,8 +60,7 @@ jobs:
           # किसी भी कनफ्लिक्ट से बचने के लिए रिपॉजिटरी को दोबारा पुल करना
           git pull origin main
           
-          # '-A' या '--all' का उपयोग करने से स्क्रिप्ट द्वारा डिलीट की गई फाइलें (Cleanup) 
-          # और अगर कोई नई लॉग फ़ाइल बनी है, दोनों गिट में सही से ट्रैक हो जाती हैं।
+          # '-A' का उपयोग करने से स्क्रिप्ट द्वारा डिलीट की गई फाइलें (Cleanup) सही से सिंक हो जाएंगी
           git add -A
           
           # चेक करना कि क्या कोई फाइल कमिट करने के लिए बची है (ताकि खाली कमिट एरर न आए)
