@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms & Conditions — Mind To Better</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Nunito+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --midnight: #0d1b2a;
+      --deep: #122038;
+      --sage: #4a9b7f;
+      --sage-light: #68c4a3;
+      --sage-pale: #e6f5ef;
+      --cream: #faf8f4;
+      --text: #1a2332;
+      --muted: #5a6a7e;
+      --border: #dde4ec;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Nunito Sans', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    nav {
+      background: var(--midnight);
+      padding: 18px 6%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: white;
+      text-decoration: none;
+    }
+
+    .nav-brand span { color: var(--sage-light); }
+
+    .nav-back {
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-back:hover { color: var(--sage-light); }
+
+    .page-header {
+      background: var(--deep);
+      padding: 70px 6% 60px;
+      text-align: center;
+    }
+
+    .page-header p {
+      font-size: 12px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--sage-light);
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .page-header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 700;
+      color: white;
+      margin-bottom: 14px;
+    }
+
+    .page-header .date {
+      font-size: 14px;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .content-wrap {
+      max-width: 780px;
+      margin: 70px auto;
+      padding: 0 6%;
+    }
+
+    .intro-note {
+      background: var(--sage-pale);
+      border-left: 4px solid var(--sage);
+      border-radius: 0 12px 12px 0;
+      padding: 18px 22px;
+      margin-bottom: 50px;
+    }
+
+    .intro-note p {
+      font-size: 15px;
+      color: var(--text);
+      font-weight: 600;
+      line-height: 1.6;
+    }
+
+    .section-block {
+      margin-bottom: 50px;
+    }
+
+    .section-block h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--sage-pale);
+    }
+
+    .section-block p {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 12px;
+    }
+
+    .section-block ul {
+      padding-left: 20px;
+      margin-bottom: 12px;
+    }
+
+    .section-block ul li {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 6px;
+    }
+
+    .section-block strong { color: var(--text); font-weight: 700; }
+
+    .refund-box {
+      background: white;
+      border: 2px solid var(--sage);
+      border-radius: 16px;
+      padding: 28px 30px;
+      margin: 16px 0;
+    }
+
+    .refund-box h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .refund-box p {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    .contact-block {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 30px;
+      margin-top: 50px;
+    }
+
+    .contact-block h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .contact-block p {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .contact-block a {
+      color: var(--sage);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    footer {
+      background: #070c12;
+      padding: 32px 6%;
+      text-align: center;
+      color: #444;
+      font-size: 13px;
+    }
+
+    footer .brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 10px;
+    }
+
+    footer a { color: #555; text-decoration: none; margin: 0 10px; }
+    footer a:hover { color: var(--sage-light); }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-brand">Mind <span>To Better</span></a>
+    <a href="index.html" class="nav-back">← Back to Home</a>
+  </nav>
+
+  <div class="page-header">
+    <p>Legal Document</p>
+    <h1>Terms & Conditions</h1>
+    <p class="date">Last updated: January 1, 2026</p>
+  </div>
+
+  <div class="content-wrap">
+
+    <div class="intro-note">
+      <p>Please read these Terms and Conditions carefully before purchasing or using any product from Mind To Better. By completing a purchase, you agree to be bound by these terms.</p>
+    </div>
+
+    <div class="section-block">
+      <h2>1. About Us</h2>
+      <p>Mind To Better ("we," "us," "our") is the publisher and seller of digital educational ebooks. These Terms & Conditions govern your purchase and use of our digital products and your access to this website.</p>
+    </div>
+
+    <div class="section-block">
+      <h2>2. Digital Product License</h2>
+      <p>When you purchase an ebook from Mind To Better, you receive a <strong>personal, non-exclusive, non-transferable license</strong> to download, store, and read the ebook for your own personal use.</p>
+      <p>You may not:</p>
+      <ul>
+        <li>Reproduce, copy, or duplicate the ebook in any form</li>
+        <li>Distribute, share, or resell the ebook to others</li>
+        <li>Upload or post the ebook to any website, platform, or file-sharing service</li>
+        <li>Modify, adapt, translate, or create derivative works from the ebook</li>
+        <li>Use the ebook or any portion of it for commercial purposes without prior written permission</li>
+      </ul>
+      <p>Unauthorized distribution of our digital products constitutes copyright infringement and will be pursued accordingly.</p>
+    </div>
+
+    <div class="section-block">
+      <h2>3. Purchases & Delivery</h2>
+      <p>All purchases are processed through Gumroad, our third-party payment platform. Once payment is confirmed, you will receive a download link via email. Please ensure your email address is correct at checkout.</p>
+      <p>If you do not receive your download link within 15 minutes of purchase, please check your spam folder. If the issue persists, contact us at the email below.</p>
+      <p>All sales are in US Dollars (USD). Prices are subject to change, but your purchase price is locked at the time of checkout.</p>
+    </div>
+
+    <div class="section-block">
+      <h2>4. Intellectual Property</h2>
+      <p>All content on this website and within our ebooks — including text, structure, design, exercises, frameworks, and graphics — is the intellectual property of Mind To Better and is protected by applicable copyright laws.</p>
+      <p>The "Mind To Better" brand name, logo, and associated marks are proprietary and may not be used without prior written consent.</p>
+    </div>
+
+    <div class="section-block">
+      <h2>5. Disclaimer of Warranties</h2>
+      <p>Our ebooks are provided for <strong>educational and informational purposes only</strong>. The content is based on research and the author's experience and is not intended as professional medical, psychological, or therapeutic advice.</p>
+      <p>Results described in testimonials and on this website are individual experiences. Individual results will vary based on personal circumstances, effort, and consistency of application. We do not guarantee specific outcomes.</p>
+      <p>Nothing in our products should be construed as a substitute for professional consultation. If you are experiencing serious mental health concerns, please seek qualified professional support.</p>
+    </div>
+
+    <div class="section-block">
+      <h2>6. Limitation of Liability</h2>
+      <p>To the fullest extent permitted by applicable law, Mind To Better shall not be liable for any indirect, incidental, special, or consequential damages arising out of or in connection with your use of our products or website, even if we have been advised of the possibility of such damages.</p>
+      <p>Our total liability to you for any claim arising out of your purchase shall not exceed the amount you paid for the product in question.</p>
+    </div>
+
+    <div class="section-block">
+      <h2>7. Website Use</h2>
+      <p>You agree to use this website only for lawful purposes. You must not attempt to gain unauthorized access to any part of our website, interfere with its operation, or transmit any malicious code or harmful material.</p>
+      <p>We reserve the right to restrict access to this website at our discretion.</p>
+    </div>
+
+    <div class="section-block">
+      <h2>9. Third-Party Links & Services</h2>
+      <p>Our website and checkout process may link to third-party services (such as Gumroad for payment processing). We are not responsible for the content, privacy practices, or terms of these third-party services. We encourage you to review their respective policies.</p>
+    </div>
+
+    <div class="section-block">
+      <h2>9. Governing Law</h2>
+      <p>These Terms & Conditions shall be governed by and construed in accordance with applicable laws. Any disputes arising in connection with these terms shall be subject to the exclusive jurisdiction of the relevant courts.</p>
+    </div>
+
+    <div class="section-block">
+      <h2>10. Changes to These Terms</h2>
+      <p>We reserve the right to update or modify these Terms & Conditions at any time. The updated version will be posted on this page with a revised "Last updated" date. Your continued use of our website or products after any changes constitutes your acceptance of the revised terms.</p>
+    </div>
+
+    <div class="contact-block">
+      <h3>Questions About These Terms?</h3>
+      <p>If you have any questions about these Terms & Conditions, please contact us at <a href="mailto:kumar.ujjawal247@gmail.com">kumar.ujjawal247@gmail.com</a>. We aim to respond within 2–3 business days.</p>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="brand">Mind To Better</div>
+    <p>© 2026 Mind To Better. All rights reserved.</p>
+    <p style="margin-top: 10px;">
+      <a href="index.html">Home</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms & Conditions</a>
+    </p>
+  </footer>
+
+</body>
+</html>
