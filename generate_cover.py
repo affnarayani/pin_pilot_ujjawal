@@ -31,8 +31,8 @@ HEADLESS = True
 PINTEREST_COOKIES_FILE = "cookies.json.encrypted"
 POSTED_CONTENT_FILE = "posted_content.json"
 
-TEMP_DIR = Path("temp")
-TEMP_DIR.mkdir(exist_ok=True)
+IMAGE_DIR = Path("image")
+IMAGE_DIR.mkdir(exist_ok=True)
 
 PBKDF2_ITERATIONS = 200_000
 MAX_RETRIES = 5  
@@ -173,6 +173,67 @@ def run():
 
         print("[OK] Cookies added successfully", flush=True)
 
+        # ========================================================
+        # HUGGING FACE OPTIMIZED PROMPT GENERATION
+        # ========================================================
+        print("[STEP] Initializing Hugging Face InferenceClient...", flush=True)
+        client = InferenceClient(model="meta-llama/Meta-Llama-3-8B-Instruct", token=HF_TOKEN)
+
+        hf_prompt = (
+            "You are an expert AI image prompt engineer. Based on the following eBook details, "
+            "write a highly descriptive, professional, and visually compelling image generation prompt "
+            "for its cover page. The prompt should perfectly capture the essence, mood, and transformation theme. "
+            "Respond ONLY with the final optimized image prompt text. Do not include any introduction, "
+            "explanation, or markdown quotes.\n\n"
+            "eBook Details:\n"
+            "Book Name: Escape The Mental Noise\n"
+            "Author Name: Mind To Better\n"
+            "Core Promise:\n"
+            "Teaches the reader to:\n"
+            "- Reduce overthinking\n"
+            "- Calm the mind\n"
+            "- Improve mental clarity\n"
+            "- Control distraction\n"
+            "- Regain focus\n"
+            "What the eBook Explains:\n"
+            "- Why the brain is always noisy\n"
+            "- The psychology of overthinking\n"
+            "- The impact of phones and social media\n"
+            "- How mental clutter builds up\n"
+            "- How to develop calm thinking\n"
+            "- Practical exercises for clarity\n"
+            "Transformation Path:\n"
+            "- From: Mentally exhausted and distracted\n"
+            "- To: Clear-minded, calm, and focused."
+        )
+
+        print("[STEP] Requesting optimized prompt from Llama-3 model using chat completions...", flush=True)
+        hf_generated_prompt = ""
+        
+        try:
+            res = client.chat.completions.create(
+                messages=[{"role": "user", "content": hf_prompt}],
+                max_tokens=300,
+                temperature=0.7,
+            )
+            
+            raw_content = res.choices[0].message.content
+            if raw_content:
+                hf_generated_prompt = raw_content.replace("**", "").replace("*", "").strip()
+                # Remove leading/trailing quotes if any
+                hf_generated_prompt = re.sub(r'^["\']|["\']$', '', hf_generated_prompt).strip()
+                
+        except Exception as hf_err:
+            print(f"[ERROR] Hugging Face prompt generation failed: {hf_err}", flush=True)
+
+        # STRICT REQUIREMENT: If empty or generation failed, exit with error code 1
+        if not hf_generated_prompt:
+            print("❌ Error: HF prompt generation failed or returned empty content. Exiting program.", flush=True)
+            sys.exit(1)
+
+        print("[OK] Successfully received prompt from Hugging Face", flush=True)
+        # ========================================================
+
         print("[STEP] Opening ChatGPT Main URL...", flush=True)
 
         page.goto(
@@ -190,7 +251,7 @@ def run():
         print("[STEP] Locating chat textbox...", flush=True)
         chat_box = page.get_by_role('textbox', name='Chat with ChatGPT')
         
-        prompt_text = "create a 4k image of an ebook cover page with text 30 money making ideas and a relevant image in the background. image size must be 1024x1536"
+        prompt_text = f"Generate a 4k image with a size strictly of 1024x1536 px, depicting the following scene: {hf_generated_prompt}"
         print(f"[STEP] Filling prompt: '{prompt_text}'", flush=True)
         chat_box.fill(prompt_text)
         
@@ -268,12 +329,11 @@ def run():
                 
                 download = download_info.value
                 
-                # File save in program root directory
-                root_dir = Path(".")
-                local_filename = root_dir / f"highres_cat_{int(time.time())}.png"
+                # File save in image folder with static name pin.png
+                local_filename = IMAGE_DIR / "pin.png"
                 
                 download.save_as(local_filename)
-                print(f"✅ Original resolution high quality image downloaded successfully (Saved to root): {local_filename}", flush=True)
+                print(f"✅ Original resolution high quality image downloaded successfully (Saved to image directory): {local_filename}", flush=True)
                 
             except Exception as download_err:
                 print(f"❌ Error during 'Save' button download processing: {download_err}", flush=True)
@@ -297,14 +357,6 @@ def run():
             browser.close()
         except:
             pass
-
-        try:
-            if TEMP_DIR.exists():
-                shutil.rmtree(TEMP_DIR)
-            TEMP_DIR.mkdir(exist_ok=True)
-            print("[CLEANUP] Temp cleared", flush=True)
-        except Exception as e:
-            print("[CLEANUP ERROR]", e, flush=True)
 
         try:
             pw_cm.__exit__(None, None, None)
