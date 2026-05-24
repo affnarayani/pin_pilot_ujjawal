@@ -1,6 +1,8 @@
-name: Generate Cover and Post Pinterest Pin
+name: Generate Cover and Post Pin
 
 on:
+  schedule:
+    - cron: '0 */4 * * *'
   workflow_dispatch: # GitHub UI पर 'Run workflow' बटन से इसे मैन्युअली चलाने के लिए
 
 permissions:
