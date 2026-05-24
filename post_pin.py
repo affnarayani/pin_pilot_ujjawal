@@ -391,4 +391,4 @@ def clear_image_folder():
 if __name__ == "__main__":
     run()
     clear_image_folder()
-    custom_random_wait(30, 60)
+    custom_random_wait(15, 30)

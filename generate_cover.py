@@ -28,7 +28,14 @@ from playwright_stealth import Stealth
 # =========================
 HEADLESS = True
 
-CHATGPT_COOKIES_FILE = "chatgpt_cookies.json.encrypted"
+COOKIES_DIR = Path("cookies")
+encrypted_files = list(COOKIES_DIR.glob("*.encrypted"))
+
+if not encrypted_files:
+    raise RuntimeError("❌ No .encrypted cookie files found in 'cookies/' folder")
+
+CHATGPT_COOKIES_FILE = random.choice(encrypted_files)
+print(f"[OK] Randomly selected cookie file: {CHATGPT_COOKIES_FILE.name}", flush=True)
 
 IMAGE_DIR = Path("image")
 IMAGE_DIR.mkdir(exist_ok=True)
