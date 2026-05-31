@@ -24,7 +24,7 @@ from playwright_stealth import Stealth
 # =========================
 # CONFIG
 # =========================
-HEADLESS = True
+HEADLESS = False
 
 COOKIES_DIR = Path("cookies")
 encrypted_files = list(COOKIES_DIR.glob("*.encrypted"))
