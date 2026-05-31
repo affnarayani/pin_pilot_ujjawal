@@ -30,7 +30,8 @@ COOKIES_DIR = Path("cookies")
 encrypted_files = list(COOKIES_DIR.glob("*.encrypted"))
 
 if not encrypted_files:
-    raise RuntimeError("❌ No .encrypted cookie files found in 'cookies/' folder")
+    print("❌ No .encrypted cookie files found in 'cookies/' folder", flush=True)
+    sys.exit(1)
 
 print(f"[OK] Found {len(encrypted_files)} cookie file(s) to process.", flush=True)
 
@@ -47,7 +48,8 @@ load_dotenv()
 DECRYPT_KEY = os.getenv("DECRYPT_KEY")
 
 if not DECRYPT_KEY:
-    raise RuntimeError("DECRYPT_KEY missing")
+    print("❌ DECRYPT_KEY missing in environment variables.", flush=True)
+    sys.exit(1)
 
 
 # =========================
@@ -83,40 +85,45 @@ def _decrypt_payload(payload: Dict[str, Any], password: str) -> bytes:
     try:
         return aesgcm.decrypt(nonce, ciphertext, None)
     except InvalidTag:
-        raise RuntimeError("❌ Decryption failed (InvalidTag)")
+        print("❌ Decryption failed (InvalidTag)", flush=True)
+        sys.exit(1)
 
 
 def load_cookies(file_path: Path) -> List[Dict[str, Any]]:
     print(f"[STEP] Loading cookies from {file_path.name}...", flush=True)
 
-    with file_path.open("r", encoding="utf-8") as f:
-        payload = json.load(f)
+    try:
+        with file_path.open("r", encoding="utf-8") as f:
+            payload = json.load(f)
 
-    plaintext = _decrypt_payload(payload, DECRYPT_KEY)
-    cookies = json.loads(plaintext.decode("utf-8"))
+        plaintext = _decrypt_payload(payload, DECRYPT_KEY)
+        cookies = json.loads(plaintext.decode("utf-8"))
 
-    # normalize SameSite and PartitionKey
-    for c in cookies:
-        if "partitionKey" in c and isinstance(c["partitionKey"], dict):
-            if "topLevelSite" in c["partitionKey"]:
-                c["partitionKey"] = str(c["partitionKey"]["topLevelSite"])
-            else:
-                del c["partitionKey"]
+        # normalize SameSite and PartitionKey
+        for c in cookies:
+            if "partitionKey" in c and isinstance(c["partitionKey"], dict):
+                if "topLevelSite" in c["partitionKey"]:
+                    c["partitionKey"] = str(c["partitionKey"]["topLevelSite"])
+                else:
+                    del c["partitionKey"]
 
-        if "sameSite" in c:
-            val = str(c["sameSite"]).lower()
+            if "sameSite" in c:
+                val = str(c["sameSite"]).lower()
 
-            if val in ["no_restriction", "none", "unspecified", "null"]:
-                c["sameSite"] = "None"
-            elif val == "lax":
-                c["sameSite"] = "Lax"
-            elif val == "strict":
-                c["sameSite"] = "Strict"
-            else:
-                c["sameSite"] = "Lax"
+                if val in ["no_restriction", "none", "unspecified", "null"]:
+                    c["sameSite"] = "None"
+                elif val == "lax":
+                    c["sameSite"] = "Lax"
+                elif val == "strict":
+                    c["sameSite"] = "Strict"
+                else:
+                    c["sameSite"] = "Lax"
 
-    print("[OK] Cookies loaded", flush=True)
-    return cookies
+        print("[OK] Cookies loaded", flush=True)
+        return cookies
+    except Exception as crypto_err:
+        print(f"❌ [CRITICAL CRYPTO ERROR]: File {file_path.name} parse/decrypt failed: {crypto_err}", flush=True)
+        sys.exit(1)
 
 
 # =========================
@@ -131,7 +138,6 @@ def run():
         print(f"[PROCESS] Processing file {index}/{len(encrypted_files)}: {cookie_file.name}", flush=True)
         print("="*50, flush=True)
 
-        # Variables set up for block context level teardown safely
         browser = None
         pw_cm = None
 
@@ -181,6 +187,21 @@ def run():
             # Step 1: Wait then locate profile menu button
             print("[STEP] Waiting 15-30s before interacting with profile menu...", flush=True)
             custom_random_wait(15, 30)
+
+            sidebar_btn = page.get_by_role("button", name="Open sidebar")
+            
+            # Check karega ki kya layout me "Open sidebar" button generated hai
+            if sidebar_btn.is_visible():
+                # Agar visible hai aur closed state (aria-expanded="false") me hai toh collapse expand karenge
+                if sidebar_btn.get_attribute("aria-expanded") == "false":
+                    print("[STEP] Sidebar is closed. Opening side bar...", flush=True)
+                    sidebar_btn.click(force=True)
+                    print("[STEP] Side bar opened successfully.", flush=True)
+                    custom_random_wait(15, 30)
+                else:
+                    print("[STEP] Side bar button is visible but already expanded. Proceeding...", flush=True)
+            else:
+                print("[STEP] Side bar toggle button not present in current view layout. Proceeding...", flush=True)
             
             print("[STEP] Locating profile menu button...", flush=True)
             profile_button = page.get_by_test_id("accounts-profile-button").last
@@ -242,12 +263,13 @@ def run():
             custom_random_wait(15, 30)
 
         except SystemExit:
+            # Agar system forced exit call ho toh propagate hone dein raise ke sath
             raise
         except Exception as e:
+            # Kisi bhi block ya locator execution crash par control seedhe yahan aayega
             print(f"\n❌ [CRITICAL ERROR] Operation failed for {cookie_file.name}: {e}", flush=True)
             print("[STEP] Executing emergency browser teardown and exiting program via sys.exit(1)...", flush=True)
             
-            # Browser cleanups explicitly matched before forced kill runtime allocation
             if browser:
                 try:
                     browser.close()
@@ -262,7 +284,7 @@ def run():
             sys.exit(1)
 
         finally:
-            # Regular cleanup for successful step processes
+            # Successful runtime loops ke baad browser close karne ke liye safety cleanup layer
             if browser or pw_cm:
                 print(f"[STEP] Exiting browser and cleaning context for {cookie_file.name}...", flush=True)
                 if browser:
