@@ -1,0 +1,42 @@
+name: Clear ChatGPT History
+
+on:
+  schedule:
+    # Triggers the workflow daily at 3 AM UTC
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  run-automation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v5
+        with:
+          token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Install Playwright Browsers
+        run: |
+          python -m playwright install chromium
+
+      - name: Run Chat History Deletion Script
+        env:
+          # Required cryptographic key injected via GitHub Secrets to decrypt session cookies
+          DECRYPT_KEY: ${{ secrets.DECRYPT_KEY }}
+        run: |
+          python clear_gpt.py
