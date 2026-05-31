@@ -179,12 +179,21 @@ def run():
             print("[OK] URL opened.", flush=True)
 
             # ==================================================
+            # FIX 1: CLOUDFLARE TURNSTILE CAPTCHA DETECTION
+            # ==================================================
+            print("[STEP] Checking for Cloudflare bot dynamic verification checks...", flush=True)
+            page.wait_for_timeout(3000)
+            
+            page_content = page.content()
+            if "Verify you are human" in page_content or "challenge-stage" in page_content or "cf-challenge" in page_content:
+                print(f"\n❌ [BOT DETECTION] GitHub Runner IP was blocked by OpenAI Cloudflare Firewall.", flush=True)
+                print("[REASON] Cloudflare turnstile captcha appeared on screen. Automation cannot continue.", flush=True)
+                raise RuntimeError("Cloudflare Security Challenge Block Intercepted.")
+
+            # ==================================================
             # HARD SECURITY CHECK: COOKIE VALIDATION LAYER
             # ==================================================
             print("[STEP] Verifying session authorization status...", flush=True)
-            page.wait_for_timeout(5000) # 5 seconds extra wait tab tak authorization settle ho jaye
-            
-            # Agar screen par "Log in" button dikh raha hai toh iska matlab login nahi hua
             login_detect = page.get_by_role("button", name=re.compile(r"Log in|Sign up", re.IGNORECASE))
             if login_detect.first.is_visible():
                 print(f"\n❌ [SESSION EXPIRED] Active session validation failed for {cookie_file.name}.", flush=True)
@@ -216,15 +225,17 @@ def run():
             
             print("[STEP] Locating profile menu button...", flush=True)
             
+            # FIX 2: Enhanced Selector array including explicit generic layouts
             profile_button = page.get_by_test_id("accounts-profile-button").last
             
             try:
-                profile_button.wait_for(state="visible", timeout=15000)
+                profile_button.wait_for(state="visible", timeout=10000)
             except Exception:
-                print("[MODIFIER] Primary test-id locator failed or slow. Trying alternative text/aria-label selectors...", flush=True)
-                profile_button = page.get_by_role("button", name=re.compile(r"User menu|Profile|Keep solid", re.IGNORECASE)).last
+                print("[MODIFIER] Primary test-id locator failed. Trying fallback structural tags...", flush=True)
+                # target structural buttons that have popups inside sidebar nav zones
+                profile_button = page.locator("nav button[aria-haspopup='menu']").last
                 if not profile_button.is_visible():
-                    profile_button = page.locator("button[aria-haspopup='menu']").last
+                    profile_button = page.get_by_role("button", name=re.compile(r"User menu|Profile|Keep solid", re.IGNORECASE)).last
                 
                 profile_button.wait_for(state="visible", timeout=15000)
 
