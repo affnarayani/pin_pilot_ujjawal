@@ -184,7 +184,7 @@ def process_cookie_file(cookie_file_path: Path):
                 print("[INFO] Test ID 'Open' button not visible, trying fallback via role/name...", flush=True)
                 open_btn = page.get_by_role('button', name='Open')
             
-            # Agar dono me se koi bhi "Open" button detect hota hai
+            # Agar "Open" button detect hota hai
             if open_btn.is_visible():
                 print("[STEP] 'Open' button detected! Clicking it now...", flush=True)
                 open_btn.click()
@@ -229,7 +229,19 @@ def process_cookie_file(cookie_file_path: Path):
     except SystemExit:
         raise
     except Exception as e:
-        print(f"[ERROR] Exception occurred while processing {cookie_file_path.name}: {e}", flush=True)
+        print(f"❌ [CRITICAL ERROR] Deletion failed for file {cookie_file_path.name}: {e}", flush=True)
+        # Browser cleanup call before exiting script to avoid zombie processes
+        try:
+            if browser:
+                browser.close()
+        except:
+            pass
+        try:
+            pw_cm.__exit__(None, None, None)
+        except:
+            pass
+        # HARD FAIL EXPLICIT REQUIREMENT
+        sys.exit(1)
 
     finally:
         print(f"[STEP] Closing browser for file: {cookie_file_path.name}...", flush=True)
