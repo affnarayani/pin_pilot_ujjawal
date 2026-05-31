@@ -166,7 +166,7 @@ def process_cookie_file(cookie_file_path: Path):
 
         # 2. Wait random 15, 30 seconds
         print("[STEP] Performing random wait after navigation...", flush=True)
-        custom_random_wait(15, 30)
+        custom_random_wait(30, 60)
 
         # 3. Locate 'Delete all chats' button
         print("[STEP] Checking for 'Delete all' chats button...", flush=True)
