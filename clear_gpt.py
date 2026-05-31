@@ -32,7 +32,7 @@ encrypted_files = list(COOKIES_DIR.glob("*.encrypted"))
 if not encrypted_files:
     raise RuntimeError("❌ No .encrypted cookie files found in 'cookies/' folder")
 
-print(f"[OK] Found {len(encrypted_files)} encrypted cookie file(s) to process.", flush=True)
+print(f"[OK] Found {len(encrypted_files)} cookie file(s) to process.", flush=True)
 
 PBKDF2_ITERATIONS = 200_000
 
@@ -87,7 +87,7 @@ def _decrypt_payload(payload: Dict[str, Any], password: str) -> bytes:
 
 
 def load_cookies(file_path: Path) -> List[Dict[str, Any]]:
-    print(f"[STEP] Loading cookies from: {file_path.name}...", flush=True)
+    print(f"[STEP] Loading cookies from {file_path.name}...", flush=True)
 
     with file_path.open("r", encoding="utf-8") as f:
         payload = json.load(f)
@@ -120,181 +120,147 @@ def load_cookies(file_path: Path) -> List[Dict[str, Any]]:
 
 
 # =========================
-# PROCESS SINGLE COOKIE
-# =========================
-def process_cookie_file(cookie_file_path: Path):
-    print(f"\n==================================================", flush=True)
-    print(f"[STARTING] Processing file: {cookie_file_path.name}", flush=True)
-    print(f"==================================================", flush=True)
-
-    cookies = load_cookies(cookie_file_path)
-    print(f"[OK] Total cookies loaded: {len(cookies)}", flush=True)
-
-    stealth = Stealth()
-    pw_cm = stealth.use_sync(sync_playwright())
-    pw = pw_cm.__enter__()
-
-    browser = None
-    try:
-        browser = pw.chromium.launch(
-            headless=HEADLESS,
-            args=[
-                "--start-maximized",
-                "--disable-blink-features=AutomationControlled"
-            ]
-        )
-
-        context = browser.new_context(
-            no_viewport=True,
-            user_agent=USER_AGENT
-        )
-
-        context.grant_permissions(["clipboard-read", "clipboard-write"])
-        print("[STEP] Adding cookies to browser context...", flush=True)
-        context.add_cookies(cookies)
-
-        page = context.new_page()
-        print("[OK] Cookies added successfully", flush=True)
-
-        # Target Settings URL
-        settings_url = "https://chatgpt.com/#settings/DataControls"
-
-        # 1. Navigate to Data Controls Settings
-        print("[STEP] Navigating to ChatGPT Data Controls Settings...", flush=True)
-        page.goto(settings_url, wait_until="domcontentloaded")
-        print("[OK] Settings URL loaded", flush=True)
-
-        # 2. Wait random 30, 60 seconds
-        print("[STEP] Performing random wait after navigation...", flush=True)
-        custom_random_wait(30, 60)
-
-        # 3. Locate 'Delete all chats' button using multi-selector strategies
-        print("[STEP] Evaluating target buttons on UI layer...", flush=True)
-        
-        delete_all_btn = None
-        
-        # Strategy A: Standard Role Option
-        btn_strategy_a = page.get_by_role('button', name='Delete all Delete all chats')
-        # Strategy B: Stacked Aria Selector variation specified by user
-        btn_strategy_b = page.get_by_role('button', name='Delete all Delete all chats: Delete all')
-        
-        if btn_strategy_a.is_visible():
-            print("[INFO] Strategy A matching target found.", flush=True)
-            delete_all_btn = btn_strategy_a
-        elif btn_strategy_b.is_visible():
-            print("[INFO] Strategy B (Stacked Aria Label) matching target found.", flush=True)
-            delete_all_btn = btn_strategy_b
-            
-        # UI Fallback Trigger: Agar direct delete button nahi mila, toh Workspace validation switch karein
-        if not delete_all_btn:
-            print("[INFO] Deletion targets not directly visible. Checking for Workspace 'Open' button fallbacks...", flush=True)
-            
-            # Sub-element matching via TestID hierarchy
-            open_btn = page.get_by_test_id('existing-workspace-row').get_by_role('button', name='Open')
-            
-            # Fallback for plain button with name/aria "Open"
-            if not open_btn.is_visible():
-                print("[INFO] Test ID 'Open' button not visible, trying fallback via role/name...", flush=True)
-                open_btn = page.get_by_role('button', name='Open')
-            
-            # If "Open" workspace mapping component triggers
-            if open_btn.is_visible():
-                print("[STEP] 'Open' workspace button detected! Clicking it now...", flush=True)
-                open_btn.click()
-                
-                print("[STEP] Waiting after clicking 'Open' button...", flush=True)
-                custom_random_wait(30, 60)
-                
-                # Re-navigate back to Data Controls settings route
-                print("[STEP] Re-navigating to ChatGPT Data Controls Settings...", flush=True)
-                page.goto(settings_url, wait_until="domcontentloaded")
-                custom_random_wait(30, 60)
-                
-                # Re-evaluate deletion paths post routing
-                if btn_strategy_a.is_visible():
-                    delete_all_btn = btn_strategy_a
-                elif btn_strategy_b.is_visible():
-                    delete_all_btn = btn_strategy_b
-
-        # Exit Strategy Check: Check if we resolved a valid target element pointer
-        if not delete_all_btn:
-            raise RuntimeError("Could not find any usable 'Delete all chats' button structural path.")
-
-        # Execution sequence
-        delete_all_btn.wait_for(state="visible", timeout=30000)
-        print("[STEP] Clicking 'Delete all' button...", flush=True)
-        delete_all_btn.click()
-
-        # Brief pause for animation layer rendering
-        time.sleep(2)
-
-        # 4. Locate and click Confirmation button
-        print("[STEP] Locating confirmation button...", flush=True)
-        confirm_btn = page.get_by_test_id('confirm-delete-all-chats-button')
-        
-        if not confirm_btn.is_visible():
-            print("[INFO] Test ID button not visible, trying fallback via role/name...", flush=True)
-            confirm_btn = page.get_by_role('button', name='Confirm deletion')
-
-        confirm_btn.wait_for(state="visible", timeout=10000)
-        print("[STEP] Clicking Confirmation button...", flush=True)
-        confirm_btn.click()
-        print("[OK] Deletion command executed successfully!", flush=True)
-
-        # 5. Wait for random 15, 30 seconds before exit
-        print("[STEP] Performing post-deletion random wait...", flush=True)
-        custom_random_wait(15, 30)
-
-    except SystemExit:
-        raise
-    except Exception as e:
-        print(f"❌ [CRITICAL ERROR] Deletion failed for file {cookie_file_path.name}: {e}", flush=True)
-        # Context cleanup
-        try:
-            if browser:
-                browser.close()
-        except:
-            pass
-        try:
-            pw_cm.__exit__(None, None, None)
-        except:
-            pass
-        # Hard fail execution
-        sys.exit(1)
-
-    finally:
-        print(f"[STEP] Closing browser for file: {cookie_file_path.name}...", flush=True)
-        try:
-            if browser:
-                browser.close()
-        except:
-            pass
-
-        try:
-            pw_cm.__exit__(None, None, None)
-        except:
-            pass
-
-        print(f"[DONE] Finished processing file: {cookie_file_path.name}", flush=True)
-
-
-# =========================
-# MAIN LOOP
+# MAIN
 # =========================
 def run():
-    print("[START] Sequential Cookie Automation Pipeline Started", flush=True)
-    
-    # Processing each encrypted cookie file sequentially
-    for index, cookie_file in enumerate(encrypted_files, start=1):
-        print(f"\n[PROGRESS] Processing Cookie {index} of {len(encrypted_files)}", flush=True)
-        process_cookie_file(cookie_file)
-        
-        # Cooldown break before loop block hand-off
-        if index < len(encrypted_files):
-            print("[INFO] Waiting 5 seconds before switching to the next cookie file...", flush=True)
-            time.sleep(5)
+    print("[START] Script started", flush=True)
 
-    print("\n[ALL DONE] All cookie files have been processed sequentially!", flush=True)
+    # LOOP: Iterating through each encrypted cookie file in the directory
+    for index, cookie_file in enumerate(encrypted_files, start=1):
+        print("\n" + "="*50, flush=True)
+        print(f"[PROCESS] Processing file {index}/{len(encrypted_files)}: {cookie_file.name}", flush=True)
+        print("="*50, flush=True)
+
+        try:
+            cookies = load_cookies(cookie_file)
+            print(f"[OK] Total cookies loaded: {len(cookies)}", flush=True)
+
+            # =========================
+            # STEALTH SETUP
+            # =========================
+            stealth = Stealth()
+            pw_cm = stealth.use_sync(sync_playwright())
+            pw = pw_cm.__enter__()
+
+            browser = None
+            try:
+                browser = pw.chromium.launch(
+                    headless=HEADLESS,
+                    args=[
+                        "--start-maximized",
+                        "--disable-blink-features=AutomationControlled"
+                    ]
+                )
+
+                context = browser.new_context(
+                    no_viewport=True,
+                    user_agent=USER_AGENT
+                )
+
+                context.grant_permissions(["clipboard-read", "clipboard-write"])
+
+                print("[STEP] Adding cookies to browser context...", flush=True)
+                context.add_cookies(cookies)
+
+                page = context.new_page()
+                print("[OK] Cookies added successfully", flush=True)
+
+                print("[STEP] Opening ChatGPT Main URL (Logging in via cookies)...", flush=True)
+                page.goto(
+                    "https://chatgpt.com/",
+                    wait_until="domcontentloaded"
+                )
+                print("[OK] URL opened and Login completed via session cookies", flush=True)
+
+                # ==================================================
+                # AUTOMATION STEPS WITH FIXED 15-30 SEC DELAYS
+                # ==================================================
+                
+                # Step 1: Wait then locate profile menu button
+                print("[STEP] Waiting 15-30s before interacting with profile menu...", flush=True)
+                custom_random_wait(15, 30)
+                
+                print("[STEP] Locating profile menu button...", flush=True)
+                profile_button = page.get_by_test_id("accounts-profile-button").last
+                profile_button.wait_for(state="visible", timeout=30000)
+                profile_button.click()
+                print("[OK] Profile menu clicked", flush=True)
+                
+                # Step 2: Wait then click Settings option
+                print("[STEP] Waiting 15-30s before clicking Settings...", flush=True)
+                custom_random_wait(15, 30)
+
+                print("[STEP] Clicking Settings option...", flush=True)
+                # target by test-id OR text/role fallback if test-id structural layout changes
+                settings_item = page.get_by_test_id("settings-menu-item")
+                if not settings_item.is_visible():
+                    settings_item = page.get_by_role("menuitem", name="Settings")
+                
+                settings_item.wait_for(state="visible", timeout=30000)
+                settings_item.click()
+                print("[OK] Settings opened", flush=True)
+
+                # Step 3: Wait then click Data Controls tab
+                print("[STEP] Waiting 15-30s before switching to Data controls tab...", flush=True)
+                custom_random_wait(15, 30)
+
+                print("[STEP] Navigating to Data controls tab...", flush=True)
+                data_controls_tab = page.get_by_test_id("data-controls-tab")
+                if not data_controls_tab.is_visible():
+                    data_controls_tab = page.get_by_role("tab", name="Data controls")
+                    
+                data_controls_tab.wait_for(state="visible", timeout=30000)
+                data_controls_tab.click()
+                print("[OK] Data controls tab loaded", flush=True)
+
+                # Step 4: Wait then trigger Delete All Chats confirmation
+                print("[STEP] Waiting 15-30s before clicking 'Delete all' chats...", flush=True)
+                custom_random_wait(15, 30)
+
+                print("[STEP] Clicking 'Delete all' chats button...", flush=True)
+                delete_all_btn = page.get_by_role("button", name="Delete all Delete all chats")
+                delete_all_btn.wait_for(state="visible", timeout=30000)
+                delete_all_btn.click()
+                print("[OK] Delete all confirmation prompt triggered", flush=True)
+
+                # Step 5: Wait then click final Deletion Confirmation button
+                print("[STEP] Waiting 15-30s before clicking 'Confirm deletion'...", flush=True)
+                custom_random_wait(15, 30)
+
+                print("[STEP] Clicking 'Confirm deletion' button...", flush=True)
+                confirm_btn = page.get_by_test_id("confirm-delete-all-chats-button")
+                if not confirm_btn.is_visible():
+                    confirm_btn = page.get_by_role("button", name="Confirm deletion")
+                    
+                confirm_btn.wait_for(state="visible", timeout=30000)
+                confirm_btn.click()
+                print("[OK] Deletion confirmed successfully", flush=True)
+
+                # Step 6: Post-action finalized wait interval before session destruction
+                print("[STEP] Action complete for this profile. Finalizing safety wait...", flush=True)
+                custom_random_wait(15, 30)
+
+            except Exception as e:
+                print(f"[ERROR inside browser session for {cookie_file.name}]:", e, flush=True)
+
+            finally:
+                print(f"[STEP] Exiting browser and cleaning context for {cookie_file.name}...", flush=True)
+                if browser:
+                    try:
+                        browser.close()
+                    except:
+                        pass
+                try:
+                    pw_cm.__exit__(None, None, None)
+                except:
+                    pass
+
+        except SystemExit:
+            raise
+        except Exception as e:
+            print(f"[ERROR processing file {cookie_file.name}]:", e, flush=True)
+
+    print("\n[DONE] All cookie files processed successfully.", flush=True)
 
 
 if __name__ == "__main__":
