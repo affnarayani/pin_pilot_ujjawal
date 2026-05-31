@@ -164,17 +164,30 @@ def process_cookie_file(cookie_file_path: Path):
         page.goto(settings_url, wait_until="domcontentloaded")
         print("[OK] Settings URL loaded", flush=True)
 
-        # 2. Wait random 15, 30 seconds
+        # 2. Wait random 30, 60 seconds
         print("[STEP] Performing random wait after navigation...", flush=True)
         custom_random_wait(30, 60)
 
-        # 3. Locate 'Delete all chats' button
-        print("[STEP] Checking for 'Delete all' chats button...", flush=True)
-        delete_all_btn = page.get_by_role('button', name='Delete all Delete all chats')
+        # 3. Locate 'Delete all chats' button using multi-selector strategies
+        print("[STEP] Evaluating target buttons on UI layer...", flush=True)
         
-        # IMPROVEMENT LOGIC: Agar delete button directly visible nahi hai toh alternative "Open" check karein
-        if not delete_all_btn.is_visible():
-            print("[INFO] 'Delete all' button not visible. Checking for Workspace 'Open' button fallbacks...", flush=True)
+        delete_all_btn = None
+        
+        # Strategy A: Standard Role Option
+        btn_strategy_a = page.get_by_role('button', name='Delete all Delete all chats')
+        # Strategy B: Stacked Aria Selector variation specified by user
+        btn_strategy_b = page.get_by_role('button', name='Delete all Delete all chats: Delete all')
+        
+        if btn_strategy_a.is_visible():
+            print("[INFO] Strategy A matching target found.", flush=True)
+            delete_all_btn = btn_strategy_a
+        elif btn_strategy_b.is_visible():
+            print("[INFO] Strategy B (Stacked Aria Label) matching target found.", flush=True)
+            delete_all_btn = btn_strategy_b
+            
+        # UI Fallback Trigger: Agar direct delete button nahi mila, toh Workspace validation switch karein
+        if not delete_all_btn:
+            print("[INFO] Deletion targets not directly visible. Checking for Workspace 'Open' button fallbacks...", flush=True)
             
             # Sub-element matching via TestID hierarchy
             open_btn = page.get_by_test_id('existing-workspace-row').get_by_role('button', name='Open')
@@ -184,24 +197,30 @@ def process_cookie_file(cookie_file_path: Path):
                 print("[INFO] Test ID 'Open' button not visible, trying fallback via role/name...", flush=True)
                 open_btn = page.get_by_role('button', name='Open')
             
-            # Agar "Open" button detect hota hai
+            # If "Open" workspace mapping component triggers
             if open_btn.is_visible():
-                print("[STEP] 'Open' button detected! Clicking it now...", flush=True)
+                print("[STEP] 'Open' workspace button detected! Clicking it now...", flush=True)
                 open_btn.click()
                 
-                # Wait for random 15, 30 seconds
                 print("[STEP] Waiting after clicking 'Open' button...", flush=True)
                 custom_random_wait(15, 30)
                 
-                # Re-navigate back to data controls settings page
+                # Re-navigate back to Data Controls settings route
                 print("[STEP] Re-navigating to ChatGPT Data Controls Settings...", flush=True)
                 page.goto(settings_url, wait_until="domcontentloaded")
-                custom_random_wait(10, 15)  # Let it stabilize
+                custom_random_wait(10, 15)
                 
-            else:
-                print("[WARNING] Neither 'Delete all' nor 'Open' buttons were immediately visible.", flush=True)
+                # Re-evaluate deletion paths post routing
+                if btn_strategy_a.is_visible():
+                    delete_all_btn = btn_strategy_a
+                elif btn_strategy_b.is_visible():
+                    delete_all_btn = btn_strategy_b
 
-        # Explicit safety wait execution for deletion popup
+        # Exit Strategy Check: Check if we resolved a valid target element pointer
+        if not delete_all_btn:
+            raise RuntimeError("Could not find any usable 'Delete all chats' button structural path.")
+
+        # Execution sequence
         delete_all_btn.wait_for(state="visible", timeout=15000)
         print("[STEP] Clicking 'Delete all' button...", flush=True)
         delete_all_btn.click()
@@ -230,7 +249,7 @@ def process_cookie_file(cookie_file_path: Path):
         raise
     except Exception as e:
         print(f"❌ [CRITICAL ERROR] Deletion failed for file {cookie_file_path.name}: {e}", flush=True)
-        # Browser cleanup call before exiting script to avoid zombie processes
+        # Context cleanup
         try:
             if browser:
                 browser.close()
@@ -240,7 +259,7 @@ def process_cookie_file(cookie_file_path: Path):
             pw_cm.__exit__(None, None, None)
         except:
             pass
-        # HARD FAIL EXPLICIT REQUIREMENT
+        # Hard fail execution
         sys.exit(1)
 
     finally:
@@ -270,7 +289,7 @@ def run():
         print(f"\n[PROGRESS] Processing Cookie {index} of {len(encrypted_files)}", flush=True)
         process_cookie_file(cookie_file)
         
-        # Small cooldown break before context hand-off
+        # Cooldown break before loop block hand-off
         if index < len(encrypted_files):
             print("[INFO] Waiting 5 seconds before switching to the next cookie file...", flush=True)
             time.sleep(5)
