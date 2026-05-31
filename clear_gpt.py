@@ -171,14 +171,27 @@ def run():
             print("[OK] Cookies added successfully", flush=True)
 
             print("[STEP] Opening ChatGPT Main URL (Logging in via cookies)...", flush=True)
-            
-            # FIX: networkidle hata kar domcontentloaded lagaya aur timeout badha kar 60s kiya
             page.goto(
                 "https://chatgpt.com/",
                 wait_until="domcontentloaded",
                 timeout=60000
             )
-            print("[OK] URL opened and Login completed via session cookies", flush=True)
+            print("[OK] URL opened.", flush=True)
+
+            # ==================================================
+            # HARD SECURITY CHECK: COOKIE VALIDATION LAYER
+            # ==================================================
+            print("[STEP] Verifying session authorization status...", flush=True)
+            page.wait_for_timeout(5000) # 5 seconds extra wait tab tak authorization settle ho jaye
+            
+            # Agar screen par "Log in" button dikh raha hai toh iska matlab login nahi hua
+            login_detect = page.get_by_role("button", name=re.compile(r"Log in|Sign up", re.IGNORECASE))
+            if login_detect.first.is_visible():
+                print(f"\n❌ [SESSION EXPIRED] Active session validation failed for {cookie_file.name}.", flush=True)
+                print("[REASON] The provided cookies are either invalid, fully expired, or cleared by OpenAI.", flush=True)
+                raise RuntimeError("Session authentication validation token expired.")
+
+            print("[OK] Session successfully validated as Active Logged-In state.", flush=True)
 
             # ==================================================
             # AUTOMATION STEPS WITH FIXED 15-30 SEC DELAYS
