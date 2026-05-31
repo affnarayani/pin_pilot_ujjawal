@@ -203,12 +203,12 @@ def process_cookie_file(cookie_file_path: Path):
                 open_btn.click()
                 
                 print("[STEP] Waiting after clicking 'Open' button...", flush=True)
-                custom_random_wait(15, 30)
+                custom_random_wait(30, 60)
                 
                 # Re-navigate back to Data Controls settings route
                 print("[STEP] Re-navigating to ChatGPT Data Controls Settings...", flush=True)
                 page.goto(settings_url, wait_until="domcontentloaded")
-                custom_random_wait(10, 15)
+                custom_random_wait(30, 60)
                 
                 # Re-evaluate deletion paths post routing
                 if btn_strategy_a.is_visible():
@@ -221,7 +221,7 @@ def process_cookie_file(cookie_file_path: Path):
             raise RuntimeError("Could not find any usable 'Delete all chats' button structural path.")
 
         # Execution sequence
-        delete_all_btn.wait_for(state="visible", timeout=15000)
+        delete_all_btn.wait_for(state="visible", timeout=30000)
         print("[STEP] Clicking 'Delete all' button...", flush=True)
         delete_all_btn.click()
 
