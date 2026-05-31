@@ -131,6 +131,10 @@ def run():
         print(f"[PROCESS] Processing file {index}/{len(encrypted_files)}: {cookie_file.name}", flush=True)
         print("="*50, flush=True)
 
+        # Variables set up for block context level teardown safely
+        browser = None
+        pw_cm = None
+
         try:
             cookies = load_cookies(cookie_file)
             print(f"[OK] Total cookies loaded: {len(cookies)}", flush=True)
@@ -142,123 +146,135 @@ def run():
             pw_cm = stealth.use_sync(sync_playwright())
             pw = pw_cm.__enter__()
 
-            browser = None
-            try:
-                browser = pw.chromium.launch(
-                    headless=HEADLESS,
-                    args=[
-                        "--start-maximized",
-                        "--disable-blink-features=AutomationControlled"
-                    ]
-                )
+            browser = pw.chromium.launch(
+                headless=HEADLESS,
+                args=[
+                    "--start-maximized",
+                    "--disable-blink-features=AutomationControlled"
+                ]
+            )
 
-                context = browser.new_context(
-                    no_viewport=True,
-                    user_agent=USER_AGENT
-                )
+            context = browser.new_context(
+                no_viewport=True,
+                user_agent=USER_AGENT
+            )
 
-                context.grant_permissions(["clipboard-read", "clipboard-write"])
+            context.grant_permissions(["clipboard-read", "clipboard-write"])
 
-                print("[STEP] Adding cookies to browser context...", flush=True)
-                context.add_cookies(cookies)
+            print("[STEP] Adding cookies to browser context...", flush=True)
+            context.add_cookies(cookies)
 
-                page = context.new_page()
-                print("[OK] Cookies added successfully", flush=True)
+            page = context.new_page()
+            print("[OK] Cookies added successfully", flush=True)
 
-                print("[STEP] Opening ChatGPT Main URL (Logging in via cookies)...", flush=True)
-                page.goto(
-                    "https://chatgpt.com/",
-                    wait_until="domcontentloaded"
-                )
-                print("[OK] URL opened and Login completed via session cookies", flush=True)
+            print("[STEP] Opening ChatGPT Main URL (Logging in via cookies)...", flush=True)
+            page.goto(
+                "https://chatgpt.com/",
+                wait_until="domcontentloaded"
+            )
+            print("[OK] URL opened and Login completed via session cookies", flush=True)
 
-                # ==================================================
-                # AUTOMATION STEPS WITH FIXED 15-30 SEC DELAYS
-                # ==================================================
+            # ==================================================
+            # AUTOMATION STEPS WITH FIXED 15-30 SEC DELAYS
+            # ==================================================
+            
+            # Step 1: Wait then locate profile menu button
+            print("[STEP] Waiting 15-30s before interacting with profile menu...", flush=True)
+            custom_random_wait(15, 30)
+            
+            print("[STEP] Locating profile menu button...", flush=True)
+            profile_button = page.get_by_test_id("accounts-profile-button").last
+            profile_button.wait_for(state="visible", timeout=30000)
+            profile_button.click()
+            print("[OK] Profile menu clicked", flush=True)
+            
+            # Step 2: Wait then click Settings option
+            print("[STEP] Waiting 15-30s before clicking Settings...", flush=True)
+            custom_random_wait(15, 30)
+
+            print("[STEP] Clicking Settings option...", flush=True)
+            settings_item = page.get_by_test_id("settings-menu-item")
+            if not settings_item.is_visible():
+                settings_item = page.get_by_role("menuitem", name="Settings")
+            
+            settings_item.wait_for(state="visible", timeout=30000)
+            settings_item.click()
+            print("[OK] Settings opened", flush=True)
+
+            # Step 3: Wait then click Data Controls tab
+            print("[STEP] Waiting 15-30s before switching to Data controls tab...", flush=True)
+            custom_random_wait(15, 30)
+
+            print("[STEP] Navigating to Data controls tab...", flush=True)
+            data_controls_tab = page.get_by_test_id("data-controls-tab")
+            if not data_controls_tab.is_visible():
+                data_controls_tab = page.get_by_role("tab", name="Data controls")
                 
-                # Step 1: Wait then locate profile menu button
-                print("[STEP] Waiting 15-30s before interacting with profile menu...", flush=True)
-                custom_random_wait(15, 30)
-                
-                print("[STEP] Locating profile menu button...", flush=True)
-                profile_button = page.get_by_test_id("accounts-profile-button").last
-                profile_button.wait_for(state="visible", timeout=30000)
-                profile_button.click()
-                print("[OK] Profile menu clicked", flush=True)
-                
-                # Step 2: Wait then click Settings option
-                print("[STEP] Waiting 15-30s before clicking Settings...", flush=True)
-                custom_random_wait(15, 30)
+            data_controls_tab.wait_for(state="visible", timeout=30000)
+            data_controls_tab.click()
+            print("[OK] Data controls tab loaded", flush=True)
 
-                print("[STEP] Clicking Settings option...", flush=True)
-                # target by test-id OR text/role fallback if test-id structural layout changes
-                settings_item = page.get_by_test_id("settings-menu-item")
-                if not settings_item.is_visible():
-                    settings_item = page.get_by_role("menuitem", name="Settings")
+            # Step 4: Wait then trigger Delete All Chats confirmation
+            print("[STEP] Waiting 15-30s before clicking 'Delete all' chats...", flush=True)
+            custom_random_wait(15, 30)
+
+            print("[STEP] Clicking 'Delete all' chats button...", flush=True)
+            delete_all_btn = page.get_by_role("button", name="Delete all Delete all chats")
+            delete_all_btn.wait_for(state="visible", timeout=30000)
+            delete_all_btn.click()
+            print("[OK] Delete all confirmation prompt triggered", flush=True)
+
+            # Step 5: Wait then click final Deletion Confirmation button
+            print("[STEP] Waiting 15-30s before clicking 'Confirm deletion'...", flush=True)
+            custom_random_wait(15, 30)
+
+            print("[STEP] Clicking 'Confirm deletion' button...", flush=True)
+            confirm_btn = page.get_by_test_id("confirm-delete-all-chats-button")
+            if not confirm_btn.is_visible():
+                confirm_btn = page.get_by_role("button", name="Confirm deletion")
                 
-                settings_item.wait_for(state="visible", timeout=30000)
-                settings_item.click()
-                print("[OK] Settings opened", flush=True)
+            confirm_btn.wait_for(state="visible", timeout=30000)
+            confirm_btn.click()
+            print("[OK] Deletion confirmed successfully", flush=True)
 
-                # Step 3: Wait then click Data Controls tab
-                print("[STEP] Waiting 15-30s before switching to Data controls tab...", flush=True)
-                custom_random_wait(15, 30)
+            # Step 6: Post-action finalized wait interval before session destruction
+            print("[STEP] Action complete for this profile. Finalizing safety wait...", flush=True)
+            custom_random_wait(15, 30)
 
-                print("[STEP] Navigating to Data controls tab...", flush=True)
-                data_controls_tab = page.get_by_test_id("data-controls-tab")
-                if not data_controls_tab.is_visible():
-                    data_controls_tab = page.get_by_role("tab", name="Data controls")
+        except SystemExit:
+            raise
+        except Exception as e:
+            print(f"\n❌ [CRITICAL ERROR] Operation failed for {cookie_file.name}: {e}", flush=True)
+            print("[STEP] Executing emergency browser teardown and exiting program via sys.exit(1)...", flush=True)
+            
+            # Browser cleanups explicitly matched before forced kill runtime allocation
+            if browser:
+                try:
+                    browser.close()
+                except:
+                    pass
+            if pw_cm:
+                try:
+                    pw_cm.__exit__(None, None, None)
+                except:
+                    pass
                     
-                data_controls_tab.wait_for(state="visible", timeout=30000)
-                data_controls_tab.click()
-                print("[OK] Data controls tab loaded", flush=True)
+            sys.exit(1)
 
-                # Step 4: Wait then trigger Delete All Chats confirmation
-                print("[STEP] Waiting 15-30s before clicking 'Delete all' chats...", flush=True)
-                custom_random_wait(15, 30)
-
-                print("[STEP] Clicking 'Delete all' chats button...", flush=True)
-                delete_all_btn = page.get_by_role("button", name="Delete all Delete all chats")
-                delete_all_btn.wait_for(state="visible", timeout=30000)
-                delete_all_btn.click()
-                print("[OK] Delete all confirmation prompt triggered", flush=True)
-
-                # Step 5: Wait then click final Deletion Confirmation button
-                print("[STEP] Waiting 15-30s before clicking 'Confirm deletion'...", flush=True)
-                custom_random_wait(15, 30)
-
-                print("[STEP] Clicking 'Confirm deletion' button...", flush=True)
-                confirm_btn = page.get_by_test_id("confirm-delete-all-chats-button")
-                if not confirm_btn.is_visible():
-                    confirm_btn = page.get_by_role("button", name="Confirm deletion")
-                    
-                confirm_btn.wait_for(state="visible", timeout=30000)
-                confirm_btn.click()
-                print("[OK] Deletion confirmed successfully", flush=True)
-
-                # Step 6: Post-action finalized wait interval before session destruction
-                print("[STEP] Action complete for this profile. Finalizing safety wait...", flush=True)
-                custom_random_wait(15, 30)
-
-            except Exception as e:
-                print(f"[ERROR inside browser session for {cookie_file.name}]:", e, flush=True)
-
-            finally:
+        finally:
+            # Regular cleanup for successful step processes
+            if browser or pw_cm:
                 print(f"[STEP] Exiting browser and cleaning context for {cookie_file.name}...", flush=True)
                 if browser:
                     try:
                         browser.close()
                     except:
                         pass
-                try:
-                    pw_cm.__exit__(None, None, None)
-                except:
-                    pass
-
-        except SystemExit:
-            raise
-        except Exception as e:
-            print(f"[ERROR processing file {cookie_file.name}]:", e, flush=True)
+                if pw_cm:
+                    try:
+                        pw_cm.__exit__(None, None, None)
+                    except:
+                        pass
 
     print("\n[DONE] All cookie files processed successfully.", flush=True)
 
