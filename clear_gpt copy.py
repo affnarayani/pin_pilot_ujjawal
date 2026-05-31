@@ -152,19 +152,16 @@ def run():
             pw_cm = stealth.use_sync(sync_playwright())
             pw = pw_cm.__enter__()
 
-            # GITHUB RUNNER COMPATIBILITY FIX 1: Window size arguments pass kiye
             browser = pw.chromium.launch(
                 headless=HEADLESS,
                 args=[
                     "--start-maximized",
-                    "--window-size=1920,1080",
                     "--disable-blink-features=AutomationControlled"
                 ]
             )
 
-            # GITHUB RUNNER COMPATIBILITY FIX 2: no_viewport hata kar fixed large desktop size set kiya
             context = browser.new_context(
-                viewport={"width": 1920, "height": 1080},
+                no_viewport=True,
                 user_agent=USER_AGENT
             )
 
@@ -266,8 +263,10 @@ def run():
             custom_random_wait(15, 30)
 
         except SystemExit:
+            # Agar system forced exit call ho toh propagate hone dein raise ke sath
             raise
         except Exception as e:
+            # Kisi bhi block ya locator execution crash par control seedhe yahan aayega
             print(f"\n❌ [CRITICAL ERROR] Operation failed for {cookie_file.name}: {e}", flush=True)
             print("[STEP] Executing emergency browser teardown and exiting program via sys.exit(1)...", flush=True)
             
@@ -285,6 +284,7 @@ def run():
             sys.exit(1)
 
         finally:
+            # Successful runtime loops ke baad browser close karne ke liye safety cleanup layer
             if browser or pw_cm:
                 print(f"[STEP] Exiting browser and cleaning context for {cookie_file.name}...", flush=True)
                 if browser:
