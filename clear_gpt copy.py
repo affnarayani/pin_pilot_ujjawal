@@ -99,6 +99,7 @@ def load_cookies(file_path: Path) -> List[Dict[str, Any]]:
         plaintext = _decrypt_payload(payload, DECRYPT_KEY)
         cookies = json.loads(plaintext.decode("utf-8"))
 
+        # normalize SameSite and PartitionKey
         for c in cookies:
             if "partitionKey" in c and isinstance(c["partitionKey"], dict):
                 if "topLevelSite" in c["partitionKey"]:
@@ -131,6 +132,7 @@ def load_cookies(file_path: Path) -> List[Dict[str, Any]]:
 def run():
     print("[START] Script started", flush=True)
 
+    # LOOP: Iterating through each encrypted cookie file in the directory
     for index, cookie_file in enumerate(encrypted_files, start=1):
         print("\n" + "="*50, flush=True)
         print(f"[PROCESS] Processing file {index}/{len(encrypted_files)}: {cookie_file.name}", flush=True)
@@ -138,16 +140,19 @@ def run():
 
         browser = None
         pw_cm = None
-        page = None
 
         try:
             cookies = load_cookies(cookie_file)
             print(f"[OK] Total cookies loaded: {len(cookies)}", flush=True)
 
+            # =========================
+            # STEALTH SETUP
+            # =========================
             stealth = Stealth()
             pw_cm = stealth.use_sync(sync_playwright())
             pw = pw_cm.__enter__()
 
+            # GITHUB RUNNER COMPATIBILITY FIX 1: Window size arguments pass kiye
             browser = pw.chromium.launch(
                 headless=HEADLESS,
                 args=[
@@ -157,6 +162,7 @@ def run():
                 ]
             )
 
+            # GITHUB RUNNER COMPATIBILITY FIX 2: no_viewport hata kar fixed large desktop size set kiya
             context = browser.new_context(
                 viewport={"width": 1920, "height": 1080},
                 user_agent=USER_AGENT
@@ -173,7 +179,7 @@ def run():
             print("[STEP] Opening ChatGPT Main URL (Logging in via cookies)...", flush=True)
             page.goto(
                 "https://chatgpt.com/",
-                wait_until="networkidle"  # Network activity poori tarah shaant hone ka wait karega
+                wait_until="domcontentloaded"
             )
             print("[OK] URL opened and Login completed via session cookies", flush=True)
 
@@ -187,7 +193,9 @@ def run():
 
             sidebar_btn = page.get_by_role("button", name="Open sidebar")
             
+            # Check karega ki kya layout me "Open sidebar" button generated hai
             if sidebar_btn.is_visible():
+                # Agar visible hai aur closed state (aria-expanded="false") me hai toh collapse expand karenge
                 if sidebar_btn.get_attribute("aria-expanded") == "false":
                     print("[STEP] Sidebar is closed. Opening side bar...", flush=True)
                     sidebar_btn.click(force=True)
@@ -199,24 +207,9 @@ def run():
                 print("[STEP] Side bar toggle button not present in current view layout. Proceeding...", flush=True)
             
             print("[STEP] Locating profile menu button...", flush=True)
-            
-            # STABILITY IMPROVEMENT: Fallback Selectors array taaki agar test-id na mile toh alternative se click ho ske
             profile_button = page.get_by_test_id("accounts-profile-button").last
-            
-            try:
-                # Pehle primary selector ka wait karenge (Timeout reduced to 15s to check fallback quickly)
-                profile_button.wait_for(state="visible", timeout=15000)
-            except Exception:
-                print("[MODIFIER] Primary test-id locator failed or slow. Trying alternative text/aria-label selectors...", flush=True)
-                profile_button = page.get_by_role("button", name=re.compile(r"User menu|Profile|Keep solid", re.IGNORECASE)).last
-                # Agar yeh bhi na mile toh final fallback jo actual DOM structural structure me ho sake
-                if not profile_button.is_visible():
-                    profile_button = page.locator("button[aria-haspopup='menu']").last
-                
-                profile_button.wait_for(state="visible", timeout=15000)
-
-            # Click with force=True taaki lazy loading overlay bypass ho sake
-            profile_button.click(force=True)
+            profile_button.wait_for(state="visible", timeout=30000)
+            profile_button.click()
             print("[OK] Profile menu clicked", flush=True)
             
             # Step 2: Wait then click Settings option
@@ -229,7 +222,7 @@ def run():
                 settings_item = page.get_by_role("menuitem", name="Settings")
             
             settings_item.wait_for(state="visible", timeout=30000)
-            settings_item.click(force=True)
+            settings_item.click()
             print("[OK] Settings opened", flush=True)
 
             # Step 3: Wait then click Data Controls tab
@@ -242,7 +235,7 @@ def run():
                 data_controls_tab = page.get_by_role("tab", name="Data controls")
                 
             data_controls_tab.wait_for(state="visible", timeout=30000)
-            data_controls_tab.click(force=True)
+            data_controls_tab.click()
             print("[OK] Data controls tab loaded", flush=True)
 
             # Step 4: Wait then trigger Delete All Chats confirmation
@@ -252,7 +245,7 @@ def run():
             print("[STEP] Clicking 'Delete all' chats button...", flush=True)
             delete_all_btn = page.get_by_role("button", name="Delete all Delete all chats")
             delete_all_btn.wait_for(state="visible", timeout=30000)
-            delete_all_btn.click(force=True)
+            delete_all_btn.click()
             print("[OK] Delete all confirmation prompt triggered", flush=True)
 
             # Step 5: Wait then click final Deletion Confirmation button
@@ -265,7 +258,7 @@ def run():
                 confirm_btn = page.get_by_role("button", name="Confirm deletion")
                 
             confirm_btn.wait_for(state="visible", timeout=30000)
-            confirm_btn.click(force=True)
+            confirm_btn.click()
             print("[OK] Deletion confirmed successfully", flush=True)
 
             # Step 6: Post-action finalized wait interval before session destruction
@@ -276,17 +269,8 @@ def run():
             raise
         except Exception as e:
             print(f"\n❌ [CRITICAL ERROR] Operation failed for {cookie_file.name}: {e}", flush=True)
-            
-            # DEBUGGING BENEFIT: Emergency exit se pehle screenshot save karega taaki aap error check kar sakein
-            if page:
-                try:
-                    screenshot_path = f"error_{cookie_file.stem}.png"
-                    page.screenshot(path=screenshot_path, full_page=True)
-                    print(f"[DEBUG] Saved emergency error screenshot to: {screenshot_path}", flush=True)
-                except:
-                    pass
-
             print("[STEP] Executing emergency browser teardown and exiting program via sys.exit(1)...", flush=True)
+            
             if browser:
                 try:
                     browser.close()
