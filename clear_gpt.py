@@ -171,9 +171,12 @@ def run():
             print("[OK] Cookies added successfully", flush=True)
 
             print("[STEP] Opening ChatGPT Main URL (Logging in via cookies)...", flush=True)
+            
+            # FIX: networkidle hata kar domcontentloaded lagaya aur timeout badha kar 60s kiya
             page.goto(
                 "https://chatgpt.com/",
-                wait_until="networkidle"  # Network activity poori tarah shaant hone ka wait karega
+                wait_until="domcontentloaded",
+                timeout=60000
             )
             print("[OK] URL opened and Login completed via session cookies", flush=True)
 
@@ -200,22 +203,18 @@ def run():
             
             print("[STEP] Locating profile menu button...", flush=True)
             
-            # STABILITY IMPROVEMENT: Fallback Selectors array taaki agar test-id na mile toh alternative se click ho ske
             profile_button = page.get_by_test_id("accounts-profile-button").last
             
             try:
-                # Pehle primary selector ka wait karenge (Timeout reduced to 15s to check fallback quickly)
                 profile_button.wait_for(state="visible", timeout=15000)
             except Exception:
                 print("[MODIFIER] Primary test-id locator failed or slow. Trying alternative text/aria-label selectors...", flush=True)
                 profile_button = page.get_by_role("button", name=re.compile(r"User menu|Profile|Keep solid", re.IGNORECASE)).last
-                # Agar yeh bhi na mile toh final fallback jo actual DOM structural structure me ho sake
                 if not profile_button.is_visible():
                     profile_button = page.locator("button[aria-haspopup='menu']").last
                 
                 profile_button.wait_for(state="visible", timeout=15000)
 
-            # Click with force=True taaki lazy loading overlay bypass ho sake
             profile_button.click(force=True)
             print("[OK] Profile menu clicked", flush=True)
             
@@ -277,7 +276,6 @@ def run():
         except Exception as e:
             print(f"\n❌ [CRITICAL ERROR] Operation failed for {cookie_file.name}: {e}", flush=True)
             
-            # DEBUGGING BENEFIT: Emergency exit se pehle screenshot save karega taaki aap error check kar sakein
             if page:
                 try:
                     screenshot_path = f"error_{cookie_file.stem}.png"
