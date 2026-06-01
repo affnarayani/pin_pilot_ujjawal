@@ -210,7 +210,8 @@ def run():
             "- Practical exercises for clarity\n"
             "Transformation Path:\n"
             "- From: Mentally exhausted and distracted\n"
-            "- To: Clear-minded, calm, and focused."
+            "- To: Clear-minded, calm, and focused.\n"
+            "CRITICALLY IMPORTANT: The cover image does not need to display the eBook's actual title. Instead, use a compelling, benefit-driven headline that clearly communicates what the eBook explains, teaches, or helps the reader achieve. The headline should be written in a title format and optimized to capture attention, similar to high-performing Pinterest Pin designs. Focus on curiosity, value, and readability rather than simply showing the eBook name. The overall design should feel engaging, clickable, and visually aligned with popular Pinterest-style content that encourages users to learn more."
         )
 
         print("[STEP] Requesting optimized prompt from Llama-3 model using chat completions...", flush=True)
