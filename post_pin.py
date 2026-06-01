@@ -161,7 +161,7 @@ def run():
         "STRICT REQUIREMENTS FOR OUTPUT:\n"
         "1. title: Catchy, highly engaging title for A/B testing. MUST be strictly between 40 and 60 characters long.\n"
         "2. description: Compelling copy. MUST be strictly between 150 and 250 characters long.\n"
-        "3. alt_text: A concise visual description of what someone would see on an aesthetic self-improvement cover image (for screen readers).\n"
+        "3. alt_text: A concise visual description of what someone would see on an aesthetic self-improvement cover image (for screen readers). MUST be strictly between 15 and 30 characters long.\n"
         "4. selected_board: Select the single most relevant category string from this list ONLY:\n"
         "   - Anxiety & Mental Peace\n"
         "   - Calm Mind Habits\n"
