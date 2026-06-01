@@ -349,6 +349,7 @@ def run():
         raise
     except Exception as e:
         print("[ERROR] Automation cycle interrupted due to runtime trace:", e, flush=True)
+        sys.exit(1)
 
     finally:
         try:
