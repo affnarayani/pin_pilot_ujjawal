@@ -272,6 +272,22 @@ def run():
         for attempt in range(1, MAX_RETRIES + 1):
             print(f"[STEP] Waiting for image generation... Attempt {attempt}/{MAX_RETRIES}", flush=True)
             custom_random_wait(30, 60)
+
+            try:
+                feedback_buttons = page.get_by_test_id('paragen-prefer-response-button')
+                if feedback_buttons.first.is_visible():
+                    count = feedback_buttons.count()
+                    print(f"[INFO] Feedback required! Found {count} preference buttons.", flush=True)
+                    
+                    # AGAR DONO DIKHE (2 ya usse zyada), TOH RANDOM SELECT KAREGA.
+                    # AGAR SIRF 1 HI MILA, TOH AUTOMATICALLY 0 (FIRST) KO HI SELECT KAREGA.
+                    chosen_index = random.choice([0, 1]) if count >= 2 else 0
+                    
+                    print(f"[STEP] Selecting response index: {chosen_index}", flush=True)
+                    feedback_buttons.nth(chosen_index).click()
+                    custom_random_wait(15, 30)
+            except Exception as feedback_err:
+                print(f"[INFO] No feedback buttons found or single image generated", flush=True)
             
             try:
                 locator = page.get_by_role('button', name='Share this image').first
