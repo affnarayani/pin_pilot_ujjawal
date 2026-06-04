@@ -300,7 +300,7 @@ def run():
         # 6. Fill Destination Link
         print("[STEP] Accessing and filling Destination URL redirection field...", flush=True)
         dest_box = page.get_by_role('textbox', name='Add a destination link')
-        dest_box.fill("https://mindtobetter.github.io/")
+        dest_box.fill("https://mindtobetter.gumroad.com/l/escape-the-mental-noise")
         print("[OK] Target destination URL added successfully.", flush=True)
         custom_random_wait(15, 30)
 
