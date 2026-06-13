@@ -39,7 +39,7 @@ jobs:
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install playwright playwright-stealth cryptography python-dotenv curl_cffi
+        pip install playwright playwright-stealth cryptography python-dotenv
         playwright install chromium --with-deps
 
     - name: Run Script
