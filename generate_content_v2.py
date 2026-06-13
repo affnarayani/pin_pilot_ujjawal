@@ -285,7 +285,7 @@ def run():
             custom_random_wait(15, 30)
 
             # ========================================================
-            # SEND BUTTON LOCATORS WITH STRATEGIC FALLBACKS (UPDATED)
+            # SEND BUTTON LOCATORS WITH STRATEGIC FORCE CLICK (FIXED)
             # ========================================================
             print("[STEP] Locating send button...", flush=True)
             send_button = page.get_by_test_id('send-button')
@@ -302,8 +302,9 @@ def run():
 
             # Click if any variant matches
             if send_button.count() > 0:
-                send_button.first.click()
-                print("[OK] Send button located and clicked successfully.", flush=True)
+                # force=True टूलटिप के ओवरलैप होने वाले व्यवधान को सीधे बाईपास कर देगा
+                send_button.first.click(force=True)
+                print("[OK] Send button located and clicked successfully (Forced).", flush=True)
             else:
                 raise RuntimeError("❌ Send button locator load nahi ho paya (All strategies failed).")
             
