@@ -139,7 +139,7 @@ async def run():
     # browser.start() खुद ब खुद बिना झंझट के अनडिटेक्टेड क्रोमियम लोड करता है
     config = uc.Config()
     config.no_sandbox = True
-    config.headless = True
+    config.headless = False
     config.add_argument("--disable-gpu")
     config.add_argument("--disable-dev-shm-usage")
     config.add_argument("--disable-software-rasterizer")
