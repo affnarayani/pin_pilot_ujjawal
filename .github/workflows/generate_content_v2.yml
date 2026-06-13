@@ -46,7 +46,7 @@ jobs:
       env:
         DECRYPT_KEY: ${{ secrets.DECRYPT_KEY }}
       run: |
-        python generate_content_v2.py
+        xvfb-run --server-args="-screen 0 1920x1080x24" python generate_content_v2.py
 
     - name: Upload Error Screenshot
       if: failure()

@@ -140,7 +140,12 @@ async def run():
     config = uc.Config()
     config.no_sandbox = True
     config.headless = True
-    
+    config.browser_args = [
+        "--disable-gpu",
+        "--disable-dev-shm-usage",
+        "--disable-software-rasterizer"
+    ]
+    print("[STEP] Launching Undetected Chrome via Nodriver...", flush=True)
     browser = await uc.start(config=config)
     
     try:
