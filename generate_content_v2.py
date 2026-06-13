@@ -188,7 +188,7 @@ def run():
     print(f"[OK] Total cookies loaded: {len(cookies)}", flush=True)
 
     # ==========================================
-    # CAMOUFOX ADVANCED BROWSER LAUNCH (FIXED)
+    # CAMOUFOX ADVANCED BROWSER LAUNCH
     # ==========================================
     try:
         with Camoufox(
@@ -201,7 +201,6 @@ def run():
                 viewport={"width": 1920, "height": 1080}
             )
 
-            # CRITICAL FIX: Firefox (Camoufox) में 'clipboard-read' परमिशन एरर देती थी, उसे हटा दिया गया है।
             print("[STEP] Adding cookies to browser context...", flush=True)
             context.add_cookies(cookies)
 
@@ -285,9 +284,28 @@ def run():
             textbox.first.fill(prompt)
             custom_random_wait(15, 30)
 
-            print("[STEP] Locating and clicking send button...", flush=True)
+            # ========================================================
+            # SEND BUTTON LOCATORS WITH STRATEGIC FALLBACKS (UPDATED)
+            # ========================================================
+            print("[STEP] Locating send button...", flush=True)
             send_button = page.get_by_test_id('send-button')
-            send_button.click()
+            
+            # Fallback 1: CSS Selector (#composer-submit-button)
+            if send_button.count() == 0:
+                print("[INFO] Send Button Fallback 1: Searching via CSS Selector '#composer-submit-button'...", flush=True)
+                send_button = page.locator('#composer-submit-button')
+                
+            # Fallback 2: XPath (//button[@id='composer-submit-button'])
+            if send_button.count() == 0:
+                print("[INFO] Send Button Fallback 2: Searching via XPath '//button[@id=\'composer-submit-button\']'...", flush=True)
+                send_button = page.locator("//button[@id='composer-submit-button']")
+
+            # Click if any variant matches
+            if send_button.count() > 0:
+                send_button.first.click()
+                print("[OK] Send button located and clicked successfully.", flush=True)
+            else:
+                raise RuntimeError("❌ Send button locator load nahi ho paya (All strategies failed).")
             
             # Initial processing wait allocation
             custom_random_wait(30, 60)
