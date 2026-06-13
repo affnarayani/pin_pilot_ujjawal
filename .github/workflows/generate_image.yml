@@ -1,0 +1,71 @@
+name: Generate Image
+
+on:
+  workflow_dispatch: # Manual button activation support
+  workflow_run:
+    workflows: ["Generate Content"]
+    types:
+      - completed
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  run-image-automation:
+    runs-on: ubuntu-latest
+    # Sirf tabhi chalega jab manual click ho YA content workflow successfully complete hua ho
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v5
+      with:
+        fetch-depth: 0 # Full history fetch karega taaki safe dynamic push ho sake
+
+    - name: Set up Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: '3.11'
+
+    - name: Configure Git
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+    - name: Pull Latest Changes (Maintain Persistence)
+      run: |
+        git pull --rebase
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install playwright playwright-stealth cryptography python-dotenv huggingface_hub requests
+        playwright install chromium --with-deps
+
+    - name: Run Image Script
+      env:
+        DECRYPT_KEY: ${{ secrets.DECRYPT_KEY }} # GitHub Secrets se key
+        HF_TOKEN: ${{ secrets.HF_TOKEN }}       # Hugging Face token
+      run: |
+        python generate_image.py
+
+    - name: Upload Error Screenshot
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright-image-error
+        path: error_screenshot.png
+        if-no-files-found: ignore
+
+    - name: Commit and Push Generated Image & States
+      run: |
+        # Sirf wahi files add hongi jo pipeline ke liye actual mein important hain
+        git add image/pin.png pinterest_ideas.json
+        
+        if git diff --staged --quiet; then
+          echo "[INFO] No changes detected in image or states. Skipping push."
+        else
+          echo "[OK] Changes detected. Committing and pushing updates..."
+          git commit -m "Automated: Update generated header image and pipeline states [skip ci]"
+          git push origin HEAD
+        fi

@@ -4,8 +4,6 @@ import json
 import time
 import base64
 import random
-import shutil
-import requests
 import re
 from pathlib import Path
 from typing import List, Dict, Any
@@ -18,7 +16,6 @@ from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from cryptography.exceptions import InvalidTag
 
 from playwright.sync_api import sync_playwright
-from huggingface_hub import InferenceClient
 from playwright_stealth import Stealth
 
 
@@ -51,13 +48,9 @@ ALLOWED_BOARDS = [
 load_dotenv()
 
 DECRYPT_KEY = os.getenv("DECRYPT_KEY")
-HF_TOKEN = os.getenv("HF_TOKEN")
 
 if not DECRYPT_KEY:
     raise RuntimeError("DECRYPT_KEY missing")
-
-if not HF_TOKEN:
-    raise RuntimeError("HF_TOKEN missing")
 
 
 # =========================
@@ -140,98 +133,80 @@ def run():
         print(f"❌ Error: Image file not found at {IMAGE_PATH}. Please make sure it exists.", flush=True)
         sys.exit(1)
 
+    # ========================================================
+    # LOAD PINTEREST IDEAS & VERIFY PIPELINE CONDITION
+    # ========================================================
+    ideas_file = Path("pinterest_ideas.json")
+    article_file = Path("article.json")
+
+    if not ideas_file.exists():
+        print("[ERROR] pinterest_ideas.json nahi mila. Exiting...", flush=True)
+        sys.exit(1)
+
+    try:
+        with ideas_file.open("r", encoding="utf-8") as f:
+            ideas_list = json.load(f)
+    except Exception as e:
+        print(f"[ERROR] pinterest_ideas.json parse nahi ho paya: {e}", flush=True)
+        sys.exit(1)
+
+    target_item = None
+    target_index = -1
+
+    # Find the current item in the pipeline state
+    for index, item in enumerate(ideas_list):
+        if isinstance(item, dict):
+            # Checking for target pending item condition
+            if item.get("content_generated") is True and item.get("image_generated") is True and item.get("posted") is False:
+                target_item = item
+                target_index = index
+                break
+
+    # If no structured item satisfies the strict launch parameters criteria
+    if target_item is None:
+        print("[INFO] Either content generation or image generation is pending.", flush=True)
+        sys.exit(0)
+
+    print(f"[OK] Pipeline verified for: '{target_item['title']}' at index [{target_index}]", flush=True)
+
+    # Fetch textual content data elements from local storage file
+    if not article_file.exists():
+        print("[ERROR] article.json file metadata missing. Pipeline corrupted.", flush=True)
+        sys.exit(1)
+
+    try:
+        with article_file.open("r", encoding="utf-8") as f:
+            meta_data = json.load(f)
+    except Exception as e:
+        print(f"[ERROR] article.json parse failed: {e}", flush=True)
+        sys.exit(1)
+
+    pin_title = target_item["title"]
+    pin_description = meta_data.get("description", "").strip()
+    pin_alt_text = meta_data.get("alt_text", pin_title).strip()
+    chosen_board = meta_data.get("selected_board", "").strip()
+
+    if not pin_description:
+        print("[ERROR] Description field inside article.json is empty.", flush=True)
+        sys.exit(1)
+
+    # Validate board fallback selection logic matching state schema boundary rules
+    if chosen_board not in ALLOWED_BOARDS:
+        print(f"[WARNING] Local metadata board target '{chosen_board}' invalid. Falling back safely.", flush=True)
+        chosen_board = random.choice(ALLOWED_BOARDS)
+
     cookies = load_cookies(Path(PINTEREST_COOKIES_FILE))
     print(f"[OK] Total cookies loaded: {len(cookies)}", flush=True)
 
-    # ========================================================
-    # HUGGING FACE ONE-SHOT GENERATION FOR ALL DATA (JSON)
-    # ========================================================
-    print("[STEP] Initializing Hugging Face InferenceClient...", flush=True)
-    client = InferenceClient(model="meta-llama/Meta-Llama-3-8B-Instruct", token=HF_TOKEN)
-
-    hf_prompt = (
-        "You are an expert Pinterest Marketer and copywriter. Generate optimized data for a Pinterest Pin "
-        "promoting a new self-help eBook. To enable effective A/B testing, the generated title should NOT match "
-        "the actual book name, but must target consumer pain points.\n\n"
-        "eBook Background Details:\n"
-        "Book Name: Escape The Mental Noise\n"
-        "Author Name: Mind To Better\n"
-        "Core Promise: Teaches how to reduce overthinking, calm the mind, improve mental clarity, control distraction, and regain focus.\n"
-        "Transformation: From mentally exhausted + distracted to clear-minded + calm + focused.\n\n"
-        "STRICT REQUIREMENTS FOR OUTPUT:\n"
-        "1. title: Catchy, highly engaging title for A/B testing. MUST be strictly between 40 and 60 characters long.\n"
-        "2. description: Compelling copy. Include 3-5 relevant hashtags at the end of the description. Each hashtag must begin with the # symbol. MUST be strictly between 150 and 250 characters long.\n"
-        "3. alt_text: A concise visual description of what someone would see on an aesthetic self-improvement cover image (for screen readers). MUST be strictly between 15 and 30 characters long.\n"
-        "4. selected_board: Select the single most relevant category string from this list ONLY:\n"
-        "   - Anxiety & Mental Peace\n"
-        "   - Calm Mind Habits\n"
-        "   - Focus & Mental Discipline\n"
-        "   - Mental Clarity\n"
-        "   - Overthinking Help\n"
-        "   - Self-Improvement Psychology\n\n"
-        "You must respond ONLY with a valid, clean JSON object. Do not include markdown ticks, no backticks, "
-        "no introduction, no explanation. Just raw JSON text. Format template:\n"
-        "{\n"
-        '  "title": "...",\n'
-        '  "description": "...",\n'
-        '  "alt_text": "...",\n'
-        '  "selected_board": "..."\n'
-        "}"
-    )
-
-    print("[STEP] Requesting combined marketing fields from Llama-3 model...", flush=True)
-    generated_data = {}
-    try:
-        res = client.chat.completions.create(
-            messages=[{"role": "user", "content": hf_prompt}],
-            max_tokens=500,
-            temperature=0.7,
-        )
-        raw_content = res.choices[0].message.content.strip()
-        
-        # FIXED: Removed inline line-breaks inside string literal parameters
-        if raw_content.startswith("```"):
-            raw_content = re.sub(r'^```json\s*|```$', '', raw_content, flags=re.MULTILINE).strip()
-            
-        generated_data = json.loads(raw_content)
-        print("[OK] Successfully generated data from Hugging Face model.", flush=True)
-        print(f"[DATA PREVIEW] JSON content parsed completely: {generated_data}", flush=True)
-
-    except Exception as hf_err:
-        print(f"❌ Error: Hugging Face extraction or parsing failed: {hf_err}. Exiting.", flush=True)
-        sys.exit(1)
-
-    # Validate individual parameters and assign fallbacks if values mismatch criteria
-    pin_title = generated_data.get("title", "Stop Overthinking & Reclaim Peace Right Now").strip()
-    pin_description = generated_data.get("description", "Feeling mentally exhausted and constantly distracted by social media loops? Discover practical mindset shifts and daily habits to quiet your mind, reduce anxiety, and master razor-sharp mental focus starting today.").strip()
-    pin_alt_text = generated_data.get("alt_text", "A minimalist aesthetic setting showcasing a calm person enjoying clarity under soft ambient lighting.").strip()
-    chosen_board = generated_data.get("selected_board", "").strip()
-
-    # Enforce strict length limits manually if LLM underperformed
-    if len(pin_title) > 60:
-        pin_title = pin_title[:57] + "..."
-    elif len(pin_title) < 40:
-        pin_title = pin_title + " - Calm Mental Clutter Strategy"
-
-    if len(pin_description) > 250:
-        pin_description = pin_description[:247] + "..."
-    elif len(pin_description) < 150:
-        pin_description = pin_description + " Explore effective actionable psychology mental routines to naturally reduce cognitive fatigue and structural overthinking loop habits today."
-
-    # Validate board fallback selection logic
-    if chosen_board not in ALLOWED_BOARDS:
-        print(f"[WARNING] HF generated an invalid board target '{chosen_board}'. Selecting a random fallback...", flush=True)
-        chosen_board = random.choice(ALLOWED_BOARDS)
-
-    print(f"[FINAL PLAN] Board: '{chosen_board}' | Title: '{pin_title}' ({len(pin_title)} chars)", flush=True)
-
     # =========================
-    # STEALTH SETUP
+    # STEALTH SETUP & EXECUTION
     # =========================
     stealth = Stealth()
     pw_cm = stealth.use_sync(sync_playwright())
     pw = pw_cm.__enter__()
 
+    browser = None
+    page = None
     try:
         browser = pw.chromium.launch(
             headless=HEADLESS,
@@ -270,7 +245,6 @@ def run():
 
         # 2. Upload Pin Media natively without dialog interference
         print("[STEP] Uploading pin image via file system injection path...", flush=True)
-        # Using a regex matcher to locate the dynamic data-test-id input selector element
         upload_input = page.locator('input[data-test-id^="media-upload-input-"]')
         upload_input.set_input_files(str(IMAGE_PATH))
         print("[OK] Media payload transferred successfully.", flush=True)
@@ -300,7 +274,7 @@ def run():
         # 6. Fill Destination Link
         print("[STEP] Accessing and filling Destination URL redirection field...", flush=True)
         dest_box = page.get_by_role('textbox', name='Add a destination link')
-        dest_box.fill("https://mindtobetter.gumroad.com/l/escape-the-mental-noise")
+        dest_box.fill("https://mindtobetter.gumroad.com/")
         print("[OK] Target destination URL added successfully.", flush=True)
         custom_random_wait(15, 30)
 
@@ -308,6 +282,13 @@ def run():
         print("[STEP] Forcing immediate launch scheduling selection parameters...", flush=True)
         page.get_by_role('radio', name='Publish immediately').click()
         print("[OK] Radio button confirmed.", flush=True)
+        custom_random_wait(15, 30)
+
+        # 7.5 Mark as AI-Modified Content Checkbox Action
+        print("[STEP] Locating and checking 'Mark as AI-Modified Content' option...", flush=True)
+        ai_checkbox = page.get_by_role('checkbox', name='Mark as AI-Modified Content')
+        ai_checkbox.check()
+        print("[OK] AI-Modified Content checkbox checked on successfully.", flush=True)
         custom_random_wait(15, 30)
 
         # 8. Open Board Selection Dropdown
@@ -341,21 +322,37 @@ def run():
         print("[STEP] Instantiating final board data save button deployment...", flush=True)
         page.locator('[data-test-id="board-dropdown-save-button"]').click()
         print("[OK] Post submission workflow finalized successfully.", flush=True)
-        
-        print("[STEP] Holding browser session buffer before structural closing loop routine...", flush=True)
         custom_random_wait(30, 60)
+
+        # ========================================================
+        # UPDATE ARRAY METADATA LOCK TRACKER STATE
+        # ========================================================
+        print("[STEP] Committing posted=True back to state tracker...", flush=True)
+        ideas_list[target_index]["posted"] = True
+
+        with ideas_file.open("w", encoding="utf-8") as f:
+            json.dump(ideas_list, f, indent=2, ensure_ascii=False)
+        print(f"✅ State Update Complete: '{pin_title}' flag marked as posted=True.", flush=True)
 
     except SystemExit:
         raise
     except Exception as e:
         print("[ERROR] Automation cycle interrupted due to runtime trace:", e, flush=True)
+        if page:
+            try:
+                screenshot_path = "error_screenshot_post.png"
+                page.screenshot(path=screenshot_path, full_page=True)
+                print(f"[OK] Error screenshot captured: {screenshot_path}", flush=True)
+            except Exception as screenshot_err:
+                print(f"[WARNING] Could not capture screenshot: {screenshot_err}", flush=True)
         sys.exit(1)
 
     finally:
-        try:
-            browser.close()
-        except:
-            pass
+        if browser:
+            try:
+                browser.close()
+            except:
+                pass
 
         try:
             pw_cm.__exit__(None, None, None)
@@ -364,32 +361,7 @@ def run():
 
         print("[DONE] Script execution phase closed. Terminating process context cleanly.", flush=True)
 
-def clear_image_folder():
-    # Folder ka path set karein
-    folder_path = Path("image")
-    
-    # Check karein ki folder exist karta hai ya nahi
-    if not folder_path.exists():
-        print(f"[INFO] '{folder_path}' nam ka koi folder nahi mila.", flush=True)
-        return
-
-    print(f"[START] '{folder_path}' folder ko khali kiya ja raha hai...", flush=True)
-    
-    # Folder ke andar ke saare contents par loop chalayein
-    for item in folder_path.iterdir():
-        try:
-            if item.is_file() or item.is_symlink():
-                item.unlink()  # File ya link ko delete karne ke liye
-                print(f"[DEL] File delete ho gayi: {item.name}", flush=True)
-            elif item.is_dir():
-                shutil.rmtree(item)  # Pura sub-folder delete karne ke liye
-                print(f"[DEL] Sub-folder delete ho gaya: {item.name}", flush=True)
-        except Exception as e:
-            print(f"❌ Error aaya {item.name} ko delete karte waqt: {e}", flush=True)
-
-    print("[SUCCESS] 'image' folder ke andar ke saare contents saaf ho gaye hain!", flush=True)
 
 if __name__ == "__main__":
     run()
-    clear_image_folder()
     custom_random_wait(15, 30)

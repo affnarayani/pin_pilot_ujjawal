@@ -1,0 +1,84 @@
+name: Post Pin to Pinterest
+
+on:
+  workflow_dispatch: # Taaki aap zaroorat padne par manually bhi run kar sakein
+  workflow_run:
+    workflows: ["Generate Image"] # Jab 'Generate Image' workflow khatam hoga tab auto-trigger hoga
+    types:
+      - completed
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  
+jobs:
+  run-script:
+    runs-on: ubuntu-latest # Linux container fast aur efficient chalta hai
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      # 1. Repository ka code checkout karna
+      - name: Checkout repository code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0 # Full history fetch karega taaki safe dynamic push ho sake
+
+      # 2. Python Environment setup karna
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      # 3. Git configuration setup karna
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      # 4. Latest changes pull karna conflicts se bachne ke liye
+      - name: Pull Latest Changes (Maintain Persistence)
+        run: |
+          git pull origin HEAD --rebase
+
+      # 5. Required Python Packages/Dependencies install karna (No HF)
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install playwright playwright-stealth python-dotenv cryptography
+
+      # 6. Playwright ke Chromium browser aur uski system dependencies install karna
+      - name: Install Playwright Chromium and system dependencies
+        run: |
+          playwright install chromium --with-deps
+
+      # 7. Post Pin Script ko run karna aur Environment Secret paas karna
+      - name: Execute Automation Script
+        env:
+          DECRYPT_KEY: ${{ secrets.DECRYPT_KEY }}
+        run: |
+          python post_pin.py
+
+      # 8. Agar script fail hoti hai, toh error_screenshot_post.png ko upload karna
+      - name: Upload Error Screenshot if script fails
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-post-error
+          path: error_screenshot_post.png # Script ke crash screenshot name se match kar diya hai
+          if-no-files-found: ignore
+          retention-days: 7
+
+      # 9. Agar script successful ho, to state tracker file ko commit aur push karna
+      - name: Commit and Push updated pipeline states
+        if: success()
+        run: |
+          # Script post hone ke baad pinterest_ideas.json mein changes save karti hai
+          git add pinterest_ideas.json
+          
+          if git diff --staged --quiet; then
+            echo "[INFO] No changes detected in state file. Skipping push."
+          else
+            echo "[OK] Changes detected. Committing and pushing updates..."
+            git commit -m "Automated: Update pipeline states to posted [skip ci]"
+            git push origin HEAD
+          fi
