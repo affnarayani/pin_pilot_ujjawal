@@ -36,12 +36,35 @@ jobs:
       run: |
         git pull origin ${GITHUB_REF_NAME} --rebase
 
+    # --- CAMOUFOX & PLAYWRIGHT CACHE BLOCK ---
+    - name: Cache Camoufox & Playwright Binaries
+      id: browser-cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cache/camoufox
+          ~/.cache/ms-playwright
+        key: ${{ runner.os }}-camoufox-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-camoufox-
+    # ----------------------------------------
+
     - name: Install Dependencies
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         python -m pip install --upgrade pip
         # पुराने playwright-stealth को हटाकर camoufox इंस्टॉल कर रहे हैं
         pip install playwright camoufox cryptography python-dotenv
         
+        # अगर कैशे हिट हो गया (cache-hit == true), तो नीचे के डाउनलोड्स को स्किप करने की कंडीशन लगा सकते हैं, 
+        # लेकिन गिटहब रेट लिमिट एरर से बचने के लिए टोकन के साथ इसे सेफ रखा गया है।
+
+    - name: Install Playwright & Camoufox Binaries (If Cache Miss)
+      if: steps.browser-cache.outputs.cache-hit != 'true'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
         # Playwright के कोर ड्राइवर्स इंस्टॉल करें
         playwright install --with-deps
         
@@ -51,6 +74,7 @@ jobs:
     - name: Run Script
       env:
         DECRYPT_KEY: ${{ secrets.DECRYPT_KEY }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         python generate_content_v2.py
 
