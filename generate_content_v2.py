@@ -191,13 +191,12 @@ def run():
     # CAMOUFOX ADVANCED BROWSER LAUNCH
     # ==========================================
     try:
-        # Camoufox को अब Context Manager ('with') की तरह यूज़ कर रहे हैं ताकि सिंटैक्स एरर न आए
+        # सिंटैक्स एरर को दूर करने के लिए अनपेक्षित आर्गुमेंट्स (hacks, block_webrtc) हटाए गए हैं
         with Camoufox(
             headless=HEADLESS,
-            os="windows",             # कड़क क्लाउडफ्लेयर बायपास के लिए विंडोज ओएस की नकल
-            hacks=True,               # ऑटोमेशन लीक को छुपाने वाले पैचेस ऑन रखें
-            block_webrtc=True,        # असली डेटासेंटर IP लीक होने से रोकें
-            human_biometrics=True     # इंसानी माउस और कर्सर बिहेवियर एम्युलेट करें
+            os="windows",             
+            human_biometrics=True,    
+            enable_plugins=True       
         ) as browser:
 
             # स्क्रीन रेजोल्यूशन सेट करें
@@ -229,7 +228,7 @@ def run():
                 print("[WARNING] Profile button not detected directly, proceeding with caution...", flush=True)
 
             # ========================================================
-            # AUTOMATION FLOW & JSON PARSING (WITH ब्लॉक के अंदर)
+            # AUTOMATION FLOW & JSON PARSING
             # ========================================================
             print("[STEP] Locating chat textbox...", flush=True)
             
@@ -400,7 +399,6 @@ def run():
         sys.exit(1)
 
     finally:
-        # Context manager 'with' ब्लॉक खत्म होते ही ब्राउज़र ऑटोमैटिकली बिना लीक के बंद हो जाता है
         print("[DONE] Script finished", flush=True)
 
 
