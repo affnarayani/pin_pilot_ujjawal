@@ -191,8 +191,6 @@ def run():
     # CAMOUFOX ADVANCED BROWSER LAUNCH (FIXED)
     # ==========================================
     try:
-        # सारे फालतू कीवर्ड्स हटा दिए हैं जो एरर दे रहे थे। 
-        # Camoufox सिर्फ़ इतने में ही पूरी तरह अपना जादुई काम कर लेता है।
         with Camoufox(
             headless=HEADLESS,
             os="windows"
@@ -203,7 +201,7 @@ def run():
                 viewport={"width": 1920, "height": 1080}
             )
 
-            context.grant_permissions(["clipboard-read", "clipboard-write"])
+            # CRITICAL FIX: Firefox (Camoufox) में 'clipboard-read' परमिशन एरर देती थी, उसे हटा दिया गया है।
             print("[STEP] Adding cookies to browser context...", flush=True)
             context.add_cookies(cookies)
 
