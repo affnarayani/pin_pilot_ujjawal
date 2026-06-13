@@ -14,8 +14,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from cryptography.exceptions import InvalidTag
 
-from playwright.sync_api import sync_playwright
-# camoufox से SyncCamoufox को इम्पोर्ट कर रहे हैं
+# Camoufox से Sync Api को इम्पोर्ट कर रहे हैं
 from camoufox.sync_api import Camoufox
 
 
@@ -132,11 +131,15 @@ def load_cookies(file_path: Path) -> List[Dict[str, Any]]:
 def run():
     print("[START] Script started with Camoufox Engine", flush=True)
 
+    # File init/clear at the beginning
     article_file = Path("article.json")
     with article_file.open("w", encoding="utf-8") as f:
         f.write("")
     print("[OK] 'article.json' cleared/initialized", flush=True)
 
+    # ========================================================
+    # LOAD PINTEREST IDEAS & PICK DYNAMIC TOPIC
+    # ========================================================
     ideas_file = Path("pinterest_ideas.json")
     if not ideas_file.exists():
         print("[ERROR] pinterest_ideas.json nahi mila. Exiting...", flush=True)
@@ -149,6 +152,7 @@ def run():
         print(f"[ERROR] pinterest_ideas.json parse nahi ho paya: {e}", flush=True)
         sys.exit(1)
 
+    # PIPELINE INTEGRITY LOCK VERIFICATION
     for item in ideas_list:
         if isinstance(item, dict):
             content_gen = item.get("content_generated", False)
@@ -162,6 +166,7 @@ def run():
     subject_matter = None
     target_index = -1
 
+    # Linear top-down scanning extraction matching clean unassigned entries
     for index, item in enumerate(ideas_list):
         if isinstance(item, str):
             subject_matter = item
@@ -185,202 +190,201 @@ def run():
     # ==========================================
     # CAMOUFOX ADVANCED BROWSER LAUNCH
     # ==========================================
-    pw_cm = sync_playwright()
-    pw = pw_cm.__enter__()
-
-    browser = None
     try:
-        # यहाँ हम Camoufox का उपयोग कर फिंगरप्रिंट को मास्क कर रहे हैं
-        browser = Camoufox(
-            pw,
+        # Camoufox को अब Context Manager ('with') की तरह यूज़ कर रहे हैं ताकि सिंटैक्स एरर न आए
+        with Camoufox(
             headless=HEADLESS,
             os="windows",             # कड़क क्लाउडफ्लेयर बायपास के लिए विंडोज ओएस की नकल
             hacks=True,               # ऑटोमेशन लीक को छुपाने वाले पैचेस ऑन रखें
             block_webrtc=True,        # असली डेटासेंटर IP लीक होने से रोकें
             human_biometrics=True     # इंसानी माउस और कर्सर बिहेवियर एम्युलेट करें
-        )
+        ) as browser:
 
-        # स्क्रीन रेजोल्यूशन और बाकी फीचर्स को रैंडमाइज करें
-        context = browser.new_context(
-            viewport={"width": 1920, "height": 1080}
-        )
+            # स्क्रीन रेजोल्यूशन सेट करें
+            context = browser.new_context(
+                viewport={"width": 1920, "height": 1080}
+            )
 
-        context.grant_permissions(["clipboard-read", "clipboard-write"])
-        print("[STEP] Adding cookies to browser context...", flush=True)
-        context.add_cookies(cookies)
+            context.grant_permissions(["clipboard-read", "clipboard-write"])
+            print("[STEP] Adding cookies to browser context...", flush=True)
+            context.add_cookies(cookies)
 
-        page = context.new_page()
-        print("[OK] Cookies added successfully", flush=True)
+            page = context.new_page()
+            print("[OK] Cookies added successfully", flush=True)
 
-        print("[STEP] Opening ChatGPT Main URL...", flush=True)
-        page.goto("https://chatgpt.com/", wait_until="load")
-        print("[OK] URL opened successfully (Logged In)", flush=True)
+            print("[STEP] Opening ChatGPT Main URL...", flush=True)
+            page.goto("https://chatgpt.com/", wait_until="load")
+            print("[OK] URL opened successfully (Logged In)", flush=True)
 
-        custom_random_wait(30, 60)
+            # 30 to 60 seconds random wait after page load
+            custom_random_wait(30, 60)
 
-        print("[STEP] Checking login success via profile button...", flush=True)
-        profile_button = page.get_by_role('button', name=list(map(lambda x: x.compile(r'.*Free, open'), [__import__('re')]))[0])
-        
-        if profile_button.count() > 0:
-            print(f"[OK] LOGIN SUCCESS: Profile button found -> '{profile_button.first.get_attribute('aria-label') or 'User Account'}'", flush=True)
-        else:
-            print("[WARNING] Profile button not detected directly, proceeding with caution...", flush=True)
-
-        # =========================
-        # AUTOMATION FLOW
-        # =========================
-        print("[STEP] Locating chat textbox...", flush=True)
-        textbox = page.get_by_role('textbox', name='Chat with ChatGPT')
-        
-        if textbox.count() == 0:
-            print("[INFO] Fallback 1: Searching for 'Ask anything' paragraph inside textbox context...", flush=True)
-            textbox = page.locator('div[contenteditable="true"]').filter(has=page.locator('p', has_text='Ask anything')).first
+            # Verification of active authenticated status
+            print("[STEP] Checking login success via profile button...", flush=True)
+            profile_button = page.get_by_role('button', name=list(map(lambda x: x.compile(r'.*Free, open'), [__import__('re')]))[0])
             
-        if textbox.count() == 0:
-            print("[INFO] Fallback 2: Searching via CSS Selector '#prompt-textarea'...", flush=True)
-            textbox = page.locator('#prompt-textarea')
-
-        if textbox.count() > 0:
-            textbox.first.click()
-            print("[OK] Textbox located and clicked successfully.", flush=True)
-        else:
-            raise RuntimeError("❌ Textbox locator load nahi ho paya (All strategies failed).")
-            
-        custom_random_wait(15, 30)
-
-        prompt = (
-            f"IMPORTANT: Your entire response must be wrapped in a single ```json code block. "
-            f"Do not print any conversational commentary or markdown outside of that code block.\n\n"
-            f"You are an elite expert Pinterest Marketer and conversion optimization copywriter. "
-            f"Generate optimized metadata assets mapped explicitly to the design vectors provided below.\n\n"
-            f"DATA INPUT PARAMETERS:\n"
-            f"1. Target Topic: {subject_matter}\n\n"
-            f"STRICT OUTPUT FIELD REQUIREMENT VALIDATION METRICS:\n"
-            f"1. title: Must contain exactly the text data string: \"{subject_matter}\"\n"
-            f"2. description: Craft a high-performing conversion optimized description tailored around consumer pain points related to the title. Include 3-5 trending relevant hashtags at the trailing edge of the value. Each hashtag must begin with the '#' symbol. Total length constraint must be strictly between 150 and 250 characters long.\n"
-            f"3. alt_text: Must contain exactly the text data string: \"{subject_matter}\"\n"
-            f"4. selected_board: Analyze the cognitive intent behind the topic and select the single most relevant category string match from this strict choice list array ONLY:\n"
-            f"   - Anxiety & Mental Peace\n"
-            f"   - Calm Mind Habits\n"
-            f"   - Focus & Mental Discipline\n"
-            f"   - Mental Clarity\n"
-            f"   - Overthinking Help\n"
-            f"   - Self-Improvement Psychology\n\n"
-            f"OUTPUT FORMATTING TEMPLATE:\n"
-            f"{{\n"
-            f'  "title": "{subject_matter}",\n'
-            f'  "description": "[Optimized description string content matching length boundaries]",\n'
-            f'  "alt_text": "{subject_matter}",\n'
-            f'  "selected_board": "[Exact matched string text chosen from given list]"\n'
-            f"}}\n"
-        )
-
-        print("[STEP] Entering prompt into textbox...", flush=True)
-        textbox.first.fill(prompt)
-        custom_random_wait(15, 30)
-
-        print("[STEP] Locating and clicking send button...", flush=True)
-        send_button = page.get_by_test_id('send-button')
-        send_button.click()
-        
-        custom_random_wait(30, 60)
-
-        print("[STEP] Waiting for generated JSON code block to complete writing (15s checks)...", flush=True)
-        code_block_locator = page.locator('#code-block-viewer pre')
-        
-        json_content = None
-        for attempt in range(1, 6):
-            print(f"[STEP] Checking code block locator (Attempt {attempt}/5)...", flush=True)
-            
-            if code_block_locator.count() > 0:
-                print("[OK] Code block visible, parsing live text size variations...", flush=True)
-                
-                last_length = 0
-                max_check_cycles = 15
-                
-                for cycle in range(max_check_cycles):
-                    time.sleep(15)
-                    
-                    current_text = code_block_locator.first.inner_text().strip()
-                    current_length = len(current_text)
-                    
-                    print(f"[STREAM INFO] Cycle {cycle+1}: Previous Length = {last_length}, Current Length = {current_length}", flush=True)
-                    
-                    if current_length > 0 and current_length == last_length:
-                        if current_text.endswith("}"):
-                            json_content = current_text
-                            print("[OK] Content generation is fully finished and finalized.", flush=True)
-                            break
-                        else:
-                            print("[WARNING] Text generation paused but JSON closing bracket '}' is missing. Waiting...", flush=True)
-                        
-                    last_length = current_length
-                
-                if json_content:
-                    break
-            
-            if attempt < 5:
-                print(f"[WARNING] Code block completely write nahi hua. Retrying window...", flush=True)
-                custom_random_wait(30, 60)
+            if profile_button.count() > 0:
+                print(f"[OK] LOGIN SUCCESS: Profile button found -> '{profile_button.first.get_attribute('aria-label') or 'User Account'}'", flush=True)
             else:
-                print("❌ Max retries reached. Streaming complete nahi ho payi. Exiting script...", flush=True)
+                print("[WARNING] Profile button not detected directly, proceeding with caution...", flush=True)
+
+            # ========================================================
+            # AUTOMATION FLOW & JSON PARSING (WITH ब्लॉक के अंदर)
+            # ========================================================
+            print("[STEP] Locating chat textbox...", flush=True)
+            
+            # Fallback Strategy for Textbox Locators
+            textbox = page.get_by_role('textbox', name='Chat with ChatGPT')
+            
+            if textbox.count() == 0:
+                print("[INFO] Fallback 1: Searching for 'Ask anything' paragraph inside textbox context...", flush=True)
+                textbox = page.locator('div[contenteditable="true"]').filter(has=page.locator('p', has_text='Ask anything')).first
+                
+            if textbox.count() == 0:
+                print("[INFO] Fallback 2: Searching via CSS Selector '#prompt-textarea'...", flush=True)
+                textbox = page.locator('#prompt-textarea')
+
+            # Trigger action if found
+            if textbox.count() > 0:
+                textbox.first.click()
+                print("[OK] Textbox located and clicked successfully.", flush=True)
+            else:
+                raise RuntimeError("❌ Textbox locator load nahi ho paya (All strategies failed).")
+                
+            custom_random_wait(15, 30)
+
+            # Prompt Architecture
+            prompt = (
+                f"IMPORTANT: Your entire response must be wrapped in a single ```json code block. "
+                f"Do not print any conversational commentary or markdown outside of that code block.\n\n"
+                
+                f"You are an elite expert Pinterest Marketer and conversion optimization copywriter. "
+                f"Generate optimized metadata assets mapped explicitly to the design vectors provided below.\n\n"
+                
+                f"DATA INPUT PARAMETERS:\n"
+                f"1. Target Topic: {subject_matter}\n\n"
+                
+                f"STRICT OUTPUT FIELD REQUIREMENT VALIDATION METRICS:\n"
+                f"1. title: Must contain exactly the text data string: \"{subject_matter}\"\n"
+                f"2. description: Craft a high-performing conversion optimized description tailored around consumer pain points related to the title. Include 3-5 trending relevant hashtags at the trailing edge of the value. Each hashtag must begin with the '#' symbol. Total length constraint must be strictly between 150 and 250 characters long.\n"
+                f"3. alt_text: Must contain exactly the text data string: \"{subject_matter}\"\n"
+                f"4. selected_board: Analyze the cognitive intent behind the topic and select the single most relevant category string match from this strict choice list array ONLY:\n"
+                f"   - Anxiety & Mental Peace\n"
+                f"   - Calm Mind Habits\n"
+                f"   - Focus & Mental Discipline\n"
+                f"   - Mental Clarity\n"
+                f"   - Overthinking Help\n"
+                f"   - Self-Improvement Psychology\n\n"
+                
+                f"OUTPUT FORMATTING TEMPLATE:\n"
+                f"{{\n"
+                f'  "title": "{subject_matter}",\n'
+                f'  "description": "[Optimized description string content matching length boundaries]",\n'
+                f'  "alt_text": "{subject_matter}",\n'
+                f'  "selected_board": "[Exact matched string text chosen from given list]"\n'
+                f"}}\n"
+            )
+
+            print("[STEP] Entering prompt into textbox...", flush=True)
+            textbox.first.fill(prompt)
+            custom_random_wait(15, 30)
+
+            print("[STEP] Locating and clicking send button...", flush=True)
+            send_button = page.get_by_test_id('send-button')
+            send_button.click()
+            
+            # Initial processing wait allocation
+            custom_random_wait(30, 60)
+
+            # STABLE 15-SECOND POLLING LIVE STREAM CHECK
+            print("[STEP] Waiting for generated JSON code block to complete writing (15s checks)...", flush=True)
+            code_block_locator = page.locator('#code-block-viewer pre')
+            
+            json_content = None
+            for attempt in range(1, 6):
+                print(f"[STEP] Checking code block locator (Attempt {attempt}/5)...", flush=True)
+                
+                if code_block_locator.count() > 0:
+                    print("[OK] Code block visible, parsing live text size variations...", flush=True)
+                    
+                    last_length = 0
+                    max_check_cycles = 15
+                    
+                    for cycle in range(max_check_cycles):
+                        time.sleep(15)
+                        
+                        current_text = code_block_locator.first.inner_text().strip()
+                        current_length = len(current_text)
+                        
+                        print(f"[STREAM INFO] Cycle {cycle+1}: Previous Length = {last_length}, Current Length = {current_length}", flush=True)
+                        
+                        if current_length > 0 and current_length == last_length:
+                            if current_text.endswith("}"):
+                                json_content = current_text
+                                print("[OK] Content generation is fully finished and finalized.", flush=True)
+                                break
+                            else:
+                                print("[WARNING] Text generation paused but JSON closing bracket '}' is missing. Waiting...", flush=True)
+                            
+                        last_length = current_length
+                    
+                    if json_content:
+                        break
+                
+                if attempt < 5:
+                    print(f"[WARNING] Code block completely write nahi hua. Retrying window...", flush=True)
+                    custom_random_wait(30, 60)
+                else:
+                    print("❌ Max retries reached. Streaming complete nahi ho payi. Exiting script...", flush=True)
+                    sys.exit(1)
+
+            # JSON parsing, validation and State Array Modification 
+            if json_content:
                 try:
-                    browser.close()
-                except:
-                    pass
+                    print("[STEP] Parsing content as JSON...", flush=True)
+                    if json_content.startswith("```json"):
+                        json_content = json_content.split("```json", 1)[1]
+                    if json_content.endswith("```"):
+                        json_content = json_content.rsplit("```", 1)[0]
+                    
+                    parsed_json = json.loads(json_content.strip())
+                    
+                    # Strict structural data synchronization constraints enforcement
+                    parsed_json["title"] = subject_matter
+                    parsed_json["alt_text"] = subject_matter
+                    
+                    # Fallback safeguard validation structure against broken board names
+                    if parsed_json.get("selected_board") not in ALLOWED_BOARDS:
+                        print(f"[WARNING] Invalid board string parsed: '{parsed_json.get('selected_board')}'. Appending arbitrary safe index variant.", flush=True)
+                        parsed_json["selected_board"] = random.choice(ALLOWED_BOARDS)
+
+                    print("[STEP] Saving formatted data inside article.json...", flush=True)
+                    with article_file.open("w", encoding="utf-8") as f:
+                        json.dump(parsed_json, f, indent=4, ensure_ascii=False)
+                    print("[OK] Data structural dump serialization write-out successful.", flush=True)
+                    
+                    # UPDATE STATE LOCK TRACKER WITH 3 KEY VALUES
+                    print("[STEP] Saving updated item state back to pinterest_ideas.json...", flush=True)
+                    ideas_list[target_index] = {
+                        "title": subject_matter,
+                        "content_generated": True,
+                        "image_generated": False,
+                        "posted": False
+                    }
+
+                    with ideas_file.open("w", encoding="utf-8") as f:
+                        json.dump(ideas_list, f, indent=2, ensure_ascii=False)
+                    print(f"✅ Success: '{subject_matter}' registered with content_generated=True.", flush=True)
+                    
+                except json.JSONDecodeError as je:
+                    print(f"[ERROR] Content JSON parse karne me fail hua: {je}. Exiting script...", flush=True)
+                    sys.exit(1)
+            else:
+                print("[ERROR] Save skip kiya gaya kyunki koi data fetch nahi hua. Exiting script...", flush=True)
                 sys.exit(1)
 
-        if json_content:
-            try:
-                print("[STEP] Parsing content as JSON...", flush=True)
-                if json_content.startswith("```json"):
-                    json_content = json_content.split("```json", 1)[1]
-                if json_content.endswith("```"):
-                    json_content = json_content.rsplit("```", 1)[0]
-                
-                parsed_json = json.loads(json_content.strip())
-                
-                parsed_json["title"] = subject_matter
-                parsed_json["alt_text"] = subject_matter
-                
-                if parsed_json.get("selected_board") not in ALLOWED_BOARDS:
-                    print(f"[WARNING] Invalid board string parsed: '{parsed_json.get('selected_board')}'. Appending arbitrary safe index variant.", flush=True)
-                    parsed_json["selected_board"] = random.choice(ALLOWED_BOARDS)
-
-                print("[STEP] Saving formatted data inside article.json...", flush=True)
-                with article_file.open("w", encoding="utf-8") as f:
-                    json.dump(parsed_json, f, indent=4, ensure_ascii=False)
-                print("[OK] Data structural dump serialization write-out successful.", flush=True)
-                
-                print("[STEP] Saving updated item state back to pinterest_ideas.json...", flush=True)
-                ideas_list[target_index] = {
-                    "title": subject_matter,
-                    "content_generated": True,
-                    "image_generated": False,
-                    "posted": False
-                }
-
-                with ideas_file.open("w", encoding="utf-8") as f:
-                    json.dump(ideas_list, f, indent=2, ensure_ascii=False)
-                print(f"✅ Success: '{subject_matter}' registered.", flush=True)
-                
-            except json.JSONDecodeError as je:
-                print(f"[ERROR] Content JSON parse karne me fail hua: {je}. Exiting script...", flush=True)
-                try:
-                    browser.close()
-                except:
-                    pass
-                sys.exit(1)
-        else:
-            print("[ERROR] Save skip kiya gaya. Exiting script...", flush=True)
-            try:
-                browser.close()
-            except:
-                pass
-            sys.exit(1)
-
-        print("[STEP] Performing random wait before normal browser closure...", flush=True)
-        custom_random_wait(15, 30)
+            print("[STEP] Performing random wait before normal browser closure...", flush=True)
+            custom_random_wait(15, 30)
 
     except SystemExit:
         raise
@@ -393,24 +397,10 @@ def run():
                 print(f"[OK] Error screenshot captured: {screenshot_path}", flush=True)
             except Exception as screenshot_err:
                 print(f"[WARNING] Could not capture screenshot: {screenshot_err}", flush=True)
-        if browser:
-            try:
-                browser.close()
-            except:
-                pass
         sys.exit(1)
 
     finally:
-        if browser:
-            try:
-                browser.close()
-            except:
-                pass
-        try:
-            pw_cm.__exit__(None, None, None)
-        except:
-            pass
-
+        # Context manager 'with' ब्लॉक खत्म होते ही ब्राउज़र ऑटोमैटिकली बिना लीक के बंद हो जाता है
         print("[DONE] Script finished", flush=True)
 
 
