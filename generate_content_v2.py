@@ -250,7 +250,7 @@ def run():
 
             # Prompt Architecture
             prompt = (
-                f"IMPORTANT: Your entire response must be wrapped in a single ```json code block. "
+                f"STRICTLY IMPORTANT: Your entire response must be wrapped in a single ```json code block. "
                 f"Do not print any conversational commentary or markdown outside of that code block.\n\n"
                 
                 f"You are an elite expert Pinterest Marketer and conversion optimization copywriter. "
