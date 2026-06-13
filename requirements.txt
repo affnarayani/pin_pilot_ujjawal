@@ -4,4 +4,3 @@ huggingface-hub
 python-dotenv
 cryptography
 playwright-stealth
-camoufox

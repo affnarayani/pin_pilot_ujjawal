@@ -1,0 +1,70 @@
+name: Generate Content v2
+
+on:
+  schedule:
+    - cron: '0 1 * * *'   # 01:00 UTC
+    - cron: '0 2 * * *'   # 02:00 UTC
+    - cron: '0 3 * * *'   # 03:00 UTC
+    - cron: '0 13 * * *'  # 13:00 UTC
+    - cron: '0 19 * * *'  # 19:00 UTC
+  workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  run-automation:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: '3.11'
+
+    - name: Configure Git
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+    - name: Pull Latest Changes (Maintain Persistence)
+      run: |
+        git pull origin ${GITHUB_REF_NAME} --rebase
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        # nodriver और उसकी ज़रूरी कोर लाइब्रेरीज़ इंस्टॉल कर रहे हैं
+        pip install nodriver cryptography python-dotenv
+
+    - name: Run Script
+      env:
+        DECRYPT_KEY: ${{ secrets.DECRYPT_KEY }}
+      run: |
+        python generate_content_v2.py
+
+    - name: Upload Error Screenshot
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: nodriver-error-screenshot
+        path: |
+          error_screenshot.png
+        if-no-files-found: ignore
+
+    - name: Commit and Push Changes (If updated)
+      run: |
+        git add article.json pinterest_ideas.json
+        
+        if git diff --staged --quiet; then
+          echo "[INFO] No changes detected. Skipping push."
+        else
+          echo "[OK] Changes detected. Committing and pushing updates..."
+          git commit -m "Automated: Update article and topics list [skip ci]"
+          git push origin ${GITHUB_REF_NAME}
+        fi
