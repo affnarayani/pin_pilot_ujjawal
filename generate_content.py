@@ -177,17 +177,18 @@ def run():
     print(f"[OK] Total cookies loaded: {len(cookies)}", flush=True)
 
     # ========================================================
-    # CURL_CFFI TLS-SPOOFING INTERNAL API REQUEST
+    # CURL_CFFI TLS-SPOOFING INTERNAL API REQUEST (FIXED)
     # ========================================================
-    # प्लेराइट फॉर्मेट की कुकीज़ को डिक्शनरी फॉर्मेट में कनवर्ट करें
-    session_cookies = {c['name']: c['value'] for c in cookies}
+    # कुकीज़ को डिक्शनरी के बजाय सीधे एक सिंगल स्ट्रिंग (Header Format) में कनवर्ट करें
+    cookie_string = "; ".join([f"{c['name']}={c['value']}" for c in cookies])
     
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0",
         "Accept": "text/event-stream",
         "Content-Type": "application/json",
         "Origin": "https://chatgpt.com",
-        "Referer": "https://chatgpt.com/"
+        "Referer": "https://chatgpt.com/",
+        "Cookie": cookie_string  # कुकीज़ को सीधे हेडर्स में इन्जेक्ट कर दिया
     }
     
     prompt = (
@@ -238,12 +239,11 @@ def run():
     json_content = None
 
     try:
-        # impersonate="chrome120" यहाँ जादुई काम करता है, क्लाउडफ्लेयर को चकमा देने के लिए
+        # cookies= आर्गुमेंट हटा दिया गया है क्योंकि सब कुछ अब headers में है
         response = curl_requests.post(
             "[https://chatgpt.com/backend-api/conversation](https://chatgpt.com/backend-api/conversation)",
             json=payload,
             headers=headers,
-            cookies=session_cookies,
             impersonate="chrome120",
             timeout=60
         )
