@@ -188,15 +188,14 @@ def run():
     print(f"[OK] Total cookies loaded: {len(cookies)}", flush=True)
 
     # ==========================================
-    # CAMOUFOX ADVANCED BROWSER LAUNCH
+    # CAMOUFOX ADVANCED BROWSER LAUNCH (FIXED)
     # ==========================================
     try:
-        # सिंटैक्स एरर को दूर करने के लिए अनपेक्षित आर्गुमेंट्स (hacks, block_webrtc) हटाए गए हैं
+        # सारे फालतू कीवर्ड्स हटा दिए हैं जो एरर दे रहे थे। 
+        # Camoufox सिर्फ़ इतने में ही पूरी तरह अपना जादुई काम कर लेता है।
         with Camoufox(
             headless=HEADLESS,
-            os="windows",             
-            human_biometrics=True,    
-            enable_plugins=True       
+            os="windows"
         ) as browser:
 
             # स्क्रीन रेजोल्यूशन सेट करें
