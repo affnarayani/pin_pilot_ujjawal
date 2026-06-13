@@ -137,7 +137,11 @@ async def run():
 
     # NODRIVER BROWSER LAUNCH
     # browser.start() खुद ब खुद बिना झंझट के अनडिटेक्टेड क्रोमियम लोड करता है
-    browser = await uc.start(headless=True)
+    config = uc.Config()
+    config.no_sandbox = True
+    config.headless = True
+    
+    browser = await uc.start(config=config)
     
     try:
         page = await browser.get("https://chatgpt.com/")
