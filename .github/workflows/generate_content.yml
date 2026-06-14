@@ -2,11 +2,7 @@ name: Generate Content
 
 on:
   schedule:
-    - cron: '0 1 * * *'   # 01:00 UTC
-    - cron: '0 2 * * *'   # 02:00 UTC
-    - cron: '0 3 * * *'   # 03:00 UTC
-    - cron: '0 13 * * *'  # 13:00 UTC
-    - cron: '0 19 * * *'  # 19:00 UTC
+    - cron: '0 */4 * * *'  # 19:00 UTC
   workflow_dispatch:
 
 env:
