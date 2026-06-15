@@ -266,26 +266,30 @@ def run():
         # 5. Fill Screen Reader Alt Text
         print("[STEP] Typing generated Alt Text content...", flush=True)
 
-        # Pata lagane ke liye ki pure page par is pattern ke kitne elements hain
-        all_matches = page.locator("textarea[id^='pin-draft-alttext-']")
-        count = all_matches.count()
-        print(f"[DEBUG] Total matching elements found on page: {count}", flush=True)
+        # Teeno locators ko combine kiya
+        alt_box = page.get_by_role('textbox', name='Explain what people can see').or_(
+            page.locator("textarea[id^='pin-draft-alttext-']")
+        ).or_(
+            page.locator("//textarea[starts-with(@id, 'pin-draft-alttext-')]")
+        )
 
-        if count > 0:
-            # Agar elements hain, toh pehle wale ko force-fully access karenge
-            alt_box = all_matches.first
-            print("[DEBUG] Element DOM mein mil gaya hai. Force-fully scroll aur wait kar rahe hain...", flush=True)
+        try:
+            print("[INFO] Alt Text box dhoond rahe hain...", flush=True)
             
-            # Isko hidden state mein bhi wait karne ke liye 'attached' use karein
-            alt_box.wait_for(state="attached", timeout=5000)
+            # Kam timeout (3-4 seconds) rakhein taaki agar na mile toh script zyada wait na kare
+            alt_box.wait_for(state="attached", timeout=4000)
             
-            # Force click karein agar koi cheez iske upar overlap kar rahi ho
+            alt_box.scroll_into_view_if_needed()
             alt_box.click(force=True)
             alt_box.fill(pin_alt_text)
             print("[OK] Alt Text loaded successfully.", flush=True)
-        else:
-            print("[ERROR] DOM mein door-door tak aisa koi element nahi mila. Check karein iframes!", flush=True)
 
+        except Exception as e:
+            # Agar element nahi mila, toh yeh block chalega aur script crash nahi hogi
+            print("[WARN] Alt Text box nahi mila (Skipping)... Aage badh rahe hain.", flush=True)
+
+        # Code yahan se normal tarike se aage continue ho jayega
+        print("[STEP] Moving to the next step...", flush=True)
         custom_random_wait(15, 30)
 
         # 6. Fill Destination Link
