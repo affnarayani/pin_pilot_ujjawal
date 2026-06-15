@@ -266,26 +266,26 @@ def run():
         # 5. Fill Screen Reader Alt Text
         print("[STEP] Typing generated Alt Text content...", flush=True)
 
-        # Primary Locator (Aapka original role-based locator)
-        alt_box = page.get_by_role('textbox', name='Explain what people can see')
+        # Pata lagane ke liye ki pure page par is pattern ke kitne elements hain
+        all_matches = page.locator("textarea[id^='pin-draft-alttext-']")
+        count = all_matches.count()
+        print(f"[DEBUG] Total matching elements found on page: {count}", flush=True)
 
-        # Agar primary locator nahi milta, toh fallbacks check karenge
-        if not alt_box.is_visible():
-            print("[INFO] Role-based locator nahi mila, CSS Fallback try kar rahe hain...", flush=True)
-            # Fallback 1: CSS Selector with Regex (ID starts with 'pin-draft-alttext-')
-            alt_box = page.locator("textarea[id^='pin-draft-alttext-']")
+        if count > 0:
+            # Agar elements hain, toh pehle wale ko force-fully access karenge
+            alt_box = all_matches.first
+            print("[DEBUG] Element DOM mein mil gaya hai. Force-fully scroll aur wait kar rahe hain...", flush=True)
+            
+            # Isko hidden state mein bhi wait karne ke liye 'attached' use karein
+            alt_box.wait_for(state="attached", timeout=5000)
+            
+            # Force click karein agar koi cheez iske upar overlap kar rahi ho
+            alt_box.click(force=True)
+            alt_box.fill(pin_alt_text)
+            print("[OK] Alt Text loaded successfully.", flush=True)
+        else:
+            print("[ERROR] DOM mein door-door tak aisa koi element nahi mila. Check karein iframes!", flush=True)
 
-        if not alt_box.is_visible():
-            print("[INFO] CSS locator bhi nahi mila, XPath Fallback try kar rahe hain...", flush=True)
-            # Fallback 2: XPath with starts-with() function
-            alt_box = page.locator("//textarea[starts-with(@id, 'pin-draft-alttext-')]")
-
-        # Action perform karne se pehle ensure karein ki element mil gaya hai
-        alt_box.wait_for(state="visible", timeout=5000)
-
-        alt_box.click()
-        alt_box.fill(pin_alt_text)
-        print("[OK] Alt Text loaded successfully.", flush=True)
         custom_random_wait(15, 30)
 
         # 6. Fill Destination Link
