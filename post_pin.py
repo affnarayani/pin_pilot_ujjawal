@@ -265,7 +265,24 @@ def run():
 
         # 5. Fill Screen Reader Alt Text
         print("[STEP] Typing generated Alt Text content...", flush=True)
+
+        # Primary Locator (Aapka original role-based locator)
         alt_box = page.get_by_role('textbox', name='Explain what people can see')
+
+        # Agar primary locator nahi milta, toh fallbacks check karenge
+        if not alt_box.is_visible():
+            print("[INFO] Role-based locator nahi mila, CSS Fallback try kar rahe hain...", flush=True)
+            # Fallback 1: CSS Selector with Regex (ID starts with 'pin-draft-alttext-')
+            alt_box = page.locator("textarea[id^='pin-draft-alttext-']")
+
+        if not alt_box.is_visible():
+            print("[INFO] CSS locator bhi nahi mila, XPath Fallback try kar rahe hain...", flush=True)
+            # Fallback 2: XPath with starts-with() function
+            alt_box = page.locator("//textarea[starts-with(@id, 'pin-draft-alttext-')]")
+
+        # Action perform karne se pehle ensure karein ki element mil gaya hai
+        alt_box.wait_for(state="visible", timeout=5000)
+
         alt_box.click()
         alt_box.fill(pin_alt_text)
         print("[OK] Alt Text loaded successfully.", flush=True)
