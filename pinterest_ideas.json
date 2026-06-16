@@ -47,7 +47,12 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Quiet Your Mind in 5 Minutes",
+  {
+    "title": "How to Quiet Your Mind in 5 Minutes",
+    "content_generated": true,
+    "image_generated": false,
+    "posted": false
+  },
   "What Overthinking Does to Your Brain",
   "How to Stop Replaying Conversations in Your Head",
   "Why Smart People Overthink More",
