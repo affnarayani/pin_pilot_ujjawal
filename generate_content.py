@@ -134,12 +134,6 @@ def load_cookies(file_path: Path) -> List[Dict[str, Any]]:
 def run():
     print("[START] Script started", flush=True)
 
-    # File init/clear at the beginning
-    article_file = Path("article.json")
-    with article_file.open("w", encoding="utf-8") as f:
-        f.write("")
-    print("[OK] 'article.json' cleared/initialized", flush=True)
-
     # ========================================================
     # LOAD PINTEREST IDEAS & PICK DYNAMIC TOPIC
     # ========================================================
@@ -170,6 +164,12 @@ def run():
             if not content_gen or not image_gen or not posted_state:
                 print("[INFO] Last Pipeline Is Not Yet Finished. Exiting safely.", flush=True)
                 sys.exit(0)
+
+    # File init/clear at the beginning
+    article_file = Path("article.json")
+    with article_file.open("w", encoding="utf-8") as f:
+        f.write("")
+    print("[OK] 'article.json' cleared/initialized", flush=True)
 
     subject_matter = None
     target_index = -1
