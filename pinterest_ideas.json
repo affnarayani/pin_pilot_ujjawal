@@ -65,7 +65,12 @@
     "image_generated": true,
     "posted": true
   },
-  "Why Smart People Overthink More",
+  {
+    "title": "Why Smart People Overthink More",
+    "content_generated": true,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Make Decisions Without Overthinking",
   "The Overthinking and Anxiety Connection",
   "How to Stop Worrying About What Others Think",
