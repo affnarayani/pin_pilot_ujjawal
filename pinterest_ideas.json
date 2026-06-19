@@ -119,7 +119,12 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Train Your Brain to Think Less",
+  {
+    "title": "How to Train Your Brain to Think Less",
+    "content_generated": true,
+    "image_generated": false,
+    "posted": false
+  },
   "The One Habit That Feeds Overthinking",
   "How to Escape Your Own Head",
   "Why Overthinking Feels Productive But Isn't",
