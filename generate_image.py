@@ -367,21 +367,27 @@ def run():
             try:
                 skip_button = page.get_by_role('button', name='Skip')
                 if skip_button.first.is_visible():
-                    print("[INFO] 'Skip' button detected! ChatGPT has created 2 images and is asking for preference.", flush=True)
+                    print("[INFO] 'Skip' button detected! Clicking 'Skip' button...", flush=True)
+                    skip_button.first.click()
                     
+                    # Skip par click karne ke baad 30-60 seconds ka wait
+                    print("[STEP] Skip clicked. Performing random wait (30-60 seconds)...", flush=True)
+                    custom_random_wait(30, 60)
+                    
+                    # Ab check karein ki kya dono options available hain
                     option_1 = page.locator('div').filter(has_text=re.compile(r'^1Image 1Image 1 is better$')).get_by_label('')
                     option_2 = page.locator('div').filter(has_text=re.compile(r'^2Image 2Image 2 is better$')).get_by_label('')
                     
-                    chosen_option = random.choice([option_1, option_2])
-                    
-                    if chosen_option.first.is_visible():
-                        print("[STEP] Randomly selecting a preference option...", flush=True)
-                        chosen_option.first.click()
+                    if option_1.first.is_visible() or option_2.first.is_visible():
+                        print("[INFO] Strategy A options are still available. Selecting one randomly...", flush=True)
+                        chosen_option = random.choice([option_1, option_2])
                         
-                        print("[STEP] Preference selected. Performing random wait (30-60 seconds)...", flush=True)
-                        custom_random_wait(30, 60)
+                        if chosen_option.first.is_visible():
+                            chosen_option.first.click()
+                            print("[STEP] Preference selected. Performing another random wait (30-60 seconds)...", flush=True)
+                            custom_random_wait(30, 60)
                     else:
-                        print("[WARNING] Suggestion options were not clickable, skipping selection.", flush=True)
+                        print("[INFO] Strategy A options are not available after Skip. Proceeding to normal download...", flush=True)
             except Exception as preference_err:
                 print(f"[INFO] Strategy A (Skip Button) exception: {preference_err}", flush=True)
             
