@@ -361,18 +361,48 @@ def run():
             print(f"[STEP] Waiting for image generation... Attempt {attempt}/{MAX_RETRIES}", flush=True)
             custom_random_wait(30, 60)
 
+            # --------------------------------------------------------
+            # STRATEGY A: Naya 'Skip' Button Aur Text-Filter Logic
+            # --------------------------------------------------------
+            try:
+                skip_button = page.get_by_role('button', name='Skip')
+                if skip_button.first.is_visible():
+                    print("[INFO] 'Skip' button detected! ChatGPT has created 2 images and is asking for preference.", flush=True)
+                    
+                    option_1 = page.locator('div').filter(has_text=re.compile(r'^1Image 1Image 1 is better$')).get_by_label('')
+                    option_2 = page.locator('div').filter(has_text=re.compile(r'^2Image 2Image 2 is better$')).get_by_label('')
+                    
+                    chosen_option = random.choice([option_1, option_2])
+                    
+                    if chosen_option.first.is_visible():
+                        print("[STEP] Randomly selecting a preference option...", flush=True)
+                        chosen_option.first.click()
+                        
+                        print("[STEP] Preference selected. Performing random wait (30-60 seconds)...", flush=True)
+                        custom_random_wait(30, 60)
+                    else:
+                        print("[WARNING] Suggestion options were not clickable, skipping selection.", flush=True)
+            except Exception as preference_err:
+                print(f"[INFO] Strategy A (Skip Button) exception: {preference_err}", flush=True)
+            
+            # --------------------------------------------------------
+            # STRATEGY B: Purana Test-ID Based Feedback Logic (FALLBACK)
+            # --------------------------------------------------------
             try:
                 feedback_buttons = page.get_by_test_id('paragen-prefer-response-button')
                 if feedback_buttons.first.is_visible():
                     count = feedback_buttons.count()
-                    print(f"[INFO] Feedback required! Found {count} preference buttons.", flush=True)
+                    print(f"[INFO] Fallback Active! Found {count} test-id preference buttons.", flush=True)
                     chosen_index = random.choice([0, 1]) if count >= 2 else 0
-                    print(f"[STEP] Selecting response index: {chosen_index}", flush=True)
+                    print(f"[STEP] Selecting response index via test-id: {chosen_index}", flush=True)
                     feedback_buttons.nth(chosen_index).click()
                     custom_random_wait(15, 30)
-            except Exception:
-                print(f"[INFO] No feedback buttons found or single image generated", flush=True)
-            
+            except Exception as old_feedback_err:
+                print(f"[INFO] Strategy B (Test-ID Fallback) exception: {old_feedback_err}", flush=True)
+
+            # --------------------------------------------------------
+            # Main Download Workflow (Share button detection)
+            # --------------------------------------------------------
             try:
                 locator = page.get_by_role('button', name='Share this image').first
                 if locator.is_visible():
