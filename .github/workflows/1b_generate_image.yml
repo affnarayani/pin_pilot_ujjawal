@@ -1,9 +1,9 @@
-name: Generate Image
+name: 1B. Generate Image
 
 on:
   workflow_dispatch: # Manual button activation support
   workflow_run:
-    workflows: ["Generate Content"]
+    workflows: ["1A. Generate Content"]
     types:
       - completed
 
@@ -39,13 +39,12 @@ jobs:
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install playwright playwright-stealth cryptography python-dotenv huggingface_hub requests
+        pip install playwright playwright-stealth cryptography python-dotenv requests
         playwright install chromium --with-deps
 
     - name: Run Image Script
       env:
-        DECRYPT_KEY: ${{ secrets.DECRYPT_KEY }} # GitHub Secrets se key
-        HF_TOKEN: ${{ secrets.HF_TOKEN }}       # Hugging Face token
+        DECRYPT_KEY: ${{ secrets.DECRYPT_KEY }}
       run: |
         python generate_image.py
 

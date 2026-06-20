@@ -1,6 +1,5 @@
 playwright
 requests
-huggingface-hub
 python-dotenv
 cryptography
 playwright-stealth

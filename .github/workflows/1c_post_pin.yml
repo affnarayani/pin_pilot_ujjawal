@@ -1,9 +1,9 @@
-name: Post Pin to Pinterest
+name: 1C. Post Pin to Pinterest
 
 on:
   workflow_dispatch: # Taaki aap zaroorat padne par manually bhi run kar sakein
   workflow_run:
-    workflows: ["Generate Image"] # Jab 'Generate Image' workflow khatam hoga tab auto-trigger hoga
+    workflows: ["1B. Generate Image"] # Jab 'Generate Image' workflow khatam hoga tab auto-trigger hoga
     types:
       - completed
 

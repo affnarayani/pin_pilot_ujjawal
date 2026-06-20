@@ -1,4 +1,4 @@
-name: Generate Content
+name: 1A. Generate Content
 
 on:
   schedule:
