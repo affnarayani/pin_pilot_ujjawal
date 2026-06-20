@@ -155,7 +155,12 @@
     "image_generated": true,
     "posted": true
   },
-  "Why Your Thoughts Lie to You",
+  {
+    "title": "Why Your Thoughts Lie to You",
+    "content_generated": true,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Create Mental Space Daily",
   "The Overthinking Trap and How to Escape It",
   "How to Stop Catastrophizing",
