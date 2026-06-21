@@ -191,7 +191,12 @@
     "image_generated": true,
     "posted": true
   },
-  "The Connection Between Control and Overthinking",
+  {
+    "title": "The Connection Between Control and Overthinking",
+    "content_generated": true,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Trust Yourself More",
   "Why Overthinking Ruins Relationships",
   "How to Stop Living in Your Head",
