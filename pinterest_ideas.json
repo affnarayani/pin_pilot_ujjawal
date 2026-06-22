@@ -209,7 +209,12 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Stop Living in Your Head",
+  {
+    "title": "How to Stop Living in Your Head",
+    "content_generated": true,
+    "image_generated": false,
+    "posted": false
+  },
   "The Overthinking and Procrastination Loop",
   "How to Think Clearly Under Pressure",
   "Why Your Inner Critic Is Always Wrong",
