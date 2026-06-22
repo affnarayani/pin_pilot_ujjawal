@@ -221,7 +221,12 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Think Clearly Under Pressure",
+  {
+    "title": "How to Think Clearly Under Pressure",
+    "content_generated": true,
+    "image_generated": false,
+    "posted": false
+  },
   "Why Your Inner Critic Is Always Wrong",
   "How to Stop Mental Rumination",
   "The Science of Why We Overthink",
