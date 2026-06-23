@@ -233,7 +233,12 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Stop Mental Rumination",
+  {
+    "title": "How to Stop Mental Rumination",
+    "content_generated": true,
+    "image_generated": false,
+    "posted": false
+  },
   "The Science of Why We Overthink",
   "How to Detach From Negative Thoughts",
   "Why Overthinking Drains Your Energy",
