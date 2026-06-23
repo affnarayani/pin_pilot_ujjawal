@@ -227,7 +227,12 @@
     "image_generated": true,
     "posted": true
   },
-  "Why Your Inner Critic Is Always Wrong",
+  {
+    "title": "Why Your Inner Critic Is Always Wrong",
+    "content_generated": true,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Stop Mental Rumination",
   "The Science of Why We Overthink",
   "How to Detach From Negative Thoughts",
