@@ -245,7 +245,12 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Detach From Negative Thoughts",
+  {
+    "title": "How to Detach From Negative Thoughts",
+    "content_generated": true,
+    "image_generated": false,
+    "posted": false
+  },
   "Why Overthinking Drains Your Energy",
   "How to Stop Obsessing Over Past Mistakes",
   "The Overthinking and Depression Link",
