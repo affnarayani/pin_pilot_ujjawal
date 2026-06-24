@@ -269,7 +269,12 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Break Negative Thought Patterns",
+  {
+    "title": "How to Break Negative Thought Patterns",
+    "content_generated": true,
+    "image_generated": false,
+    "posted": false
+  },
   "Why You Cannot Stop Thinking About Someone",
   "How to Stop Overanalyzing Text Messages",
   "The Mental Cost of Always Being in Your Head",
