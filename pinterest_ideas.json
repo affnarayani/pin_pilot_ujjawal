@@ -311,7 +311,12 @@
     "image_generated": true,
     "posted": true
   },
-  "The Overthinking Cure Nobody Talks About",
+  {
+    "title": "The Overthinking Cure Nobody Talks About",
+    "content_generated": true,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Stop Thinking About Things You Cannot Control",
   "Why Your Brain Loops on the Same Thoughts",
   "How to Interrupt Overthinking in Real Time",
