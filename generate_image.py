@@ -332,17 +332,17 @@ def run():
             raise RuntimeError("❌ Textbox locator load nahi ho paya (All strategies failed).")
 
         # Step A: Enter context modifier /createimage
-        image_selection_text = f"/createimage"
-        print(f"[STEP] Filling command: '{image_selection_text}'", flush=True)
-        chat_box.first.fill(image_selection_text)
+        # image_selection_text = f"/createimage"
+        # print(f"[STEP] Filling command: '{image_selection_text}'", flush=True)
+        # chat_box.first.fill(image_selection_text)
         
-        # Wait 3-6 seconds before pressing enter
-        custom_random_wait(3, 6)
-        page.keyboard.press("Enter")
-        print("[OK] /createimage command sent", flush=True)
+        # # Wait 3-6 seconds before pressing enter
+        # custom_random_wait(3, 6)
+        # page.keyboard.press("Enter")
+        # print("[OK] /createimage command sent", flush=True)
         
-        # Wait 3-6 seconds after enter before entering main prompt
-        custom_random_wait(3, 6)
+        # # Wait 3-6 seconds after enter before entering main prompt
+        # custom_random_wait(3, 6)
 
         # Step B: Enter wrapped dynamic prompt
         prompt_text = f"Generate a 8k image with a size strictly of 1024x1536 px, depicting the following scene: {base_prompt}"
