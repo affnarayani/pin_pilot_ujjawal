@@ -317,7 +317,12 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Stop Thinking About Things You Cannot Control",
+  {
+    "title": "How to Stop Thinking About Things You Cannot Control",
+    "content_generated": true,
+    "image_generated": false,
+    "posted": false
+  },
   "Why Your Brain Loops on the Same Thoughts",
   "How to Interrupt Overthinking in Real Time",
   "The Difference Between Thinking and Overthinking",
