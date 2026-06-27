@@ -417,6 +417,13 @@ def run():
 
         if not found_share or not share_button:
             print("❌ Error: 'Share this image' button not found after 5 retries. Exiting program.", flush=True)
+            if 'page' in locals() and page:
+                try:
+                    screenshot_path = "error_screenshot.png"
+                    page.screenshot(path=screenshot_path, full_page=True)
+                    print(f"[OK] Error screenshot captured: {screenshot_path}", flush=True)
+                except Exception as screenshot_err:
+                    print(f"[WARNING] Could not capture screenshot: {screenshot_err}", flush=True)
             sys.exit(1)
 
         # ========================================================
