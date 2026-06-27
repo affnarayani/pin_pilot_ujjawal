@@ -112,5 +112,5 @@ jobs:
             echo "[OK] Changes detected. Committing and pushing updates..."
             git commit -m "Automated: Update pipeline states to posted [skip ci]"
             git pull origin ${GITHUB_REF_NAME} --rebase
-            ggit push origin ${GITHUB_REF_NAME}
+            git push origin ${GITHUB_REF_NAME}
           fi
