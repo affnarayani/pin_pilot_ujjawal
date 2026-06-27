@@ -201,10 +201,6 @@ def run():
 
         # Base strategic blueprint for prompt creation
         base_prompt = f"""
-            You are an elite Pinterest visual strategist, viral pin designer, infographic specialist, and AI image prompt engineer.
-
-            Your task is to create a highly detailed image-generation prompt for a Pinterest-optimized vertical infographic pin.
-
             TOPIC:
             {subject_matter}
 
@@ -297,8 +293,6 @@ def run():
 
             QUALITY REQUIREMENTS:
             Ultra-detailed Pinterest infographic, highly professional layout, realistic design composition, premium content marketing graphic, conversion-focused visual hierarchy, Pinterest viral pin style, polished typography, educational infographic format, high engagement potential.
-
-            Generate only the final image-generation prompt.
             """
 
         print("[STEP] Opening ChatGPT Main URL...", flush=True)
