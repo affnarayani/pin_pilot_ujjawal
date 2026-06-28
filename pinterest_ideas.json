@@ -377,7 +377,12 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Create Mental Boundaries",
+  {
+    "title": "How to Create Mental Boundaries",
+    "content_generated": true,
+    "image_generated": false,
+    "posted": false
+  },
   "The Overthinking Personality and How to Change It",
   "How to Stop Predicting the Worst",
   "Why Your Thoughts Are Not Facts",
