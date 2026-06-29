@@ -201,98 +201,7 @@ def run():
 
         # Base strategic blueprint for prompt creation
         base_prompt = f"""
-            TOPIC:
-            {subject_matter}
-
-            IMPORTANT OBJECTIVE:
-            The image must look like a high-performing Pinterest infographic that people save, share, and click on.
-
-            DO NOT create:
-            * eBook covers
-            * Book advertisements
-            * Product mockups
-            * Magazine covers
-            * Promotional posters
-            * Generic social media graphics
-            * Random aesthetic artwork
-            * Title-only designs
-
-            The image should feel educational, practical, visually informative, and optimized for Pinterest engagement.
-
-            LAYOUT REQUIREMENTS:
-            * Vertical Pinterest pin (2:3 aspect ratio)
-            * Professional infographic structure
-            * Strong visual hierarchy
-            * Mobile-first readability
-            * Large attention-grabbing headline
-            * Multiple content sections
-            * Easy-to-scan design
-            * Pinterest-native appearance
-            * Clean spacing
-            * Premium visual balance
-
-            CONTENT STRUCTURE:
-            Create a complete infographic layout containing:
-            1. A compelling Pinterest-style headline based on the topic
-            2. A short explanatory subtitle
-            3. 3–5 insight sections, mistakes, habits, signs, lessons, or tips relevant to the topic
-            4. Visual connectors such as arrows, icons, dividers, or flow elements
-            5. A transformation-focused takeaway section
-            6. A subtle call-to-action section
-
-            VISUAL STORYTELLING:
-            The design must visually explain the topic.
-            Do not use random decorative imagery.
-            Use realistic scenes, illustrations, symbols, psychology-based visual metaphors, and meaningful graphics directly connected to the topic.
-
-            Examples of visual elements when relevant:
-            * Overthinking
-            * Mental clutter
-            * Brain activity
-            * Focus
-            * Productivity
-            * Mindfulness
-            * Journaling
-            * Phone addiction
-            * Distraction
-            * Daily habits
-            * Decision making
-            * Stress
-            * Mental clarity
-            * Self-improvement routines
-
-            The imagery should immediately communicate the topic even before the viewer reads all the text.
-
-            STYLE:
-            * Modern psychology infographic
-            * Self-improvement niche
-            * Premium Pinterest aesthetic
-            * Soft neutral color palette
-            * Strategic accent colors
-            * Clean white space
-            * High-end digital publication quality
-            * Minimal clutter
-            * Visually engaging information design
-
-            TYPOGRAPHY:
-            * Large Pinterest-style headline
-            * Bold readable fonts
-            * High contrast text
-            * Clear section labels
-            * Mobile-friendly readability
-            * Optimized for quick scanning
-
-            ENGAGEMENT OPTIMIZATION:
-            The infographic should be designed to maximize:
-            * Saves
-            * Shares
-            * Click-through rate
-            * Engagement
-            * Curiosity
-            * Readability
-
-            QUALITY REQUIREMENTS:
-            Ultra-detailed Pinterest infographic, highly professional layout, realistic design composition, premium content marketing graphic, conversion-focused visual hierarchy, Pinterest viral pin style, polished typography, educational infographic format, high engagement potential.
+            Create image with a size strictly of 1024x1536 px, depicting {subject_matter} in the form of a high-performing Pinterest infographic designed to maximize saves, shares, and clicks. The image must avoid being an eBook cover, book advertisement, product mockup, magazine cover, promotional poster, generic social media graphic, random aesthetic artwork, or title-only design, and instead feel educational, practical, visually informative, and optimized for Pinterest engagement. It should follow a professional, vertical (2:3 aspect ratio) infographic layout with a strong visual hierarchy, mobile-first readability, a large attention-grabbing headline, multiple easy-to-scan content sections, clean spacing, and premium visual balance, all while maintaining a Pinterest-native appearance. The content structure must include a compelling Pinterest-style headline based on the topic, a short explanatory subtitle, 3–5 insightful sections (tips, habits, etc.), visual connectors (arrows, icons, etc.), a transformation-focused takeaway, and a subtle call-to-action. Visual storytelling must be core, using realistic scenes, illustrations, symbols, and psychology-based metaphors directly connected to the topic (like overthinking, mental clutter, focus, etc.) to immediately communicate the message. The style should be a modern psychology/self-improvement infographic with a premium Pinterest aesthetic, soft neutral palette, strategic accent colors, clean white space, high-end digital publication quality, and minimal clutter. Typography needs a large headline, bold readable fonts, high contrast text, clear section labels, and optimized mobile readability for quick scanning. This should be an ultra-detailed, professional, conversion-focused premium content marketing graphic with high engagement potential in a Pinterest viral pin style.
             """
 
         print("[STEP] Opening ChatGPT Main URL...", flush=True)
@@ -339,7 +248,7 @@ def run():
         # custom_random_wait(3, 6)
 
         # Step B: Enter wrapped dynamic prompt
-        prompt_text = f"Create image with a size strictly of 1024x1536 px, depicting the following scene: {base_prompt}"
+        prompt_text = f"{base_prompt}"
         print("[STEP] Filling hardcoded template wrapped prompt assembly...", flush=True)
         chat_box.first.fill(prompt_text)
         
