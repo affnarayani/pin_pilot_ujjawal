@@ -205,7 +205,7 @@ def run():
             {subject_matter}
 
             IMPORTANT OBJECTIVE:
-            The final image must look like a high-performing Pinterest infographic that people save, share, and click on.
+            The image must look like a high-performing Pinterest infographic that people save, share, and click on.
 
             DO NOT create:
             * eBook covers
@@ -339,7 +339,7 @@ def run():
         # custom_random_wait(3, 6)
 
         # Step B: Enter wrapped dynamic prompt
-        prompt_text = f"Generate a 8k image with a size strictly of 1024x1536 px, depicting the following scene: {base_prompt}"
+        prompt_text = f"Create image with a size strictly of 1024x1536 px, depicting the following scene: {base_prompt}"
         print("[STEP] Filling hardcoded template wrapped prompt assembly...", flush=True)
         chat_box.first.fill(prompt_text)
         
