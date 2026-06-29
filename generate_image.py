@@ -417,6 +417,13 @@ def run():
 
         if not found_share or not share_button:
             print("❌ Error: 'Share this image' button not found after 5 retries. Exiting program.", flush=True)
+            try:
+                error_paragraph = page.locator("p[data-start='0']").first
+                if error_paragraph.is_visible():
+                    error_text = error_paragraph.inner_text()
+                    print(f"[FOUND ERROR TEXT] Paragraph content: {error_text}", flush=True)
+            except Exception as p_err:
+                print(f"[INFO] Could not read paragraph locator: {p_err}", flush=True)
             if 'page' in locals() and page:
                 try:
                     screenshot_path = "error_screenshot.png"
