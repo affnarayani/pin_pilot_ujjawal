@@ -217,6 +217,7 @@ def run():
         profile_button = page.get_by_role('button', name=list(map(lambda x: x.compile(r'.*Free, open'), [__import__('re')]))[0])
         if profile_button.count() > 0:
             print(f"[OK] LOGIN SUCCESS: Profile button found -> '{profile_button.first.get_attribute('aria-label') or 'User Account'}'", flush=True)
+            custom_random_wait(6, 12)
         else:
             print("[WARNING] Profile button not detected directly, proceeding with caution...", flush=True)
 
