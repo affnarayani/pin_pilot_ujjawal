@@ -201,7 +201,7 @@ def run():
 
         # Base strategic blueprint for prompt creation
         base_prompt = f"""
-            Generate image of dimensions in ratio of 2:3 for Pinterest Pins. The image must be on the "{subject_matter}". The image must be in infographics style. The image must be engaging.
+            Create image with a size strictly of 1024x1536 px, depicting "{subject_matter}" in the form of a high-performing Pinterest infographic designed to maximize saves, shares, and clicks. The image must avoid being an eBook cover, book advertisement, product mockup, magazine cover, promotional poster, generic social media graphic, random aesthetic artwork, or title-only design, and instead feel educational, practical, visually informative, and optimized for Pinterest engagement. It should follow a professional, vertical (2:3 aspect ratio) infographic layout with a strong visual hierarchy, mobile-first readability, a large attention-grabbing headline, multiple easy-to-scan content sections, clean spacing, and premium visual balance, all while maintaining a Pinterest-native appearance. The content structure must include a compelling Pinterest-style headline based on the topic, a short explanatory subtitle, 3–5 insightful sections (tips, habits, etc.), visual connectors (arrows, icons, etc.), a transformation-focused takeaway, and a subtle call-to-action. Visual storytelling must be core, using realistic scenes, illustrations, symbols, and psychology-based metaphors directly connected to the topic (like overthinking, mental clutter, focus, etc.) to immediately communicate the message. The style should be a modern psychology/self-improvement infographic with a premium Pinterest aesthetic, soft neutral palette, strategic accent colors, clean white space, high-end digital publication quality, and minimal clutter. Typography needs a large headline, bold readable fonts, high contrast text, clear section labels, and optimized mobile readability for quick scanning. This should be an ultra-detailed, professional, conversion-focused premium content marketing graphic with high engagement potential in a Pinterest viral pin style.
             """
 
         print("[STEP] Opening ChatGPT Main URL...", flush=True)
@@ -219,6 +219,11 @@ def run():
             print(f"[OK] LOGIN SUCCESS: Profile button found -> '{profile_button.first.get_attribute('aria-label') or 'User Account'}'", flush=True)
         else:
             print("[WARNING] Profile button not detected directly, proceeding with caution...", flush=True)
+
+        if page.get_by_role('button', name='Create an image').is_visible():
+            page.get_by_role('button', name='Create an image').click()
+            print("[STEP] Create an image button clicked!...", flush=True)
+            custom_random_wait(6, 12)
 
         # Locate chat box
         print("[STEP] Locating chat textbox...", flush=True)
