@@ -283,7 +283,7 @@ def run():
 
             CONTENT STRUCTURE:
             Create a complete infographic layout containing:
-            1. A compelling Pinterest-style headline based on the topic
+            1. A compelling Pinterest-style headline strictly same as the topic
             2. A short explanatory subtitle
             3. 3–5 insight sections, mistakes, habits, signs, lessons, or tips relevant to the topic
             4. Visual connectors such as arrows, icons, dividers, or flow elements
