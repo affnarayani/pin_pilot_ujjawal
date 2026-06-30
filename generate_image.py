@@ -201,7 +201,7 @@ def run():
 
         # Base strategic blueprint for prompt creation
         base_prompt = f"""
-            Create image of dimension in ratio 2:3 on "{subject_matter} for Pinterest Pins". The image must be engaging infographics. 
+            Create image of dimension in ratio 2:3 on topic "{subject_matter} for Pinterest Pins". The image must be engaging infographics. Please strictly note that there is no reference image. You need to create this image from scratch. Don't ask any further question. The output must be direct image.
             """
 
         print("[STEP] Opening ChatGPT Main URL...", flush=True)
