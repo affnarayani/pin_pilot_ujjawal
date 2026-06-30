@@ -199,9 +199,59 @@ def run():
         page = context.new_page()
         print("[OK] Cookies added successfully", flush=True)
 
-        # Base strategic blueprint for prompt creation
-        base_prompt = f"""
-            TOPIC:
+        print("[STEP] Opening ChatGPT Main URL...", flush=True)
+        page.goto("https://chatgpt.com/", wait_until="load")
+        print("[OK] URL opened", flush=True)
+
+        # Initial random wait (30-60 seconds)
+        print("[STEP] Performing initial random wait (30-60 seconds)...", flush=True)
+        custom_random_wait(30, 60)
+
+        # Check login state
+        print("[STEP] Checking login success via profile button...", flush=True)
+        profile_button = page.get_by_role('button', name=list(map(lambda x: x.compile(r'.*Free, open'), [__import__('re')]))[0])
+        if profile_button.count() > 0:
+            print(f"[OK] LOGIN SUCCESS: Profile button found -> '{profile_button.first.get_attribute('aria-label') or 'User Account'}'", flush=True)
+            custom_random_wait(6, 12)
+        else:
+            print("[WARNING] Profile button not detected directly, proceeding with caution...", flush=True)
+
+        if page.get_by_role('button', name='Create an image').is_visible():
+            page.get_by_role('button', name='Create an image').click()
+            print("[STEP] Create an image button clicked!...", flush=True)
+            custom_random_wait(6, 12)
+
+        # Locate chat box
+        print("[STEP] Locating chat textbox...", flush=True)
+        chat_box = page.get_by_role('textbox', name='Chat with ChatGPT')
+        if chat_box.count() == 0:
+            chat_box = page.locator('div[contenteditable="true"]').filter(has=page.locator('p', has_text='Describe or edit an image')).first
+        if chat_box.count() == 0:
+            chat_box = page.locator('#prompt-textarea')
+
+        if chat_box.count() > 0:
+            chat_box.first.click()
+            print("[OK] Textbox located and clicked successfully.", flush=True)
+        else:
+            raise RuntimeError("❌ Textbox locator load nahi ho paya (All strategies failed).")
+
+        # Step A: Enter context modifier /createimage
+        # image_selection_text = f"/createimage"
+        # print(f"[STEP] Filling command: '{image_selection_text}'", flush=True)
+        # chat_box.first.fill(image_selection_text)
+        
+        # # Wait 3-6 seconds before pressing enter
+        # custom_random_wait(3, 6)
+        # page.keyboard.press("Enter")
+        # print("[OK] /createimage command sent", flush=True)
+        
+        # # Wait 3-6 seconds after enter before entering main prompt
+        # custom_random_wait(3, 6)
+
+        # Step B: Enter wrapped dynamic prompt
+        prompt_text = f"""
+        Create image with a size strictly of 1024x1536 px, depicting the following scene:
+        TOPIC:
             {subject_matter}
 
             IMPORTANT OBJECTIVE:
@@ -293,59 +343,7 @@ def run():
 
             QUALITY REQUIREMENTS:
             Ultra-detailed Pinterest infographic, highly professional layout, realistic design composition, premium content marketing graphic, conversion-focused visual hierarchy, Pinterest viral pin style, polished typography, educational infographic format, high engagement potential.
-            """
-
-        print("[STEP] Opening ChatGPT Main URL...", flush=True)
-        page.goto("https://chatgpt.com/", wait_until="load")
-        print("[OK] URL opened", flush=True)
-
-        # Initial random wait (30-60 seconds)
-        print("[STEP] Performing initial random wait (30-60 seconds)...", flush=True)
-        custom_random_wait(30, 60)
-
-        # Check login state
-        print("[STEP] Checking login success via profile button...", flush=True)
-        profile_button = page.get_by_role('button', name=list(map(lambda x: x.compile(r'.*Free, open'), [__import__('re')]))[0])
-        if profile_button.count() > 0:
-            print(f"[OK] LOGIN SUCCESS: Profile button found -> '{profile_button.first.get_attribute('aria-label') or 'User Account'}'", flush=True)
-            custom_random_wait(6, 12)
-        else:
-            print("[WARNING] Profile button not detected directly, proceeding with caution...", flush=True)
-
-        if page.get_by_role('button', name='Create an image').is_visible():
-            page.get_by_role('button', name='Create an image').click()
-            print("[STEP] Create an image button clicked!...", flush=True)
-            custom_random_wait(6, 12)
-
-        # Locate chat box
-        print("[STEP] Locating chat textbox...", flush=True)
-        chat_box = page.get_by_role('textbox', name='Chat with ChatGPT')
-        if chat_box.count() == 0:
-            chat_box = page.locator('div[contenteditable="true"]').filter(has=page.locator('p', has_text='Describe or edit an image')).first
-        if chat_box.count() == 0:
-            chat_box = page.locator('#prompt-textarea')
-
-        if chat_box.count() > 0:
-            chat_box.first.click()
-            print("[OK] Textbox located and clicked successfully.", flush=True)
-        else:
-            raise RuntimeError("❌ Textbox locator load nahi ho paya (All strategies failed).")
-
-        # Step A: Enter context modifier /createimage
-        # image_selection_text = f"/createimage"
-        # print(f"[STEP] Filling command: '{image_selection_text}'", flush=True)
-        # chat_box.first.fill(image_selection_text)
-        
-        # # Wait 3-6 seconds before pressing enter
-        # custom_random_wait(3, 6)
-        # page.keyboard.press("Enter")
-        # print("[OK] /createimage command sent", flush=True)
-        
-        # # Wait 3-6 seconds after enter before entering main prompt
-        # custom_random_wait(3, 6)
-
-        # Step B: Enter wrapped dynamic prompt
-        prompt_text = f"Create image with a size strictly of 1024x1536 px, depicting the following scene: {base_prompt}"
+        """
         print("[STEP] Filling hardcoded template wrapped prompt assembly...", flush=True)
         chat_box.first.type(prompt_text)
         custom_random_wait(6, 12)
