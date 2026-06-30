@@ -256,8 +256,8 @@ def run():
         # Step B: Enter wrapped dynamic prompt
         prompt_text = f"{base_prompt}"
         print("[STEP] Filling hardcoded template wrapped prompt assembly...", flush=True)
-        chat_box.first.fill(prompt_text)
-        
+        chat_box.first.type(prompt_text)
+        custom_random_wait(15, 30)
         page.keyboard.press("Enter")
         print("[OK] Hardcoded structural prompt execution complete.", flush=True)
 
