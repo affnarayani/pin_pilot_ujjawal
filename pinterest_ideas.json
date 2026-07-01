@@ -395,7 +395,12 @@
     "image_generated": true,
     "posted": true
   },
-  "Why Your Thoughts Are Not Facts",
+  {
+    "title": "Why Your Thoughts Are Not Facts",
+    "content_generated": true,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Reduce Mental Chatter",
   "The Link Between Overthinking and Low Self Worth",
   "How to Stop Overcomplicating Simple Decisions",
