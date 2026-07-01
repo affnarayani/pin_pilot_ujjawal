@@ -401,7 +401,12 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Reduce Mental Chatter",
+  {
+    "title": "How to Reduce Mental Chatter",
+    "content_generated": true,
+    "image_generated": false,
+    "posted": false
+  },
   "The Link Between Overthinking and Low Self Worth",
   "How to Stop Overcomplicating Simple Decisions",
   "Why Overthinkers Struggle to Relax",
