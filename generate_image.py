@@ -200,10 +200,10 @@ def run():
         print("[OK] Cookies added successfully", flush=True)
 
         # Base strategic blueprint for prompt creation
-        base_prompt = f"""
+        base_prompt = """
             You are an elite Pinterest visual strategist, viral pin designer, infographic specialist, and AI image prompt engineer.
 
-            Your task is to create a highly detailed image for a Pinterest-optimized vertical infographic pin.
+            Your task is to create a highly detailed image-generation prompt for a Pinterest-optimized vertical infographic pin.
 
             TOPIC:
             {subject_matter}
@@ -298,7 +298,7 @@ def run():
             QUALITY REQUIREMENTS:
             Ultra-detailed Pinterest infographic, highly professional layout, realistic design composition, premium content marketing graphic, conversion-focused visual hierarchy, Pinterest viral pin style, polished typography, educational infographic format, high engagement potential.
 
-            Generate only the final infographic image.
+            Generate only the final image-generation prompt.
             """
 
         print("[STEP] Opening ChatGPT Main URL...", flush=True)
@@ -321,7 +321,7 @@ def run():
             page.get_by_role('button', name='Create an image').click()
             print("[STEP] Create an image button clicked!...", flush=True)
             custom_random_wait(6, 12)
-
+            
         # Locate chat box
         print("[STEP] Locating chat textbox...", flush=True)
         chat_box = page.get_by_role('textbox', name='Chat with ChatGPT')
@@ -337,7 +337,7 @@ def run():
             raise RuntimeError("❌ Textbox locator load nahi ho paya (All strategies failed).")
         
         # Step B: Enter wrapped dynamic prompt
-        prompt_text = f"""Generate a 8k image with a size strictly of 1024x1536 px, depicting the following scene: {base_prompt}"""
+        prompt_text = f"Generate a 8k image with a size strictly of 1024x1536 px, depicting the following scene: {base_prompt.format(subject_matter=subject_matter)}"
         print("[STEP] Filling hardcoded template wrapped prompt assembly...", flush=True)
         chat_box.first.type(prompt_text)
         
