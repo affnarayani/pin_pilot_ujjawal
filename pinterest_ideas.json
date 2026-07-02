@@ -449,7 +449,12 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Think Faster and Decide Better",
+  {
+    "title": "How to Think Faster and Decide Better",
+    "content_generated": true,
+    "image_generated": false,
+    "posted": false
+  },
   "The Mental Loop That Keeps You Stuck",
   "How to Stop Worrying About What Could Go Wrong",
   "Why Overthinking Prevents Action",
