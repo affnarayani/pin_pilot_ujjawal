@@ -203,13 +203,13 @@ def run():
         base_prompt = f"""
             You are an elite Pinterest visual strategist, viral pin designer, infographic specialist, and AI image prompt engineer.
 
-            Your task is to create a highly detailed image-generation prompt for a Pinterest-optimized vertical infographic pin.
+            Your task is to create a highly detailed image for a Pinterest-optimized vertical infographic pin.
 
             TOPIC:
             {subject_matter}
 
             IMPORTANT OBJECTIVE:
-            The final image must look like a high-performing Pinterest infographic that people save, share, and click on.
+            The final image must look like a high-performing Pinterest INFOGRAPHIC that people save, share, and click on.
 
             DO NOT create:
             * eBook covers
@@ -298,7 +298,7 @@ def run():
             QUALITY REQUIREMENTS:
             Ultra-detailed Pinterest infographic, highly professional layout, realistic design composition, premium content marketing graphic, conversion-focused visual hierarchy, Pinterest viral pin style, polished typography, educational infographic format, high engagement potential.
 
-            Generate only the final image-generation prompt.
+            Generate only the final infographic image.
             """
 
         print("[STEP] Opening ChatGPT Main URL...", flush=True)
@@ -321,7 +321,7 @@ def run():
             page.get_by_role('button', name='Create an image').click()
             print("[STEP] Create an image button clicked!...", flush=True)
             custom_random_wait(6, 12)
-            
+
         # Locate chat box
         print("[STEP] Locating chat textbox...", flush=True)
         chat_box = page.get_by_role('textbox', name='Chat with ChatGPT')
