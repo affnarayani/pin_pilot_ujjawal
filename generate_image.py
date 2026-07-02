@@ -414,6 +414,9 @@ def run():
                 print(f"[INFO] Share locator exception: {loc_err}", flush=True)
             
             print(f"[WARNING] Share button not visible on attempt {attempt}. Retrying...", flush=True)
+            loading_locator = page.get_by_test_id('image-gen-loading-state').locator('div').first
+            if loading_locator.is_visible():
+                print("Image still loading!!!", flush=True)
 
         if not found_share or not share_button:
             print("❌ Error: 'Share this image' button not found after 5 retries. Exiting program.", flush=True)
