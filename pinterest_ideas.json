@@ -425,7 +425,12 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Find Clarity When You Feel Confused",
+  {
+    "title": "How to Find Clarity When You Feel Confused",
+    "content_generated": true,
+    "image_generated": false,
+    "posted": false
+  },
   "The Overthinking and Insomnia Connection",
   "How to Stop Imagining Fake Scenarios",
   "Why Overthinking Is an Addiction",
