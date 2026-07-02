@@ -199,17 +199,50 @@ def run():
         page = context.new_page()
         print("[OK] Cookies added successfully", flush=True)
 
-        # Base strategic blueprint for prompt creation
-        base_prompt = f"""
-            You are an elite Pinterest visual strategist, viral pin designer, infographic specialist, and AI image prompt engineer.
+        print("[STEP] Opening ChatGPT Main URL...", flush=True)
+        page.goto("https://chatgpt.com/", wait_until="load")
+        print("[OK] URL opened", flush=True)
 
-            Your task is to create a highly detailed image-generation prompt for a Pinterest-optimized vertical infographic pin.
+        # Initial random wait (30-60 seconds)
+        print("[STEP] Performing initial random wait (30-60 seconds)...", flush=True)
+        custom_random_wait(30, 60)
 
-            TOPIC:
+        # Check login state
+        print("[STEP] Checking login success via profile button...", flush=True)
+        profile_button = page.get_by_role('button', name=list(map(lambda x: x.compile(r'.*Free, open'), [__import__('re')]))[0])
+        if profile_button.count() > 0:
+            print(f"[OK] LOGIN SUCCESS: Profile button found -> '{profile_button.first.get_attribute('aria-label') or 'User Account'}'", flush=True)
+            custom_random_wait(6, 12)
+        else:
+            print("[WARNING] Profile button not detected directly, proceeding with caution...", flush=True)
+
+        if page.get_by_role('button', name='Create an image').is_visible():
+            page.get_by_role('button', name='Create an image').click()
+            print("[STEP] Create an image button clicked!...", flush=True)
+            custom_random_wait(6, 12)
+
+        # Locate chat box
+        print("[STEP] Locating chat textbox...", flush=True)
+        chat_box = page.get_by_role('textbox', name='Chat with ChatGPT')
+        if chat_box.count() == 0:
+            chat_box = page.locator('div[contenteditable="true"]').filter(has=page.locator('p', has_text='Describe or edit an image')).first
+        if chat_box.count() == 0:
+            chat_box = page.locator('#prompt-textarea')
+
+        if chat_box.count() > 0:
+            chat_box.first.click()
+            print("[OK] Textbox located and clicked successfully.", flush=True)
+        else:
+            raise RuntimeError("❌ Textbox locator load nahi ho paya (All strategies failed).")
+
+        # Step B: Enter wrapped dynamic prompt
+        prompt_text = f"""
+        Create image with a size strictly of 1024x1536 px, depicting the following scene:
+        TOPIC:
             {subject_matter}
 
             IMPORTANT OBJECTIVE:
-            The final image must look like a high-performing Pinterest infographic that people save, share, and click on.
+            The image must look like a high-performing Pinterest infographic that people save, share, and click on.
 
             DO NOT create:
             * eBook covers
@@ -237,7 +270,7 @@ def run():
 
             CONTENT STRUCTURE:
             Create a complete infographic layout containing:
-            1. A compelling Pinterest-style headline based on the topic
+            1. A compelling Pinterest-style headline strictly same as the topic
             2. A short explanatory subtitle
             3. 3–5 insight sections, mistakes, habits, signs, lessons, or tips relevant to the topic
             4. Visual connectors such as arrows, icons, dividers, or flow elements
@@ -297,50 +330,10 @@ def run():
 
             QUALITY REQUIREMENTS:
             Ultra-detailed Pinterest infographic, highly professional layout, realistic design composition, premium content marketing graphic, conversion-focused visual hierarchy, Pinterest viral pin style, polished typography, educational infographic format, high engagement potential.
-
-            Generate only the final image-generation prompt.
-            """
-
-        print("[STEP] Opening ChatGPT Main URL...", flush=True)
-        page.goto("https://chatgpt.com/", wait_until="load")
-        print("[OK] URL opened", flush=True)
-
-        # Initial random wait (30-60 seconds)
-        print("[STEP] Performing initial random wait (30-60 seconds)...", flush=True)
-        custom_random_wait(30, 60)
-
-        # Check login state
-        print("[STEP] Checking login success via profile button...", flush=True)
-        profile_button = page.get_by_role('button', name=list(map(lambda x: x.compile(r'.*Free, open'), [__import__('re')]))[0])
-        if profile_button.count() > 0:
-            print(f"[OK] LOGIN SUCCESS: Profile button found -> '{profile_button.first.get_attribute('aria-label') or 'User Account'}'", flush=True)
-        else:
-            print("[WARNING] Profile button not detected directly, proceeding with caution...", flush=True)
-
-        if page.get_by_role('button', name='Create an image').is_visible():
-            page.get_by_role('button', name='Create an image').click()
-            print("[STEP] Create an image button clicked!...", flush=True)
-            custom_random_wait(6, 12)
-            
-        # Locate chat box
-        print("[STEP] Locating chat textbox...", flush=True)
-        chat_box = page.get_by_role('textbox', name='Chat with ChatGPT')
-        if chat_box.count() == 0:
-            chat_box = page.locator('div[contenteditable="true"]').filter(has=page.locator('p', has_text='Describe or edit an image')).first
-        if chat_box.count() == 0:
-            chat_box = page.locator('#prompt-textarea')
-
-        if chat_box.count() > 0:
-            chat_box.first.click()
-            print("[OK] Textbox located and clicked successfully.", flush=True)
-        else:
-            raise RuntimeError("❌ Textbox locator load nahi ho paya (All strategies failed).")
-        
-        # Step B: Enter wrapped dynamic prompt
-        prompt_text = f"""Generate a 8k image with a size strictly of 1024x1536 px, depicting the following scene: {base_prompt}"""
+        """
         print("[STEP] Filling hardcoded template wrapped prompt assembly...", flush=True)
         chat_box.first.type(prompt_text)
-        
+        custom_random_wait(6, 12)
         page.keyboard.press("Enter")
         print("[OK] Hardcoded structural prompt execution complete.", flush=True)
 
@@ -415,6 +408,20 @@ def run():
 
         if not found_share or not share_button:
             print("❌ Error: 'Share this image' button not found after 5 retries. Exiting program.", flush=True)
+            try:
+                error_paragraph = page.locator("p[data-start='0']").first
+                if error_paragraph.is_visible():
+                    error_text = error_paragraph.inner_text()
+                    print(f"[FOUND ERROR TEXT] Paragraph content: {error_text}", flush=True)
+            except Exception as p_err:
+                print(f"[INFO] Could not read paragraph locator: {p_err}", flush=True)
+            if 'page' in locals() and page:
+                try:
+                    screenshot_path = "error_screenshot.png"
+                    page.screenshot(path=screenshot_path, full_page=True)
+                    print(f"[OK] Error screenshot captured: {screenshot_path}", flush=True)
+                except Exception as screenshot_err:
+                    print(f"[WARNING] Could not capture screenshot: {screenshot_err}", flush=True)
             sys.exit(1)
 
         # ========================================================
