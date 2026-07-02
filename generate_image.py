@@ -337,7 +337,9 @@ def run():
             raise RuntimeError("❌ Textbox locator load nahi ho paya (All strategies failed).")
         
         # Step B: Enter wrapped dynamic prompt
-        prompt_text = f"Generate a 8k image with a size strictly of 1024x1536 px, depicting the following scene: {base_prompt.format(subject_matter=subject_matter)}"
+        formatted_base = base_prompt.format(subject_matter=subject_matter)
+        clean_base_prompt = " ".join(formatted_base.split())
+        prompt_text = f"Generate a 8k image with a size strictly of 1024x1536 px, depicting the following scene: {clean_base_prompt}"
         print("[STEP] Filling hardcoded template wrapped prompt assembly...", flush=True)
         chat_box.first.type(prompt_text)
         
