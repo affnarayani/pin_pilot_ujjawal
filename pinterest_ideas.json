@@ -455,7 +455,12 @@
     "image_generated": true,
     "posted": true
   },
-  "The Mental Loop That Keeps You Stuck",
+  {
+    "title": "The Mental Loop That Keeps You Stuck",
+    "content_generated": true,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Stop Worrying About What Could Go Wrong",
   "Why Overthinking Prevents Action",
   "How to Calm an Anxious Mind Instantly",
