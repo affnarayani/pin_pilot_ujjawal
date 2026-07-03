@@ -473,7 +473,12 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Calm an Anxious Mind Instantly",
+  {
+    "title": "How to Calm an Anxious Mind Instantly",
+    "content_generated": true,
+    "image_generated": false,
+    "posted": false
+  },
   "The Overthinker's Daily Reset Routine",
   "How to Stop Living in Fear of the Future",
   "Why You Replay Arguments in Your Head",
