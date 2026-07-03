@@ -491,7 +491,12 @@
     "image_generated": true,
     "posted": true
   },
-  "Why You Replay Arguments in Your Head",
+  {
+    "title": "Why You Replay Arguments in Your Head",
+    "content_generated": true,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Stop Being Your Own Worst Enemy",
   "The Overthinking Habit Stack to Break",
   "How to Make Peace With Uncertainty",
