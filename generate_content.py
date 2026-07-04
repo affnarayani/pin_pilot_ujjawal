@@ -226,7 +226,7 @@ def run():
         print("[OK] Cookies added successfully", flush=True)
 
         print("[STEP] Opening ChatGPT Main URL...", flush=True)
-        page.goto("https://chatgpt.com/", wait_until="load")
+        page.goto("https://chatgpt.com/?temporary-chat=true", wait_until="load")
         print("[OK] URL opened successfully (Logged In)", flush=True)
 
         # 30 to 60 seconds random wait after page load
@@ -241,6 +241,10 @@ def run():
         else:
             print("[WARNING] Profile button not detected directly, proceeding with caution...", flush=True)
 
+        continue_button = page.get_by_role("button", name="Continue")
+        if continue_button.is_visible():
+            continue_button.click()
+            custom_random_wait(6, 12)
         # =========================
         # AUTOMATION FLOW
         # =========================
@@ -268,34 +272,205 @@ def run():
 
         # Construction of algorithmic contextual optimization prompt blueprint
         prompt = (
-            f"IMPORTANT: Your entire response must be wrapped in a single ```json code block. "
-            f"Do not print any conversational commentary or markdown outside of that code block.\n\n"
-            
-            f"You are an elite expert Pinterest Marketer and conversion optimization copywriter. "
-            f"Generate optimized metadata assets mapped explicitly to the design vectors provided below.\n\n"
-            
-            f"DATA INPUT PARAMETERS:\n"
-            f"1. Target Topic: {subject_matter}\n\n"
-            
-            f"STRICT OUTPUT FIELD REQUIREMENT VALIDATION METRICS:\n"
-            f"1. title: Must contain exactly the text data string: \"{subject_matter}\"\n"
-            f"2. description: Craft a high-performing conversion optimized description tailored around consumer pain points related to the title. Include 3-5 trending relevant hashtags at the trailing edge of the value. Each hashtag must begin with the '#' symbol. Total length constraint must be strictly between 150 and 250 characters long.\n"
-            f"3. alt_text: Must contain exactly the text data string: \"{subject_matter}\"\n"
-            f"4. selected_board: Analyze the cognitive intent behind the topic and select the single most relevant category string match from this strict choice list array ONLY:\n"
-            f"   - Anxiety & Mental Peace\n"
-            f"   - Calm Mind Habits\n"
-            f"   - Focus & Mental Discipline\n"
-            f"   - Mental Clarity\n"
-            f"   - Overthinking Help\n"
-            f"   - Self-Improvement Psychology\n\n"
-            
-            f"OUTPUT FORMATTING TEMPLATE:\n"
-            f"{{\n"
-            f'  "title": "{subject_matter}",\n'
-            f'  "description": "[Optimized description string content matching length boundaries]",\n'
-            f'  "alt_text": "{subject_matter}",\n'
-            f'  "selected_board": "[Exact matched string text chosen from given list]"\n'
-            f"}}\n"
+            f"IMPORTANT:\n"
+            f"Return ONLY ONE valid JSON object wrapped inside a single ```json code block```.\n"
+            f"Do NOT output explanations, markdown, comments, notes or conversational text outside the JSON block.\n\n"
+
+            f"ROLE\n"
+            f"You are an elite Pinterest SEO Strategist, Pinterest Trend Analyst, Consumer Psychologist and Direct Response Copywriter.\n\n"
+
+            f"PRIMARY OBJECTIVE\n"
+            f"Generate Pinterest metadata that maximizes:\n"
+            f"- Pinterest Search Visibility\n"
+            f"- Search Ranking\n"
+            f"- Click Through Rate (CTR)\n"
+            f"- Saves\n"
+            f"- Outbound Clicks\n"
+            f"- User Engagement\n"
+            f"- Human Readability\n\n"
+
+            f"INPUT TOPIC\n"
+            f"{subject_matter}\n\n"
+
+            f"========================================\n"
+            f"INTERNAL ANALYSIS (DO NOT OUTPUT)\n"
+            f"========================================\n"
+
+            f"Before writing anything, silently determine:\n"
+            f"• Primary Pinterest Search Intent\n"
+            f"• Target Audience Intent\n"
+            f"• Primary Keyword\n"
+            f"• 3-6 Secondary Pinterest Keywords\n"
+            f"• Semantic Keyword Variations\n"
+            f"• User Pain Point\n"
+            f"• Desired Transformation\n"
+            f"• Emotional Trigger\n"
+            f"• Curiosity Trigger\n"
+            f"• Best Content Angle\n"
+            f"• Best Hook Style\n"
+            f"• Best CTA Style\n"
+            f"• Reader Awareness Stage\n"
+            f"• Best Matching Board\n\n"
+
+            f"Never output this reasoning.\n\n"
+
+            f"========================================\n"
+            f"TITLE\n"
+            f"========================================\n"
+
+            f"Requirements:\n"
+            f"- Target length: 60-85 characters.\n"
+            f"- Never exceed 95 characters.\n"
+            f"- Naturally include the complete input topic exactly once.\n"
+            f"- You MAY add words before and/or after the topic.\n"
+            f"- Front-load the strongest searchable keyword whenever natural.\n"
+            f"- Optimize for Pinterest Search first.\n"
+            f"- Optimize for CTR second.\n"
+            f"- Make users curious.\n"
+            f"- Promise a clear benefit.\n"
+            f"- Human sounding only.\n"
+            f"- Avoid clickbait.\n"
+            f"- Avoid generic AI phrases.\n"
+            f"- No emojis.\n"
+            f"- No hashtags.\n"
+            f"- No quotation marks.\n\n"
+
+            f"========================================\n"
+            f"DESCRIPTION\n"
+            f"========================================\n"
+
+            f"Requirements:\n"
+            f"- Target length: 350-600 characters.\n"
+            f"- Never exceed 700 characters.\n"
+            f"- First sentence must immediately communicate value.\n"
+            f"- Use a compelling hook.\n"
+            f"- Naturally reinforce the primary keyword.\n"
+            f"- Naturally include several semantic Pinterest search keywords.\n"
+            f"- Avoid keyword stuffing.\n"
+            f"- Avoid repeating identical phrases.\n"
+            f"- Use synonyms naturally.\n"
+            f"- Address a real user pain point.\n"
+            f"- Explain the practical benefit.\n"
+            f"- Build curiosity.\n"
+            f"- Make the content feel save-worthy.\n"
+            f"- End with ONE natural CTA.\n"
+            f"- CTA examples:\n"
+            f"  • Save this pin for later.\n"
+            f"  • Explore the complete guide.\n"
+            f"  • Learn the full framework.\n"
+            f"  • Read the complete method.\n"
+            f"  • Discover the complete system.\n"
+            f"- Educational tone preferred over promotional tone.\n"
+            f"- Never sound spammy.\n"
+            f"- No emojis.\n"
+            f"- Hashtags are optional. Use at most 3 only if they genuinely improve discoverability.\n\n"
+
+            f"========================================\n"
+            f"ALT TEXT\n"
+            f"========================================\n"
+
+            f"Requirements:\n"
+            f"- Target length: 120-250 characters.\n"
+            f"- Never exceed 350 characters.\n"
+            f"- Describe the infographic for accessibility.\n"
+            f"- Mention the main topic naturally.\n"
+            f"- Mention important visual information.\n"
+            f"- Naturally include the primary keyword once.\n"
+            f"- Do NOT copy the title.\n"
+            f"- Do NOT paraphrase the description.\n"
+            f"- Human language only.\n"
+            f"- No hashtags.\n"
+            f"- No emojis.\n\n"
+
+            f"========================================\n"
+            f"HOOK STRATEGY\n"
+            f"========================================\n"
+
+            f"Internally choose ONLY ONE hook style:\n"
+            f"- Problem\n"
+            f"- Curiosity\n"
+            f"- Mistake\n"
+            f"- Checklist\n"
+            f"- Framework\n"
+            f"- Step-by-Step\n"
+            f"- Secret\n"
+            f"- Myth vs Fact\n"
+            f"- Transformation\n"
+            f"- Warning\n"
+            f"- Question\n"
+            f"- Habit\n"
+            f"- Beginner Guide\n\n"
+
+            f"========================================\n"
+            f"BOARD\n"
+            f"========================================\n"
+
+            f"Choose EXACTLY ONE:\n"
+            f"- Anxiety & Mental Peace\n"
+            f"- Calm Mind Habits\n"
+            f"- Focus & Mental Discipline\n"
+            f"- Mental Clarity\n"
+            f"- Overthinking Help\n"
+            f"- Self-Improvement Psychology\n\n"
+
+            f"========================================\n"
+            f"DIVERSITY RULES\n"
+            f"========================================\n"
+
+            f"- Never use repetitive sentence structures.\n"
+            f"- Vary sentence openings naturally.\n"
+            f"- Avoid AI sounding transitions.\n"
+            f"- Avoid repetitive adjectives.\n"
+            f"- Produce unique wording even for related topics.\n\n"
+
+            f"========================================\n"
+            f"NEGATIVE RULES\n"
+            f"========================================\n"
+
+            f"Never use phrases such as:\n"
+            f"unlock your potential\n"
+            f"game changer\n"
+            f"transform your life\n"
+            f"revolutionary\n"
+            f"next level\n"
+            f"dive into\n"
+            f"unleash\n"
+            f"boost your life instantly\n"
+            f"life-changing secret\n\n"
+
+            f"Never:\n"
+            f"- Keyword stuff.\n"
+            f"- Repeat identical phrases.\n"
+            f"- Sound robotic.\n"
+            f"- Write generic marketing copy.\n"
+            f"- Invent facts.\n"
+            f"- Invent statistics.\n"
+            f"- Make medical claims.\n\n"
+
+            f"========================================\n"
+            f"FINAL SELF REVIEW (DO NOT OUTPUT)\n"
+            f"========================================\n"
+
+            f"Before returning JSON, internally score your output from 1-10 for:\n"
+            f"- Pinterest SEO\n"
+            f"- CTR\n"
+            f"- Human Readability\n"
+            f"- Search Intent Match\n"
+            f"- Semantic Diversity\n"
+            f"- Accessibility\n\n"
+
+            f"If any category scores below 9/10, improve the output before returning it.\n\n"
+
+            f"========================================\n"
+            f"OUTPUT FORMAT\n"
+            f"========================================\n"
+
+            f'{{\n'
+            f'  "title": "...",\n'
+            f'  "description": "...",\n'
+            f'  "alt_text": "...",\n'
+            f'  "selected_board": "..."\n'
+            f'}}'
         )
 
         print("[STEP] Entering prompt into textbox...", flush=True)
@@ -369,8 +544,8 @@ def run():
                 parsed_json = json.loads(json_content.strip())
                 
                 # Strict structural data synchronization constraints enforcement
-                parsed_json["title"] = subject_matter
-                parsed_json["alt_text"] = subject_matter
+                # parsed_json["title"] = subject_matter
+                # parsed_json["alt_text"] = subject_matter
                 
                 # Fallback safeguard validation structure against broken board names
                 if parsed_json.get("selected_board") not in ALLOWED_BOARDS:

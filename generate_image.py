@@ -201,105 +201,360 @@ def run():
 
         # Base strategic blueprint for prompt creation
         base_prompt = """
-            You are an elite Pinterest visual strategist, viral pin designer, infographic specialist, and AI image prompt engineer.
+        You are an elite Pinterest Visual Strategist, Editorial Information Designer, UX Infographic Designer, Consumer Psychologist, and AI Image Prompt Engineer.
 
-            Your task is to create a highly detailed image-generation prompt for a Pinterest-optimized vertical infographic pin.
+        Your task is to create ONE highly detailed image-generation prompt for a Pinterest-optimized vertical infographic.
 
-            TOPIC:
-            {subject_matter}
+        ==================================================
+        TOPIC
+        ==================================================
 
-            IMPORTANT OBJECTIVE:
-            The final image must look like a high-performing Pinterest INFOGRAPHIC that people save, share, and click on.
+        {subject_matter}
 
-            DO NOT create:
-            * eBook covers
-            * Book advertisements
-            * Product mockups
-            * Magazine covers
-            * Promotional posters
-            * Generic social media graphics
-            * Random aesthetic artwork
-            * Title-only designs
+        ==================================================
+        PRIMARY OBJECTIVE
+        ==================================================
 
-            The image should feel educational, practical, visually informative, and optimized for Pinterest engagement.
+        Design a Pinterest pin that immediately stops scrolling, communicates value within seconds, encourages users to save it, and motivates them to click for more information.
 
-            LAYOUT REQUIREMENTS:
-            * Vertical Pinterest pin (2:3 aspect ratio)
-            * Professional infographic structure
-            * Strong visual hierarchy
-            * Mobile-first readability
-            * Large attention-grabbing headline
-            * Multiple content sections
-            * Easy-to-scan design
-            * Pinterest-native appearance
-            * Clean spacing
-            * Premium visual balance
+        The final image must look like a professionally designed Pinterest infographic created by an experienced editorial designer—not by AI.
 
-            CONTENT STRUCTURE:
-            Create a complete infographic layout containing:
-            1. A compelling Pinterest-style headline based on the topic
-            2. A short explanatory subtitle
-            3. 3–5 insight sections, mistakes, habits, signs, lessons, or tips relevant to the topic
-            4. Visual connectors such as arrows, icons, dividers, or flow elements
-            5. A transformation-focused takeaway section
-            6. A subtle call-to-action section
+        The design should feel premium, clean, educational, trustworthy, and highly engaging.
 
-            VISUAL STORYTELLING:
-            The design must visually explain the topic.
-            Do not use random decorative imagery.
-            Use realistic scenes, illustrations, symbols, psychology-based visual metaphors, and meaningful graphics directly connected to the topic.
+        ==================================================
+        IMPORTANT
+        ==================================================
 
-            Examples of visual elements when relevant:
-            * Overthinking
-            * Mental clutter
-            * Brain activity
-            * Focus
-            * Productivity
-            * Mindfulness
-            * Journaling
-            * Phone addiction
-            * Distraction
-            * Daily habits
-            * Decision making
-            * Stress
-            * Mental clarity
-            * Self-improvement routines
+        Generate ONLY the final image-generation prompt.
 
-            The imagery should immediately communicate the topic even before the viewer reads all the text.
+        Do NOT explain your reasoning.
 
-            STYLE:
-            * Modern psychology infographic
-            * Self-improvement niche
-            * Premium Pinterest aesthetic
-            * Soft neutral color palette
-            * Strategic accent colors
-            * Clean white space
-            * High-end digital publication quality
-            * Minimal clutter
-            * Visually engaging information design
+        Do NOT output design notes.
 
-            TYPOGRAPHY:
-            * Large Pinterest-style headline
-            * Bold readable fonts
-            * High contrast text
-            * Clear section labels
-            * Mobile-friendly readability
-            * Optimized for quick scanning
+        Do NOT output markdown.
 
-            ENGAGEMENT OPTIMIZATION:
-            The infographic should be designed to maximize:
-            * Saves
-            * Shares
-            * Click-through rate
-            * Engagement
-            * Curiosity
-            * Readability
+        ==================================================
+        DO NOT CREATE
+        ==================================================
 
-            QUALITY REQUIREMENTS:
-            Ultra-detailed Pinterest infographic, highly professional layout, realistic design composition, premium content marketing graphic, conversion-focused visual hierarchy, Pinterest viral pin style, polished typography, educational infographic format, high engagement potential.
+        • Book covers
+        • eBook covers
+        • Magazine covers
+        • Posters
+        • Advertisements
+        • Product mockups
+        • Generic social media posts
+        • Quote graphics
+        • Presentation slides
+        • AI concept art
+        • Decorative artwork
+        • Title-only graphics
+        • Busy collage layouts
 
-            Generate only the final image-generation prompt.
-            """
+        ==================================================
+        IMAGE FORMAT
+        ==================================================
+
+        Pinterest Vertical Pin
+
+        Aspect Ratio:
+        2:3
+
+        High-resolution
+
+        Professional editorial quality
+
+        ==================================================
+        DESIGN GOAL
+        ==================================================
+
+        Imagine this image competing against dozens of Pinterest pins.
+
+        The design should maximize:
+
+        • Scroll stopping
+        • Click-through rate
+        • Saves
+        • Shares
+        • Readability
+        • Visual clarity
+        • Trust
+        • Educational value
+
+        ==================================================
+        VISUAL HIERARCHY
+        ==================================================
+
+        The eye should naturally move through the design in this order:
+
+        1. Headline
+        2. Hero visual
+        3. Main insight
+        4. Supporting insights
+        5. Takeaway
+        6. CTA
+
+        Nothing should interrupt this reading flow.
+
+        ==================================================
+        HEADLINE
+        ==================================================
+
+        The headline is the single most important visual element.
+
+        Requirements:
+
+        • Occupy approximately 25–35% of the upper canvas.
+        • Large.
+        • Bold.
+        • Extremely readable.
+        • Benefit-driven.
+        • Curiosity-driven.
+        • Mobile-first.
+        • Easy to understand within two seconds.
+        • Never feel like a blog title.
+        • Never feel like a textbook heading.
+
+        The headline should stop scrolling before explaining.
+
+        ==================================================
+        HERO VISUAL
+        ==================================================
+
+        Use ONE dominant hero illustration.
+
+        The illustration should communicate the emotional state of the reader.
+
+        Examples:
+
+        • overwhelmed mind
+        • calm mind
+        • person reflecting
+        • decision making
+        • mental clutter becoming clarity
+        • stress transforming into peace
+        • focus replacing distraction
+
+        Avoid stock-photo style poses.
+
+        Avoid decorative people.
+
+        Avoid multiple unrelated illustrations.
+
+        The hero visual should immediately communicate the topic even before reading.
+
+        ==================================================
+        CONTENT STRUCTURE
+        ==================================================
+
+        Create an infographic containing:
+
+        • One strong headline
+
+        • One short subtitle
+
+        • Three to five content blocks
+
+        Each block should contain:
+
+        • short heading
+        • one or two concise supporting lines
+
+        Each supporting line should remain short enough to read comfortably on a phone screen.
+
+        Never create long paragraphs.
+
+        ==================================================
+        CONTENT DENSITY
+        ==================================================
+
+        Prioritize simplicity.
+
+        Remove unnecessary information.
+
+        Less text is better.
+
+        Each section should communicate one idea only.
+
+        Do not overload the design.
+
+        Reduce cognitive load wherever possible.
+
+        ==================================================
+        VISUAL STORYTELLING
+        ==================================================
+
+        Every illustration, icon and visual element must reinforce the educational message.
+
+        Visuals should never exist only for decoration.
+
+        Use:
+
+        • psychology illustrations
+        • simple diagrams
+        • arrows
+        • progress indicators
+        • minimal icons
+        • subtle dividers
+        • meaningful symbols
+
+        Avoid visual clutter.
+
+        ==================================================
+        TRANSFORMATION SECTION
+        ==================================================
+
+        Near the bottom, include one concise transformation summary showing the desired outcome after applying the advice.
+
+        This section should feel motivating rather than promotional.
+
+        ==================================================
+        CTA
+        ==================================================
+
+        Place one subtle but visible CTA at the bottom.
+
+        Examples:
+
+        • Save this Pin
+        • Read the Full Guide
+        • Explore More
+        • Learn More
+
+        Only ONE CTA.
+
+        ==================================================
+        TYPOGRAPHY
+        ==================================================
+
+        Typography should feel modern editorial.
+
+        Use:
+
+        • bold headline
+        • clear hierarchy
+        • few font sizes
+        • high contrast
+        • generous spacing
+        • clean alignment
+
+        Avoid:
+
+        • decorative fonts
+        • script fonts
+        • curved text
+        • excessive font variation
+        • text effects
+
+        ==================================================
+        COLOR PALETTE
+        ==================================================
+
+        Modern self-improvement aesthetic.
+
+        Soft neutral background.
+
+        Limited strategic accent colors.
+
+        Excellent contrast.
+
+        Calming, trustworthy and premium.
+
+        Never oversaturate colors.
+
+        ==================================================
+        LAYOUT
+        ==================================================
+
+        Use a professional editorial grid.
+
+        Consistent margins.
+
+        Consistent spacing.
+
+        Large white space.
+
+        Balanced composition.
+
+        Perfect alignment.
+
+        Premium visual rhythm.
+
+        ==================================================
+        MOBILE READABILITY
+        ==================================================
+
+        Assume the image will first be viewed on a phone.
+
+        Every important element must remain readable without zooming.
+
+        Prioritize readability over additional content.
+
+        ==================================================
+        VISUAL STYLE
+        ==================================================
+
+        Premium Pinterest infographic.
+
+        Editorial information design.
+
+        Modern self-improvement niche.
+
+        Minimal clutter.
+
+        High-end publication quality.
+
+        Clean vector illustration mixed with subtle realism.
+
+        Professional digital product quality.
+
+        ==================================================
+        NEGATIVE REQUIREMENTS
+        ==================================================
+
+        Do NOT:
+
+        • overload text
+        • create long paragraphs
+        • create tiny unreadable fonts
+        • use unnecessary decorations
+        • create multiple competing focal points
+        • generate random icons
+        • create visual clutter
+        • use generic AI layouts
+        • produce stock-photo aesthetics
+        • overuse gradients
+        • overuse shadows
+        • use inconsistent illustration styles
+
+        ==================================================
+        FINAL QUALITY CHECK
+        ==================================================
+
+        Before producing the final prompt ensure that:
+
+        ✓ The design immediately communicates the topic.
+
+        ✓ The headline dominates attention.
+
+        ✓ The layout is optimized for Pinterest.
+
+        ✓ The design looks premium.
+
+        ✓ Mobile readability is excellent.
+
+        ✓ Information hierarchy is obvious.
+
+        ✓ White space is balanced.
+
+        ✓ Visuals support the educational message.
+
+        ✓ The design feels human-made.
+
+        ✓ The overall result resembles a top-performing Pinterest infographic created by an experienced designer.
+
+        Generate ONLY the final image-generation prompt.
+        """
 
         print("[STEP] Opening ChatGPT Main URL...", flush=True)
         page.goto("https://chatgpt.com/", wait_until="load")
@@ -341,7 +596,7 @@ def run():
         clean_base_prompt = " ".join(formatted_base.split())
         prompt_text = f"Generate a 8k image with a size strictly of 1024x1536 px, depicting the following scene: {clean_base_prompt}"
         print("[STEP] Filling hardcoded template wrapped prompt assembly...", flush=True)
-        chat_box.first.type(prompt_text)
+        chat_box.first.type(prompt_text, timeout=0)
         
         page.keyboard.press("Enter")
         print("[OK] Hardcoded structural prompt execution complete.", flush=True)
