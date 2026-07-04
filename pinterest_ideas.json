@@ -521,7 +521,12 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Stop Seeking Perfection in Every Decision",
+  {
+    "title": "How to Stop Seeking Perfection in Every Decision",
+    "content_generated": true,
+    "image_generated": false,
+    "posted": false
+  },
   "The Real Source of Your Mental Noise",
   "How to Detox Your Mind From Negative Loops",
   "Why Overthinking Keeps You From Being Present",
