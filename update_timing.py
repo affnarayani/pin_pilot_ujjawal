@@ -47,4 +47,4 @@ def update_cron_times(file_path, n):
     print(f"Updated {file_path} with {n} cron times", flush=True)
 
 if __name__ == "__main__":
-    update_cron_times('.github/workflows/1a_generate_content.yml', 6)
+    update_cron_times('.github/workflows/1a_post_generate.yml', 6)

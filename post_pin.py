@@ -153,23 +153,25 @@ def run():
     target_item = None
     target_index = -1
 
-    # Find the current item in the pipeline state
+    # FIXED PIPELINE CHECK: Runs only when image_generated is True and posted is False
     for index, item in enumerate(ideas_list):
         if isinstance(item, dict):
-            # Checking for target pending item condition
-            if item.get("content_generated") is True and item.get("image_generated") is True and item.get("posted") is False:
+            if (item.get("content_generated") is True and 
+                item.get("image_generated") is True and 
+                item.get("posted") is False):
+                
                 target_item = item
                 target_index = index
                 break
 
-    # If no structured item satisfies the strict launch parameters criteria
-    if target_item is None:
-        print("[INFO] Either content generation or image generation is pending.", flush=True)
+    # If no matching row satisfies the launch criteria, exit cleanly
+    if target_item is None or target_index == -1:
+        print("[INFO] Conditions not met ('image_generated': true and 'posted': false). Exiting safely.", flush=True)
         sys.exit(0)
 
-    print(f"[OK] Pipeline verified for: '{target_item['title']}' at index [{target_index}]", flush=True)
+    print(f"[OK] Pipeline verified for: '{target_item.get('title')}' at index [{target_index}]", flush=True)
 
-    # Fetch textual content data elements from local storage file
+    # Verify if local article template exists
     if not article_file.exists():
         print("[ERROR] article.json file metadata missing. Pipeline corrupted.", flush=True)
         sys.exit(1)
@@ -181,16 +183,38 @@ def run():
         print(f"[ERROR] article.json parse failed: {e}", flush=True)
         sys.exit(1)
 
-    pin_title = target_item["title"]
+    # ========================================================
+    # EXTRACT URL FROM JSON AND APPEND IT TO ARTICLE JSON
+    # ========================================================
+    extracted_blog_url = target_item.get("url", "").strip()
+    
+    # Agar URL nahi milta toh ek safety fallback framework lagaya hai
+    if not extracted_blog_url:
+        print("[WARNING] Target row inside JSON does not contain a 'url' key! Falling back to Gumroad.", flush=True)
+        extracted_blog_url = "https://mindtobetter.gumroad.com/"
+
+    print(f"[STEP] Appending live extracted URL '{extracted_blog_url}' to article.json...", flush=True)
+    
+    # Appending url as the last key-value pair smoothly without overriding existing data
+    meta_data["url"] = extracted_blog_url
+    
+    with article_file.open("w", encoding="utf-8") as f:
+        json.dump(meta_data, f, indent=4, ensure_ascii=False)
+        
+    print("[OK] article.json seamlessly updated with the 'url' field.", flush=True)
+
+    # Text metadata assignments
+    pin_title = target_item.get("title") or meta_data.get("title", "Untitled Pin")
     pin_description = meta_data.get("description", "").strip()
     pin_alt_text = meta_data.get("alt_text", pin_title).strip()
     chosen_board = meta_data.get("selected_board", "").strip()
+    destination_link = meta_data.get("url", "https://mindtobetter.gumroad.com/").strip()
 
     if not pin_description:
         print("[ERROR] Description field inside article.json is empty.", flush=True)
         sys.exit(1)
 
-    # Validate board fallback selection logic matching state schema boundary rules
+    # Validate board selection logic parameters
     if chosen_board not in ALLOWED_BOARDS:
         print(f"[WARNING] Local metadata board target '{chosen_board}' invalid. Falling back safely.", flush=True)
         chosen_board = random.choice(ALLOWED_BOARDS)
@@ -265,8 +289,6 @@ def run():
 
         # 5. Fill Screen Reader Alt Text
         print("[STEP] Typing generated Alt Text content...", flush=True)
-
-        # Teeno locators ko combine kiya
         alt_box = page.get_by_role('textbox', name='Explain what people can see').or_(
             page.locator("textarea[id^='pin-draft-alttext-']")
         ).or_(
@@ -275,28 +297,23 @@ def run():
 
         try:
             print("[INFO] Alt Text box dhoond rahe hain...", flush=True)
-            
-            # Kam timeout (3-4 seconds) rakhein taaki agar na mile toh script zyada wait na kare
             alt_box.wait_for(state="attached", timeout=4000)
-            
             alt_box.scroll_into_view_if_needed()
             alt_box.click(force=True)
             alt_box.fill(pin_alt_text)
             print("[OK] Alt Text loaded successfully.", flush=True)
-
         except Exception as e:
-            # Agar element nahi mila, toh yeh block chalega aur script crash nahi hogi
             print("[WARN] Alt Text box nahi mila (Skipping)... Aage badh rahe hain.", flush=True)
 
-        # Code yahan se normal tarike se aage continue ho jayega
         print("[STEP] Moving to the next step...", flush=True)
         custom_random_wait(15, 30)
 
-        # 6. Fill Destination Link
-        print("[STEP] Accessing and filling Destination URL redirection field...", flush=True)
+        # 6. FIXED: Fill Dynamic Destination Link Using .type() Instead of .fill()
+        print("[STEP] Accessing and typing Dynamic Destination URL redirection field...", flush=True)
         dest_box = page.get_by_role('textbox', name='Add a destination link')
-        dest_box.fill("https://mindtobetter.gumroad.com/")
-        print("[OK] Target destination URL added successfully.", flush=True)
+        dest_box.click()
+        dest_box.type(destination_link, delay=50)
+        print(f"[OK] Target dynamic URL '{destination_link}' typed in completely.", flush=True)
         custom_random_wait(15, 30)
 
         # 7. Select immediate publishing protocol
@@ -318,7 +335,7 @@ def run():
         print("[OK] Dropdown component overlay active.", flush=True)
         custom_random_wait(15, 30)
 
-        # Map correct execution string names based on selected context target configuration
+        # Map correct execution string names
         if chosen_board == "Anxiety & Mental Peace":
             board_button = page.get_by_role('button', name='Anxiety & Mental Peace Publish')
         elif chosen_board == "Calm Mind Habits":
@@ -346,10 +363,14 @@ def run():
         custom_random_wait(30, 60)
 
         # ========================================================
-        # UPDATE ARRAY METADATA LOCK TRACKER STATE
+        # FIXED: UPDATE STATE SEAMLESSLY (posted = True)
         # ========================================================
-        print("[STEP] Committing posted=True back to state tracker...", flush=True)
-        ideas_list[target_index]["posted"] = True
+        print("[STEP] Committing posted=True back to state tracker via update query...", flush=True)
+        
+        # Using .update() so that no other keys are accidentally deleted or over-written
+        ideas_list[target_index].update({
+            "posted": True
+        })
 
         with ideas_file.open("w", encoding="utf-8") as f:
             json.dump(ideas_list, f, indent=2, ensure_ascii=False)
@@ -361,7 +382,7 @@ def run():
         print("[ERROR] Automation cycle interrupted due to runtime trace:", e, flush=True)
         if page:
             try:
-                screenshot_path = "error_screenshot_post.png"
+                screenshot_path = "error_screenshot.png"
                 page.screenshot(path=screenshot_path, full_page=True)
                 print(f"[OK] Error screenshot captured: {screenshot_path}", flush=True)
             except Exception as screenshot_err:

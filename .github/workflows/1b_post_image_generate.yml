@@ -1,9 +1,9 @@
-name: 1B. Generate Image
+name: 1B. Post Image Generate
 
 on:
   workflow_dispatch: # Manual button activation support
   workflow_run:
-    workflows: ["1A. Generate Content"]
+    workflows: ["1A. Post Generate"]
     types:
       - completed
 
@@ -74,7 +74,7 @@ jobs:
         DECRYPT_KEY: ${{ secrets.DECRYPT_KEY }}
         IMGBBB_API_KEY: ${{ secrets.IMGBBB_API_KEY }}
       run: |
-        python generate_image.py
+        python post_image_generate.py
 
     - name: Upload Error Screenshot
       if: failure()
@@ -87,7 +87,7 @@ jobs:
     - name: Commit and Push Generated Image & States
       run: |
         # Sirf wahi files add hongi jo pipeline ke liye actual mein important hain
-        git add image/pin.png pinterest_ideas.json
+        git add post_image/post.png pinterest_ideas.json
         
         if git diff --staged --quiet; then
           echo "[INFO] No changes detected in image or states. Skipping push."

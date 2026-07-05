@@ -1,9 +1,9 @@
-name: Post Pin to Pinterest
+name: 1F. Post Pin to Pinterest
 
 on:
   workflow_dispatch: # Taaki aap zaroorat padne par manually bhi run kar sakein
   workflow_run:
-    workflows: ["Generate Image"] # Jab 'Generate Image' workflow khatam hoga tab auto-trigger hoga
+    workflows: ["1E. Generate Image"] # Jab 'Generate Image' workflow khatam hoga tab auto-trigger hoga
     types:
       - completed
 
@@ -40,6 +40,33 @@ jobs:
         run: |
           git pull origin HEAD --rebase
 
+      - name: Install and Start Cloudflare WARP (TUN Global Mode)
+        run: |
+          # 1. Repository aur GPG Key set karein
+          curl -fsSL https://pkg.cloudflareclient.com/pubkey.gpg | sudo gpg --yes --dearmor --output /usr/share/keyrings/cloudflare-warp-archive-keyring.gpg
+          echo "deb [signed-by=/usr/share/keyrings/cloudflare-warp-archive-keyring.gpg] https://pkg.cloudflareclient.com/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/cloudflare-client.list
+          
+          # 2. Install
+          sudo apt-get update && sudo apt-get install -y cloudflare-warp
+          
+          # 3. Start Service
+          sudo systemctl start warp-svc
+          sleep 2
+          
+          # 4. Register (New CLI Syntax compatible)
+          warp-cli --accept-tos registration new || warp-cli registration new
+          
+          # 5. STRICT FIX: Mode ko PROXY se badal kar TUN (Standard VPN) karein
+          # Yeh pure GitHub runner ka internet traffic WARP se routing kar dega
+          warp-cli --accept-tos mode warp || warp-cli mode warp
+          
+          # 6. Connect
+          warp-cli --accept-tos connect || warp-cli connect
+          sleep 5
+          
+          # 7. Verify ki pure system ka IP change hua ya nahi
+          curl https://cloudflare.com/cdn-cgi/trace
+
       # 5. Required Python Packages/Dependencies install karna (No HF)
       - name: Install dependencies
         run: |
@@ -73,12 +100,13 @@ jobs:
         if: success()
         run: |
           # Script post hone ke baad pinterest_ideas.json mein changes save karti hai
-          git add pinterest_ideas.json
+          git add article.json pinterest_ideas.json
           
           if git diff --staged --quiet; then
             echo "[INFO] No changes detected in state file. Skipping push."
           else
             echo "[OK] Changes detected. Committing and pushing updates..."
             git commit -m "Automated: Update pipeline states to posted [skip ci]"
-            git push origin HEAD
+            git pull origin ${GITHUB_REF_NAME} --rebase
+            git push origin ${GITHUB_REF_NAME}
           fi

@@ -35,7 +35,8 @@ if not encrypted_files:
 CHATGPT_COOKIES_FILE = random.choice(encrypted_files)
 print(f"[OK] Randomly selected cookie file: {CHATGPT_COOKIES_FILE.name}", flush=True)
 
-IMAGE_DIR = Path("image")
+# Target directory changed to post_image
+IMAGE_DIR = Path("post_image")
 IMAGE_DIR.mkdir(exist_ok=True)
 
 PBKDF2_ITERATIONS = 200_000
@@ -138,9 +139,6 @@ def run():
     if not ideas_file.exists():
         raise RuntimeError("❌ 'pinterest_ideas.json' file not found!")
 
-    # ========================================================
-    # LOAD & PARSE IDEAS JSON (STRICT FILTER REGISTRATION)
-    # ========================================================
     print("[STEP] Loading Pinterest ideas JSON...", flush=True)
     with ideas_file.open("r", encoding="utf-8") as f:
         ideas_list = json.load(f)
@@ -148,19 +146,17 @@ def run():
     subject_matter = None
     target_index = -1
 
-    # FIXED CONDITION: Find the entry where content_generated is True and image_generated is False
     for index, item in enumerate(ideas_list):
         if isinstance(item, dict):
-            if (item.get("content_generated") is True and 
-                item.get("image_generated") is False):
+            if (item.get("post_generated") is True and 
+                item.get("post_image_generated") is False):
                 
                 subject_matter = item.get("title") or item.get("subject") or list(item.values())[0]
                 target_index = index
                 break
 
-    # If criteria condition falls out, exit early with tracking logs
     if subject_matter is None or target_index == -1:
-        print("[INFO] Target conditions ('content_generated': true and 'image_generated': false) not met! Exiting safely.", flush=True)
+        print("[INFO] Blog Post Content Not Generated or Image Already Created! Exiting safely.", flush=True)
         sys.exit(0)
 
     print(f"[OK] Selected Target Subject Matter: '{subject_matter}' at index [{target_index}]", flush=True)
@@ -198,14 +194,13 @@ def run():
         page = context.new_page()
         print("[OK] Cookies added successfully", flush=True)
 
-        # Base strategic blueprint for prompt creation
         base_prompt = """
-        You are an elite Pinterest Visual Strategist, Editorial Information Designer, UX Infographic Designer, Consumer Psychologist, and AI Image Prompt Engineer.
+        You are an elite Digital Editorial Creative Director, Consumer Psychologist, and AI Image Prompt Engineer specializing in high-conversion web typography and premium blogging aesthetics.
 
-        Your task is to create ONE highly detailed image-generation prompt for a Pinterest-optimized vertical infographic.
+        Your task is to create ONE highly detailed image-generation prompt for a blog post horizontal hero image.
 
         ==================================================
-        TOPIC
+        TOPIC / SUBJECT MATTER
         ==================================================
 
         {subject_matter}
@@ -214,11 +209,9 @@ def run():
         PRIMARY OBJECTIVE
         ==================================================
 
-        Design a Pinterest pin that immediately stops scrolling, communicates value within seconds, encourages users to save it, and motivates them to click for more information.
+        Design an authoritative, cinematic, and premium horizontal blog hero header that instantly establishes credibility, sets the emotional tone of the article, and captures attention on desktop and mobile screens.
 
-        The final image must look like a professionally designed Pinterest infographic created by an experienced editorial designer—not by AI.
-
-        The design should feel premium, clean, educational, trustworthy, and highly engaging.
+        The final image must look like a custom high-end digital publication asset or professional editorial photography, completely free of generic AI-art cliches or awkward composition.
 
         ==================================================
         IMPORTANT
@@ -233,324 +226,49 @@ def run():
         Do NOT output markdown.
 
         ==================================================
-        DO NOT CREATE
+        IMAGE FORMAT & LAYOUT
         ==================================================
 
-        • Book covers
-        • eBook covers
-        • Magazine covers
-        • Posters
-        • Advertisements
-        • Product mockups
-        • Generic social media posts
-        • Quote graphics
-        • Presentation slides
-        • AI concept art
-        • Decorative artwork
-        • Title-only graphics
-        • Busy collage layouts
-
-        ==================================================
-        IMAGE FORMAT
-        ==================================================
-
-        Pinterest Vertical Pin
+        Blog Post Hero Image / Website Header
 
         Aspect Ratio:
-        2:3
+        16:9
 
-        High-resolution
+        High-resolution (Landscape)
 
-        Professional editorial quality
-
-        ==================================================
-        DESIGN GOAL
-        ==================================================
-
-        Imagine this image competing against dozens of Pinterest pins.
-
-        The design should maximize:
-
-        • Scroll stopping
-        • Click-through rate
-        • Saves
-        • Shares
-        • Readability
-        • Visual clarity
-        • Trust
-        • Educational value
+        Balanced composition with strong visual focal points that fit perfectly across standard modern article layouts without awkward text cropping.
 
         ==================================================
-        VISUAL HIERARCHY
+        VISUAL STYLE & COMPOSITION
         ==================================================
 
-        The eye should naturally move through the design in this order:
+        Premium Digital Editorial. Think Medium publication headers, New York Times corporate essays, or high-end self-improvement platforms.
 
-        1. Headline
-        2. Hero visual
-        3. Main insight
-        4. Supporting insights
-        5. Takeaway
-        6. CTA
-
-        Nothing should interrupt this reading flow.
-
-        ==================================================
-        HEADLINE
-        ==================================================
-
-        The headline is the single most important visual element.
-
-        Requirements:
-
-        • Occupy approximately 25–35% of the upper canvas.
-        • Large.
-        • Bold.
-        • Extremely readable.
-        • Benefit-driven.
-        • Curiosity-driven.
-        • Mobile-first.
-        • Easy to understand within two seconds.
-        • Never feel like a blog title.
-        • Never feel like a textbook heading.
-
-        The headline should stop scrolling before explaining.
-
-        ==================================================
-        HERO VISUAL
-        ==================================================
-
-        Use ONE dominant hero illustration.
-
-        The illustration should communicate the emotional state of the reader.
-
-        Examples:
-
-        • overwhelmed mind
-        • calm mind
-        • person reflecting
-        • decision making
-        • mental clutter becoming clarity
-        • stress transforming into peace
-        • focus replacing distraction
-
-        Avoid stock-photo style poses.
-
-        Avoid decorative people.
-
-        Avoid multiple unrelated illustrations.
-
-        The hero visual should immediately communicate the topic even before reading.
-
-        ==================================================
-        CONTENT STRUCTURE
-        ==================================================
-
-        Create an infographic containing:
-
-        • One strong headline
-
-        • One short subtitle
-
-        • Three to five content blocks
-
-        Each block should contain:
-
-        • short heading
-        • one or two concise supporting lines
-
-        Each supporting line should remain short enough to read comfortably on a phone screen.
-
-        Never create long paragraphs.
-
-        ==================================================
-        CONTENT DENSITY
-        ==================================================
-
-        Prioritize simplicity.
-
-        Remove unnecessary information.
-
-        Less text is better.
-
-        Each section should communicate one idea only.
-
-        Do not overload the design.
-
-        Reduce cognitive load wherever possible.
-
-        ==================================================
-        VISUAL STORYTELLING
-        ==================================================
-
-        Every illustration, icon and visual element must reinforce the educational message.
-
-        Visuals should never exist only for decoration.
-
-        Use:
-
-        • psychology illustrations
-        • simple diagrams
-        • arrows
-        • progress indicators
-        • minimal icons
-        • subtle dividers
-        • meaningful symbols
-
-        Avoid visual clutter.
-
-        ==================================================
-        TRANSFORMATION SECTION
-        ==================================================
-
-        Near the bottom, include one concise transformation summary showing the desired outcome after applying the advice.
-
-        This section should feel motivating rather than promotional.
-
-        ==================================================
-        CTA
-        ==================================================
-
-        Place one subtle but visible CTA at the bottom.
-
-        Examples:
-
-        • Save this Pin
-        • Read the Full Guide
-        • Explore More
-        • Learn More
-
-        Only ONE CTA.
-
-        ==================================================
-        TYPOGRAPHY
-        ==================================================
-
-        Typography should feel modern editorial.
-
-        Use:
-
-        • bold headline
-        • clear hierarchy
-        • few font sizes
-        • high contrast
-        • generous spacing
-        • clean alignment
-
-        Avoid:
-
-        • decorative fonts
-        • script fonts
-        • curved text
-        • excessive font variation
-        • text effects
+        • Use clean metaphorical concept art or modern architectural/lifestyle vector minimalism blended with subtle cinematic realism.
+        • Soft, sophisticated lighting with intentional depth of field (blurred background elements where necessary to keep the focus clear).
+        • Rich textures and highly polished details that feel human-designed.
+        • Incorporate ample negative space strategically on one side (left or right) to balance the frame beautifully.
 
         ==================================================
         COLOR PALETTE
         ==================================================
 
-        Modern self-improvement aesthetic.
+        Modern self-improvement and intellectual aesthetic.
 
-        Soft neutral background.
-
-        Limited strategic accent colors.
-
-        Excellent contrast.
-
-        Calming, trustworthy and premium.
-
-        Never oversaturate colors.
-
-        ==================================================
-        LAYOUT
-        ==================================================
-
-        Use a professional editorial grid.
-
-        Consistent margins.
-
-        Consistent spacing.
-
-        Large white space.
-
-        Balanced composition.
-
-        Perfect alignment.
-
-        Premium visual rhythm.
-
-        ==================================================
-        MOBILE READABILITY
-        ==================================================
-
-        Assume the image will first be viewed on a phone.
-
-        Every important element must remain readable without zooming.
-
-        Prioritize readability over additional content.
-
-        ==================================================
-        VISUAL STYLE
-        ==================================================
-
-        Premium Pinterest infographic.
-
-        Editorial information design.
-
-        Modern self-improvement niche.
-
-        Minimal clutter.
-
-        High-end publication quality.
-
-        Clean vector illustration mixed with subtle realism.
-
-        Professional digital product quality.
+        • Soft neutral base tones (e.g., warm cream, deep charcoal, muted olive, or sophisticated beige).
+        • A single, calculated accent color to drive psychological engagement based on the topic.
+        • Elegant, balanced contrast. Avoid oversaturated, neon, neon-gradients, or cheap stock-photo color schemes.
 
         ==================================================
         NEGATIVE REQUIREMENTS
         ==================================================
 
-        Do NOT:
-
-        • overload text
-        • create long paragraphs
-        • create tiny unreadable fonts
-        • use unnecessary decorations
-        • create multiple competing focal points
-        • generate random icons
-        • create visual clutter
-        • use generic AI layouts
-        • produce stock-photo aesthetics
-        • overuse gradients
-        • overuse shadows
-        • use inconsistent illustration styles
-
-        ==================================================
-        FINAL QUALITY CHECK
-        ==================================================
-
-        Before producing the final prompt ensure that:
-
-        ✓ The design immediately communicates the topic.
-
-        ✓ The headline dominates attention.
-
-        ✓ The layout is optimized for Pinterest.
-
-        ✓ The design looks premium.
-
-        ✓ Mobile readability is excellent.
-
-        ✓ Information hierarchy is obvious.
-
-        ✓ White space is balanced.
-
-        ✓ Visuals support the educational message.
-
-        ✓ The design feels human-made.
-
-        ✓ The overall result resembles a top-performing Pinterest infographic created by an experienced designer.
+        Do NOT include:
+        • Cluttered collage layouts or crowded elements.
+        • Cheap vector icon kits or generic stock-photo poses.
+        • Messy, unreadable AI-generated gibberish text strings inside the illustration itself.
+        • Dark, depressing colors unless explicitly needed for contrast.
+        • Corny, exaggerated facial expressions or cartoonish proportions.
 
         Generate ONLY the final image-generation prompt.
         """
@@ -559,11 +277,9 @@ def run():
         page.goto("https://chatgpt.com/", wait_until="load")
         print("[OK] URL opened", flush=True)
 
-        # Initial random wait (30-60 seconds)
         print("[STEP] Performing initial random wait (30-60 seconds)...", flush=True)
         custom_random_wait(30, 60)
 
-        # Check login state
         print("[STEP] Checking login success via profile button...", flush=True)
         profile_button = page.get_by_role('button', name=list(map(lambda x: x.compile(r'.*Free, open'), [__import__('re')]))[0])
         if profile_button.count() > 0:
@@ -576,7 +292,6 @@ def run():
             print("[STEP] Create an image button clicked!...", flush=True)
             custom_random_wait(6, 12)
             
-        # Locate chat box
         print("[STEP] Locating chat textbox...", flush=True)
         chat_box = page.get_by_role('textbox', name='Chat with ChatGPT')
         if chat_box.count() == 0:
@@ -590,17 +305,16 @@ def run():
         else:
             raise RuntimeError("❌ Textbox locator load nahi ho paya (All strategies failed).")
         
-        # Step B: Enter wrapped dynamic prompt
         formatted_base = base_prompt.format(subject_matter=subject_matter)
         clean_base_prompt = " ".join(formatted_base.split())
-        prompt_text = f"Generate a 8k image with a size strictly of 1024x1536 px, depicting the following scene: {clean_base_prompt}"
+        
+        prompt_text = f"Generate a high-quality ultra-detailed image with an aspect ratio of strictly 16:9, depicting the following scene: {clean_base_prompt}"
         print("[STEP] Filling hardcoded template wrapped prompt assembly...", flush=True)
         chat_box.first.type(prompt_text, timeout=0)
         
         page.keyboard.press("Enter")
         print("[OK] Hardcoded structural prompt execution complete.", flush=True)
 
-        # Image generation tracking context
         share_button = None
         found_share = False
         image_downloaded_successfully = False
@@ -609,20 +323,16 @@ def run():
             print(f"[STEP] Waiting for image generation... Attempt {attempt}/{MAX_RETRIES}", flush=True)
             custom_random_wait(30, 60)
 
-            # --------------------------------------------------------
             # STRATEGY A: Naya 'Skip' Button Aur Text-Filter Logic
-            # --------------------------------------------------------
             try:
                 skip_button = page.get_by_role('button', name='Skip')
                 if skip_button.first.is_visible():
                     print("[INFO] 'Skip' button detected! Clicking 'Skip' button...", flush=True)
                     skip_button.first.click()
                     
-                    # Skip par click karne ke baad 30-60 seconds ka wait
                     print("[STEP] Skip clicked. Performing random wait (30-60 seconds)...", flush=True)
                     custom_random_wait(30, 60)
                     
-                    # Ab check karein ki kya dono options available hain
                     option_1 = page.locator('div').filter(has_text=re.compile(r'^1Image 1Image 1 is better$')).get_by_label('')
                     option_2 = page.locator('div').filter(has_text=re.compile(r'^2Image 2Image 2 is better$')).get_by_label('')
                     
@@ -639,9 +349,7 @@ def run():
             except Exception as preference_err:
                 print(f"[INFO] Strategy A (Skip Button) exception: {preference_err}", flush=True)
             
-            # --------------------------------------------------------
             # STRATEGY B: Purana Test-ID Based Feedback Logic (FALLBACK)
-            # --------------------------------------------------------
             try:
                 feedback_buttons = page.get_by_test_id('paragen-prefer-response-button')
                 if feedback_buttons.first.is_visible():
@@ -654,9 +362,7 @@ def run():
             except Exception as old_feedback_err:
                 print(f"[INFO] Strategy B (Test-ID Fallback) exception: {old_feedback_err}", flush=True)
 
-            # --------------------------------------------------------
             # Main Download Workflow (Share button detection)
-            # --------------------------------------------------------
             try:
                 locator = page.get_by_role('button', name='Share this image').first
                 if locator.is_visible():
@@ -677,11 +383,9 @@ def run():
             if 'page' in locals() and page:
                 try:
                     screenshot_path = "error_screenshot.png"
-                    # Playwright full page screenshot
                     page.screenshot(path=screenshot_path, full_page=True)
                     print(f"[OK] Error screenshot captured: {screenshot_path}", flush=True)
                     
-                    # --- ImgBB Upload Logic Starts Here ---
                     imgbb_key = os.getenv("IMGBBB_API_KEY")
                     if imgbb_key:
                         print("[OK] Uploading screenshot to ImgBB...", flush=True)
@@ -704,9 +408,7 @@ def run():
                     print(f"[WARNING] Could not capture or upload screenshot: {screenshot_err}", flush=True)
             sys.exit(1)
 
-        # ========================================================
-        # PROCESSING STRATEGY 1: DIRECT DOWNLOAD
-        # ========================================================
+        # STRATEGY 1: DIRECT DOWNLOAD
         print("[STEP] Checking if direct 'Download' button is available on main page...", flush=True)
         direct_download_btn = page.get_by_role('button', name='Download').first
         
@@ -717,7 +419,7 @@ def run():
                     direct_download_btn.click()
                 
                 download = download_info.value
-                local_filename = IMAGE_DIR / "pin.png"
+                local_filename = IMAGE_DIR / "post.png"
                 download.save_as(local_filename)
                 print(f"✅ Original resolution image downloaded directly: {local_filename}", flush=True)
                 image_downloaded_successfully = True
@@ -725,9 +427,7 @@ def run():
             except Exception as direct_dl_err:
                 print(f"[WARNING] Direct download triggered error, falling back: {direct_dl_err}", flush=True)
 
-        # ========================================================
-        # PROCESSING STRATEGY 2: FALLBACK 1 CONTAINER EXTRACTION
-        # ========================================================
+        # STRATEGY 2: FALLBACK 1 CONTAINER EXTRACTION
         if not image_downloaded_successfully:
             print("[STEP] Executing Fallback 1: Searching for Generated image container...", flush=True)
             try:
@@ -738,7 +438,7 @@ def run():
                     img_src = img_element.get_attribute('src')
                     
                     if img_src:
-                        local_filename = IMAGE_DIR / "pin.png"
+                        local_filename = IMAGE_DIR / "post.png"
                         if img_src.startswith('blob:'):
                             print("[INFO] Blob URL detected. Extracting image data natively...", flush=True)
                             base64_data = page.evaluate("""async (url) => {
@@ -765,9 +465,7 @@ def run():
             except Exception as fallback_one_err:
                 print(f"[WARNING] Fallback 1 extraction method failed: {fallback_one_err}", flush=True)
 
-        # ========================================================
-        # PROCESSING STRATEGY 3: FALLBACK 2 NEW TAB/SHARE LINK
-        # ========================================================
+        # STRATEGY 3: FALLBACK 2 NEW TAB/SHARE LINK
         if not image_downloaded_successfully:
             print("[INFO] Moving forward with Fallback 2 workflow (New Tab / Share Link Method)...", flush=True)
             page.evaluate("() => navigator.clipboard.writeText('')")
@@ -783,7 +481,7 @@ def run():
                         popup_download_btn.click()
                     
                     download = download_info.value
-                    local_filename = IMAGE_DIR / "pin.png"
+                    local_filename = IMAGE_DIR / "post.png"
                     download.save_as(local_filename)
                     print(f"✅ Image downloaded from pop-up successfully: {local_filename}", flush=True)
                     image_downloaded_successfully = True
@@ -816,7 +514,7 @@ def run():
                             save_btn.click()
                         
                         download = download_info.value
-                        local_filename = IMAGE_DIR / "pin.png"
+                        local_filename = IMAGE_DIR / "post.png"
                         download.save_as(local_filename)
                         print(f"✅ High quality image downloaded successfully via share link tab: {local_filename}", flush=True)
                         image_downloaded_successfully = True
@@ -825,11 +523,9 @@ def run():
                         if 'page' in locals() and page:
                             try:
                                 screenshot_path = "error_screenshot.png"
-                                # Playwright full page screenshot
                                 page.screenshot(path=screenshot_path, full_page=True)
                                 print(f"[OK] Error screenshot captured: {screenshot_path}", flush=True)
                                 
-                                # --- ImgBB Upload Logic Starts Here ---
                                 imgbb_key = os.getenv("IMGBBB_API_KEY")
                                 if imgbb_key:
                                     print("[OK] Uploading screenshot to ImgBB...", flush=True)
@@ -862,26 +558,23 @@ def run():
         if image_downloaded_successfully:
             print("[STEP] Updating execution status inside JSON state schema...", flush=True)
             
-            # Using .update() to safely update ONLY the image_generated field
+            # Use .update() to preserve all other fields (url, content_generated, posted etc.)
             ideas_list[target_index].update({
-                "image_generated": True
+                "post_image_generated": True
             })
 
-            # Modifying updates persistent across calls
             with ideas_file.open("w", encoding="utf-8") as f:
                 json.dump(ideas_list, f, indent=2, ensure_ascii=False)
             
-            print(f"✅ Success log saved into JSON for index {target_index}: '{subject_matter}' marked as image_generated=True.", flush=True)
+            print(f"✅ Success log saved into JSON for index {target_index}: '{subject_matter}' marked as post_image_generated=True.", flush=True)
         else:
             print("❌ Image pipeline terminated without confirming output save down.", flush=True)
             if 'page' in locals() and page:
                 try:
                     screenshot_path = "error_screenshot.png"
-                    # Playwright full page screenshot
                     page.screenshot(path=screenshot_path, full_page=True)
                     print(f"[OK] Error screenshot captured: {screenshot_path}", flush=True)
                     
-                    # --- ImgBB Upload Logic Starts Here ---
                     imgbb_key = os.getenv("IMGBBB_API_KEY")
                     if imgbb_key:
                         print("[OK] Uploading screenshot to ImgBB...", flush=True)
@@ -914,11 +607,9 @@ def run():
         if 'page' in locals() and page:
                 try:
                     screenshot_path = "error_screenshot.png"
-                    # Playwright full page screenshot
                     page.screenshot(path=screenshot_path, full_page=True)
                     print(f"[OK] Error screenshot captured: {screenshot_path}", flush=True)
                     
-                    # --- ImgBB Upload Logic Starts Here ---
                     imgbb_key = os.getenv("IMGBBB_API_KEY")
                     if imgbb_key:
                         print("[OK] Uploading screenshot to ImgBB...", flush=True)

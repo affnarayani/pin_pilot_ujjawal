@@ -8,3 +8,5 @@ google-auth-oauthlib
 google-auth-httplib2
 markdown
 python-frontmatter
+httplib2
+pyyaml

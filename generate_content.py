@@ -150,48 +150,31 @@ def run():
         sys.exit(1)
 
     # ========================================================
-    # PIPELINE INTEGRITY LOCK VERIFICATION
+    # NEW EXTRACTOR & INTEGRITY LOCK WITH NEW STRUCTURE
     # ========================================================
-    # Agar kisi bhi pichle processed item ki teeno keys me se koi ek bhi False hai,
-    # toh iska matlab uska image gen ya posting pending hai. Naya task run nahi hoga.
-    for item in ideas_list:
+    subject_matter = None
+    target_index = -1
+
+    for index, item in enumerate(ideas_list):
         if isinstance(item, dict):
-            content_gen = item.get("content_generated", False)
-            image_gen = item.get("image_generated", False)
-            posted_state = item.get("posted", False)
-            
-            # Checking if any of them is False (Pipeline unfinished status trigger)
-            if not content_gen or not image_gen or not posted_state:
-                print("[INFO] Last Pipeline Is Not Yet Finished. Exiting safely.", flush=True)
-                sys.exit(0)
+            # Sirf tabhi chalega jab URL blank na ho aur content_generated False ho
+            if item.get("url") and item.get("content_generated") is False:
+                subject_matter = item.get("title")
+                target_index = index
+                break
+
+    # Agar koi aisa topic nahi mila jisme URL ho aur content_generated False ho, toh safe exit
+    if subject_matter is None or target_index == -1:
+        print("[INFO] No matching item found with a valid URL and content_generated=False. Exiting safely.", flush=True)
+        sys.exit(0)
+
+    print(f"[OK] Dynamic Target Extracted: '{subject_matter}' at array index [{target_index}]", flush=True)
 
     # File init/clear at the beginning
     article_file = Path("article.json")
     with article_file.open("w", encoding="utf-8") as f:
         f.write("")
     print("[OK] 'article.json' cleared/initialized", flush=True)
-
-    subject_matter = None
-    target_index = -1
-
-    # Linear top-down scanning extraction matching clean unassigned entries
-    for index, item in enumerate(ideas_list):
-        if isinstance(item, str):
-            subject_matter = item
-            target_index = index
-            break
-        elif isinstance(item, dict):
-            # Enforce checking that neither tracking structure exists
-            if "content_generated" not in item and "posted" not in item and "generated" not in item:
-                subject_matter = item.get("title") or item.get("subject") or list(item.values())[0]
-                target_index = index
-                break
-
-    if subject_matter is None or target_index == -1:
-        print("[INFO] No ungenerated or unposted subject matter found inside array. Exiting safely.", flush=True)
-        sys.exit(0)
-
-    print(f"[OK] Dynamic Target Extracted: '{subject_matter}' at array index [{target_index}]", flush=True)
 
     cookies = load_cookies(Path(CHATGPT_COOKIES_FILE))
     print(f"[OK] Total cookies loaded: {len(cookies)}", flush=True)
@@ -558,19 +541,16 @@ def run():
                 print("[OK] Data structural dump serialization write-out successful.", flush=True)
                 
                 # ========================================================
-                # UPDATE STATE LOCK TRACKER WITH 3 KEY VALUES
+                # UPDATE STATE LOCK TRACKER (ONLY TOGGLE content_generated)
                 # ========================================================
-                print("[STEP] Saving updated item state back to pinterest_ideas.json...", flush=True)
-                ideas_list[target_index] = {
-                    "title": subject_matter,
-                    "content_generated": True,
-                    "image_generated": False,
-                    "posted": False
-                }
+                print("[STEP] Updating content_generated state back to pinterest_ideas.json...", flush=True)
+                
+                # Baki saara data same rahega, bas content_generated True hoga
+                ideas_list[target_index]["content_generated"] = True
 
                 with ideas_file.open("w", encoding="utf-8") as f:
                     json.dump(ideas_list, f, indent=2, ensure_ascii=False)
-                print(f"✅ Success: '{subject_matter}' registered with content_generated=True, image_generated=False, posted=False.", flush=True)
+                print(f"✅ Success: '{subject_matter}' updated with content_generated=True.", flush=True)
                 
             except json.JSONDecodeError as je:
                 print(f"[ERROR] Content JSON parse karne me fail hua: {je}. Exiting script...", flush=True)

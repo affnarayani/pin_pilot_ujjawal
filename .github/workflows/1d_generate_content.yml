@@ -1,14 +1,11 @@
-name: 1A. Generate Content
+name: 1D. Generate Content
 
 on:
-  schedule:
-    - cron: '40 11 * * *'
-    - cron: '50 21 * * *'
-    - cron: '46 8 * * *'
-    - cron: '14 11 * * *'
-    - cron: '37 6 * * *'
-    - cron: '52 2 * * *'
   workflow_dispatch:
+  workflow_run:
+    workflows: ["1C. Post Post"]
+    types:
+      - completed
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -16,6 +13,7 @@ env:
 jobs:
   run-automation:
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
 
     steps:
     - name: Checkout Repository
@@ -83,7 +81,6 @@ jobs:
         name: playwright-error-screenshot
         path: |
           error_screenshot.png
-          error_screenshot_post.png
         if-no-files-found: ignore
 
     - name: Commit and Push Changes (If updated)
