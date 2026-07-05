@@ -3,3 +3,8 @@ requests
 python-dotenv
 cryptography
 playwright-stealth
+google-api-python-client 
+google-auth-oauthlib 
+google-auth-httplib2
+markdown
+python-frontmatter
