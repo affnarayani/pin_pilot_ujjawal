@@ -17,7 +17,7 @@ load_dotenv()
 BLOG_ID = os.getenv("BLOG_ID")
 CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
-TOKEN_JSON_STR = os.getenv("BLOGGER_TOKEN_JSON")
+TOKEN_JSON_STR = os.getenv("TOKEN_JSON_STR")
 IMGBB_API_KEY = os.getenv("IMGBBB_API_KEY")
 
 SCOPES = ['https://www.googleapis.com/auth/blogger']
