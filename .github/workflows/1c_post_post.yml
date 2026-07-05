@@ -84,7 +84,7 @@ jobs:
           BLOG_ID: ${{ secrets.BLOG_ID }}
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-          BLOGGER_TOKEN_JSON: ${{ secrets.BLOGGER_TOKEN_JSON }}
+          TOKEN_JSON_STR: ${{ secrets.TOKEN_JSON_STR }}
           IMGBBB_API_KEY: ${{ secrets.IMGBBB_API_KEY }}
         run: |
           python post_post.py
