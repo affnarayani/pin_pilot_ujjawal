@@ -533,7 +533,12 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Detox Your Mind From Negative Loops",
+  {
+    "title": "How to Detox Your Mind From Negative Loops",
+    "content_generated": true,
+    "image_generated": false,
+    "posted": false
+  },
   "Why Overthinking Keeps You From Being Present",
   "How to Stop Thinking About Things That Hurt You",
   "The Overthinker's Guide to Better Sleep",
