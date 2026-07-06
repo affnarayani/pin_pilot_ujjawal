@@ -273,16 +273,17 @@ def run():
 
         # Algorithmic Prompt Design for full markdown post generation
         prompt = (
-            f"IMPORTANT:\n"
+            f"CRITICALLY AND STRICTLY IMPORTANT:\n"
             f"Return ONLY ONE complete comprehensive article wrapped inside a single ```markdown code block```.\n"
             f"Do NOT output explanations, conversational introduction, greetings, or notes outside the markdown block.\n\n"
 
             f"ROLE\n"
-            f"You are a professional Content Creator, Mental Health Blogger, and SEO Copywriter specializing in psychology and mindfulness.\n\n"
+            f"You are a professional Content Creator, Mental Health Blogger, SEO Copywriter, and Psychology Educator specializing in evidence-based mental wellness, mindfulness, emotional wellbeing, and self-improvement.\n\n"
 
             f"PRIMARY OBJECTIVE\n"
-            f"Generate a deep, engaging, and comprehensive blog post based on the target title below. "
-            f"The body length must be exactly between 1000 to 1500 words to ensure thorough exploration.\n\n"
+            f"Generate a deep, engaging, original, and comprehensive evergreen blog post based on the target title below. "
+            f"The body length must be exactly between 1000 and 1500 words to ensure thorough exploration while maintaining excellent readability. "
+            f"The article should be genuinely useful, highly informative, naturally engaging, and capable of ranking well on Google for its primary search intent.\n\n"
 
             f"INPUT TOPIC TITLE\n"
             f"'{subject_matter}'\n\n"
@@ -301,10 +302,95 @@ def run():
             f"---\n\n"
 
             f"CONTENT STRUCTURE RULES\n"
-            f"- Word Count: Strictly 1000 to 1500 words.\n"
-            f"- Structure: Do not follow a rigid hardcoded pattern. Create a natural flowing progression with diverse section headers (H2, H3), deeply explanatory paragraphs, logical sub-points, and clear structural lists to make it highly informative and shareable.\n"
-            f"- Tone: Compassionate, empathetic, evidence-based, clear, and highly engaging for readers seeking self-improvement.\n"
-            f"- Negative Constraints: Avoid generic AI-sounding opening hooks, robotic transitions, or repeating the same terms across consecutive sections. Do NOT include any comparison tables.\n"
+            f"- Word Count: Strictly between 1000 and 1500 words.\n"
+            f"- Structure: Do NOT follow a rigid or repetitive template. Create a natural progression with diverse H2 and H3 headings, explanatory paragraphs, logical sub-points, and clear structural lists wherever they genuinely improve readability. Do NOT include comparison tables.\n"
+            f"- Tone: Compassionate, trustworthy, evidence-based, insightful, conversational, and highly engaging.\n"
+            f"- Keep the article suitable for both beginners and readers already familiar with self-improvement concepts.\n"
+            f"- Avoid generic AI-sounding introductions, robotic transitions, filler paragraphs, unnecessary repetition, or keyword stuffing.\n\n"
+
+            f"E-E-A-T REQUIREMENTS\n"
+            f"- Demonstrate expertise through nuanced explanations instead of generic advice.\n"
+            f"- Explain WHY concepts work before explaining HOW to apply them.\n"
+            f"- Where appropriate, naturally reference established psychological principles or reputable organizations such as APA, NIH, WHO, Mayo Clinic, Harvard Health, or similar trusted sources without making the article sound academic.\n"
+            f"- Never fabricate research, statistics, quotes, or scientific findings.\n"
+            f"- If mentioning research, describe it naturally instead of inserting formal citations.\n\n"
+
+            f"SEARCH INTENT OPTIMIZATION\n"
+            f"- Fully satisfy the likely Google search intent behind the topic.\n"
+            f"- Anticipate the reader's next questions and answer them naturally inside the article.\n"
+            f"- Ensure readers can finish the article without feeling the need to immediately search another page for missing information.\n"
+            f"- Naturally incorporate semantic variations of the primary keyword without overusing exact-match phrases.\n"
+            f"- Whenever appropriate, include concise explanatory paragraphs that have Featured Snippet potential.\n\n"
+
+            f"ORIGINALITY REQUIREMENTS\n"
+            f"- Every article must provide original explanations rather than repeating common internet advice.\n"
+            f"- Prioritize insight over motivation.\n"
+            f"- Avoid clichés and overused self-help statements.\n"
+            f"- Introduce fresh perspectives whenever possible.\n"
+            f"- Every major section should contribute at least one genuinely new insight.\n\n"
+
+            f"WRITING NATURALNESS\n"
+            f"- Write like an experienced human author, not an AI.\n"
+            f"- Vary sentence lengths naturally.\n"
+            f"- Vary paragraph lengths naturally.\n"
+            f"- Occasionally use rhetorical questions when appropriate.\n"
+            f"- Occasionally include relatable everyday situations or examples that readers can immediately recognize.\n"
+            f"- Avoid making every paragraph follow the same rhythm.\n"
+            f"- Avoid ending every section with a mini-summary.\n"
+            f"- Avoid repetitive sentence openings.\n"
+            f"- Avoid repeatedly starting paragraphs with phrases such as 'Another...', 'One important...', 'It is also...', or 'Over time...' unless absolutely necessary.\n\n"
+
+            f"READABILITY\n"
+            f"- Optimize for comfortable online reading.\n"
+            f"- Prefer clear, simple English over unnecessarily academic vocabulary.\n"
+            f"- Break long explanations into digestible paragraphs.\n"
+            f"- Use bullet lists only when they genuinely improve clarity.\n\n"
+
+            f"TRANSITIONS\n"
+            f"- Ensure each section flows naturally into the next.\n"
+            f"- Build ideas progressively rather than making sections feel independently generated.\n\n"
+
+            f"PRACTICAL VALUE\n"
+            f"- Every major section should accomplish at least one of the following:\n"
+            f"  * Explain an important concept.\n"
+            f"  * Explain why it matters.\n"
+            f"  * Show how readers can apply it.\n"
+            f"  * Correct a common misconception.\n"
+            f"- Avoid paragraphs that merely restate previous information.\n\n"
+
+            f"NEWSLETTER INTEGRATION\n"
+            f"- Exactly once during the middle 40%–60% portion of the article, insert a short standalone subsection encouraging readers to subscribe for future evidence-based mental wellness and self-improvement content.\n"
+            f"- Keep this subsection under 70 words.\n"
+            f"- Immediately after that text, insert EXACTLY the following HTML snippet on its own line without modifying anything:\n\n"
+            f"<script async data-uid=\"eaed1acc11\" src=\"https://mindtobetter.kit.com/eaed1acc11/index.js\"></script>\n\n"
+
+            f"EBOOK RECOMMENDATION\n"
+            f"- Exactly once during the article (not at the very beginning or very end), naturally recommend a related in-depth ebook for readers who want to explore the topic further.\n"
+            f"- This recommendation must blend seamlessly into the surrounding content and should feel genuinely helpful rather than promotional.\n"
+            f"- Never paste the raw URL.\n"
+            f"- Instead, use an HTML hyperlink with descriptive anchor text such as:\n"
+            f"<a href=\"https://mindtobetter.blogspot.com/p/store.html\">Explore our complete self-improvement ebook collection</a>\n"
+            f"- You may adjust the anchor text naturally to fit the article, but keep it descriptive and relevant.\n\n"
+
+            f"CONCLUSION\n"
+            f"- End with a thoughtful and memorable takeaway.\n"
+            f"- Reinforce the central message without repeating earlier paragraphs.\n"
+            f"- Avoid generic motivational endings or clichés.\n\n"
+
+            f"FAQ SECTION\n"
+            f"- End the article with an H2 heading titled 'Frequently Asked Questions'.\n"
+            f"- Include exactly 3 to 5 concise, high-value FAQs based on the most likely questions readers would search after reading the article.\n"
+            f"- Questions should target long-tail search intent and complement the main article rather than repeat it.\n"
+            f"- Each answer should be between 40 and 80 words.\n"
+            f"- Write answers naturally and conversationally while remaining evidence-based.\n"
+            f"- Avoid obvious or redundant questions already answered in the main body.\n"
+            f"- Do not use FAQ schema or JSON-LD; output only standard Markdown headings and paragraphs.\n\n"
+
+            f"OUTPUT QUALITY\n"
+            f"- The finished article should feel publication-ready for a high-quality mental wellness blog.\n"
+            f"- Aim for content quality that is worthy of long-term evergreen rankings.\n"
+            f"- Optimize for user satisfaction, readability, topical authority, and search engine visibility.\n"
+            f"- Return valid Markdown only inside the requested markdown code block while preserving any required HTML exactly as instructed.\n"
         )
 
         print("[STEP] Entering prompt into textbox...", flush=True)

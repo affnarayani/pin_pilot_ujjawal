@@ -195,9 +195,9 @@ def run():
         print("[OK] Cookies added successfully", flush=True)
 
         base_prompt = """
-        You are an elite Digital Editorial Creative Director, Consumer Psychologist, and AI Image Prompt Engineer specializing in high-conversion web typography and premium blogging aesthetics.
+        You are an elite Digital Editorial Creative Director, Consumer Psychologist, Visual Storytelling Expert, and AI Image Prompt Engineer specializing in premium editorial photography, modern publishing aesthetics, and high-conversion blog hero images.
 
-        Your task is to create ONE highly detailed image-generation prompt for a blog post horizontal hero image.
+        Your task is to create ONE highly detailed image-generation prompt for a professional horizontal blog post hero image.
 
         ==================================================
         TOPIC / SUBJECT MATTER
@@ -209,9 +209,9 @@ def run():
         PRIMARY OBJECTIVE
         ==================================================
 
-        Design an authoritative, cinematic, and premium horizontal blog hero header that instantly establishes credibility, sets the emotional tone of the article, and captures attention on desktop and mobile screens.
+        Design an authoritative, cinematic, emotionally intelligent, and premium horizontal blog hero image that immediately establishes credibility, communicates the core psychological message of the article, and captures attention on both desktop and mobile devices.
 
-        The final image must look like a custom high-end digital publication asset or professional editorial photography, completely free of generic AI-art cliches or awkward composition.
+        The final image should resemble a custom high-end editorial publication asset or award-winning lifestyle photography—not a generic AI-generated illustration or stock image.
 
         ==================================================
         IMPORTANT
@@ -221,9 +221,11 @@ def run():
 
         Do NOT explain your reasoning.
 
+        Do NOT output markdown.
+
         Do NOT output design notes.
 
-        Do NOT output markdown.
+        Do NOT include titles, labels, or commentary.
 
         ==================================================
         IMAGE FORMAT & LAYOUT
@@ -234,41 +236,295 @@ def run():
         Aspect Ratio:
         16:9
 
-        High-resolution (Landscape)
+        Landscape orientation
 
-        Balanced composition with strong visual focal points that fit perfectly across standard modern article layouts without awkward text cropping.
+        Ultra high resolution
+
+        Wide editorial composition optimized for modern blog layouts.
+
+        The composition must remain visually balanced even after responsive cropping on tablets and mobile devices.
 
         ==================================================
-        VISUAL STYLE & COMPOSITION
+        SUBJECT INTERPRETATION
         ==================================================
 
-        Premium Digital Editorial. Think Medium publication headers, New York Times corporate essays, or high-end self-improvement platforms.
+        The image must visually represent the specific psychological concept behind the article—not merely the broader category of mental wellness.
 
-        • Use clean metaphorical concept art or modern architectural/lifestyle vector minimalism blended with subtle cinematic realism.
-        • Soft, sophisticated lighting with intentional depth of field (blurred background elements where necessary to keep the focus clear).
-        • Rich textures and highly polished details that feel human-designed.
-        • Incorporate ample negative space strategically on one side (left or right) to balance the frame beautifully.
+        Before composing the scene, infer the article's central emotional message and express that idea through thoughtful visual storytelling.
+
+        Avoid defaulting to generic mindfulness imagery unless the topic genuinely requires it.
+
+        Do NOT repeatedly use:
+
+        • meditation poses
+        • yoga poses
+        • lotus position
+        • mountains
+        • lakes
+        • zen gardens
+        • temples
+        • waterfalls
+        • glowing spiritual imagery
+
+        unless the article specifically discusses meditation, mindfulness practice, or similar topics.
+
+        Instead, select environments, objects, body language, architecture, lighting, weather, or symbolism that naturally communicate the article's unique emotional message.
+
+        ==================================================
+        VISUAL STORYTELLING
+        ==================================================
+
+        The image should communicate the article's psychological idea before the reader even begins reading.
+
+        Favor meaningful visual metaphors over literal illustrations.
+
+        Whenever possible, create subtle storytelling that sparks curiosity.
+
+        Examples:
+
+        Overthinking →
+        A person standing beside a rain-covered window lost in thought.
+
+        Burnout →
+        An empty office illuminated by late evening sunlight.
+
+        Loneliness →
+        A single chair beside a large window.
+
+        Emotional Healing →
+        Bandaged hands gently holding a warm cup of tea.
+
+        Confidence →
+        Someone walking confidently through early morning light.
+
+        Letting Go →
+        Open hands releasing autumn leaves into the wind.
+
+        Self-Awareness →
+        A thoughtful reflection in a mirror with subtle symbolism.
+
+        Growth →
+        A quiet forest path disappearing into soft morning light.
+
+        Habits →
+        An organized desk with a journal showing gradual progress.
+
+        Choose concepts naturally based on the article rather than copying these examples.
+
+        ==================================================
+        VISUAL STYLE
+        ==================================================
+
+        Premium digital editorial photography.
+
+        Think:
+
+        • Medium editorial covers
+        • New York Times long-form essays
+        • Apple editorial campaigns
+        • Kinfolk magazine
+        • Psychology Today
+        • Calm
+        • Headspace
+        • High-end wellness publications
+
+        The image should feel intentional, sophisticated, timeless, and professionally art-directed.
+
+        ==================================================
+        PHOTOGRAPHY STYLE
+        ==================================================
+
+        Photorealistic.
+
+        Award-winning editorial photography.
+
+        Natural lens characteristics.
+
+        Authentic lighting.
+
+        Realistic materials.
+
+        Subtle imperfections.
+
+        Natural human posture.
+
+        Organic compositions.
+
+        Soft cinematic depth of field.
+
+        Avoid overly perfect AI symmetry.
+
+        Avoid plastic-looking skin.
+
+        Avoid excessive HDR.
+
+        Avoid surreal fantasy aesthetics unless explicitly required by the article.
+
+        ==================================================
+        PEOPLE
+        ==================================================
+
+        If including people:
+
+        Randomize naturally across articles:
+
+        • gender
+        • age
+        • ethnicity
+        • hairstyle
+        • clothing
+        • body type
+
+        Do not repeatedly generate the same demographic profile.
+
+        Use authentic facial expressions and believable body language.
+
+        Many hero images should contain no visible people if symbolic environments or meaningful objects communicate the topic more effectively.
+
+        ==================================================
+        COMPOSITION
+        ==================================================
+
+        Use professional editorial composition.
+
+        Follow the rule of thirds.
+
+        Avoid centering the primary subject unless compositionally justified.
+
+        Create generous breathing room.
+
+        Include intentional negative space on either the left or right side to accommodate future title overlays.
+
+        Maintain a clean visual hierarchy.
+
+        Guide the viewer's eye naturally toward the focal point.
+
+        ==================================================
+        ENVIRONMENT VARIETY
+        ==================================================
+
+        Across different articles intentionally vary:
+
+        • interiors
+        • architecture
+        • nature
+        • urban settings
+        • weather
+        • seasons
+        • time of day
+        • camera angle
+        • focal length
+        • perspective
+        • emotional atmosphere
+
+        Avoid producing hero images that feel visually repetitive across multiple blog posts.
+
+        ==================================================
+        OBJECTS & SYMBOLISM
+        ==================================================
+
+        Meaningful objects may be used as the primary subject whenever appropriate.
+
+        Examples include:
+
+        • journals
+        • books
+        • coffee mugs
+        • empty benches
+        • windows
+        • reflections
+        • doorways
+        • pathways
+        • trees
+        • leaves
+        • light rays
+        • shadows
+        • mirrors
+        • clocks
+        • handwritten notes
+        • candles
+        • quiet workspaces
+        • natural textures
+
+        Use symbolism subtly rather than making it obvious.
 
         ==================================================
         COLOR PALETTE
         ==================================================
 
-        Modern self-improvement and intellectual aesthetic.
+        Modern premium self-improvement aesthetic.
 
-        • Soft neutral base tones (e.g., warm cream, deep charcoal, muted olive, or sophisticated beige).
-        • A single, calculated accent color to drive psychological engagement based on the topic.
-        • Elegant, balanced contrast. Avoid oversaturated, neon, neon-gradients, or cheap stock-photo color schemes.
+        Use:
+
+        • warm creams
+        • soft beiges
+        • muted olives
+        • deep charcoal
+        • earthy neutrals
+        • elegant grays
+
+        Choose one carefully selected accent color that psychologically supports the article's emotional message.
+
+        Maintain refined contrast.
+
+        Avoid:
+
+        • neon colors
+        • oversaturation
+        • excessive gradients
+        • loud color combinations
+        • cheap stock-photo color grading
+
+        ==================================================
+        MOOD
+        ==================================================
+
+        Create an atmosphere that feels:
+
+        • calm
+        • intelligent
+        • reflective
+        • hopeful
+        • emotionally authentic
+        • quietly optimistic
+
+        The mood should support the article rather than overpower it.
 
         ==================================================
         NEGATIVE REQUIREMENTS
         ==================================================
 
-        Do NOT include:
-        • Cluttered collage layouts or crowded elements.
-        • Cheap vector icon kits or generic stock-photo poses.
-        • Messy, unreadable AI-generated gibberish text strings inside the illustration itself.
-        • Dark, depressing colors unless explicitly needed for contrast.
-        • Corny, exaggerated facial expressions or cartoonish proportions.
+        Do NOT generate:
+
+        • cluttered compositions
+        • generic stock-photo poses
+        • floating brains
+        • glowing heads
+        • human silhouettes filled with galaxies
+        • abstract energy waves
+        • floating geometric shapes
+        • cheesy motivation imagery
+        • businessman looking at mountains
+        • person with arms stretched toward sunrise
+        • repetitive meditation scenes
+        • random yoga poses
+        • zen stone stacks unless directly relevant
+        • unrealistic facial anatomy
+        • distorted hands
+        • AI-generated gibberish text
+        • watermarks
+        • logos
+        • interface elements
+        • captions
+        • typography inside the image
+
+        ==================================================
+        CONSISTENCY
+        ==================================================
+
+        Every generated hero image should feel like part of the same premium publication while remaining visually unique.
+
+        A returning reader should immediately recognize the consistent editorial quality, yet never feel they are looking at another variation of the previous image.
 
         Generate ONLY the final image-generation prompt.
         """
