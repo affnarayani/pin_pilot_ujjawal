@@ -368,8 +368,8 @@ def run():
             f"- Exactly once during the article (not at the very beginning or very end), naturally recommend a related in-depth ebook for readers who want to explore the topic further.\n"
             f"- This recommendation must blend seamlessly into the surrounding content and should feel genuinely helpful rather than promotional.\n"
             f"- Never paste the raw URL.\n"
-            f"- Instead, use an HTML hyperlink with descriptive anchor text such as:\n"
-            f"<a href=\"https://mindtobetter.blogspot.com/p/store.html\">Explore our complete self-improvement ebook collection</a>\n"
+            f"- Instead, use an HTML hyperlink with given anchor text such as:\n"
+            f"<a href=\"https://mindtobetter.blogspot.com/p/store.html\">Click Here</a>\n"
             f"- You may adjust the anchor text naturally to fit the article, but keep it descriptive and relevant.\n\n"
 
             f"CONCLUSION\n"
