@@ -66,7 +66,7 @@ def upload_image_to_imgbb(image_path):
         return image_url
     else:
         print(f"❌ ImgBB Upload Failed: {response.text}")
-        return None
+        sys.exit(1)
 
 def fetch_and_parse_md_file():
     """posts/post.md file ko direct utha kar metadata aur HTML content return karta hai"""

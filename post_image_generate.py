@@ -280,37 +280,6 @@ def run():
 
         Whenever possible, create subtle storytelling that sparks curiosity.
 
-        Examples:
-
-        Overthinking →
-        A person standing beside a rain-covered window lost in thought.
-
-        Burnout →
-        An empty office illuminated by late evening sunlight.
-
-        Loneliness →
-        A single chair beside a large window.
-
-        Emotional Healing →
-        Bandaged hands gently holding a warm cup of tea.
-
-        Confidence →
-        Someone walking confidently through early morning light.
-
-        Letting Go →
-        Open hands releasing autumn leaves into the wind.
-
-        Self-Awareness →
-        A thoughtful reflection in a mirror with subtle symbolism.
-
-        Growth →
-        A quiet forest path disappearing into soft morning light.
-
-        Habits →
-        An organized desk with a journal showing gradual progress.
-
-        Choose concepts naturally based on the article rather than copying these examples.
-
         ==================================================
         VISUAL STYLE
         ==================================================
