@@ -20,7 +20,8 @@ jobs:
       - name: Checkout repository code
         uses: actions/checkout@v5
         with:
-          fetch-depth: 0 # Full history fetch karega taaki safe dynamic push ho sake
+          fetch-depth: 0
+          token: ${{ secrets.PAT_TOKEN_ALL }}
 
       # 2. Python Environment setup karna
       - name: Set up Python
