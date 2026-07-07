@@ -19,7 +19,16 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Stop Mental Spiraling",
+  {
+    "title": "How to Stop Mental Spiraling",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "The Overthinking Patterns You Need to Break",
   "How to Create Calm in a Chaotic Mind",
   "Why Overthinkers Are Secretly Afraid",
