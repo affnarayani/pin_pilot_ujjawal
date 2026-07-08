@@ -369,8 +369,8 @@ def run():
             f"- This recommendation must blend seamlessly into the surrounding content and should feel genuinely helpful rather than promotional.\n"
             f"- Never paste the raw URL.\n"
             f"- Instead, use an HTML hyperlink with given anchor text such as:\n"
-            f"<a href=\"https://mindtobetter.blogspot.com/p/store.html\">Click Here</a>\n"
-            f"- You may adjust the anchor text naturally to fit the article, but keep it descriptive and relevant.\n\n"
+            f"<a href=\"https://mindtobetter.blogspot.com/p/store.html\">CLICK HERE</a>\n"
+            f"- The anchor text inside the <a href> tag must be exactly \"CLICK HERE\". Do not use any other anchor text.\n\n"
 
             f"CONCLUSION\n"
             f"- End with a thoughtful and memorable takeaway.\n"
