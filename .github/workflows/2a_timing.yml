@@ -5,12 +5,12 @@ on:
     - cron: '0 0 * * *'
   workflow_dispatch: {}
 
+concurrency:
+  group: repository-lock
+  cancel-in-progress: false
+
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
-concurrency:
-  group: ci-${{ github.workflow }}
-  cancel-in-progress: false
 
 permissions:
   contents: write

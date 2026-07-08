@@ -1,19 +1,20 @@
 name: 1F. Post Pin to Pinterest
 
 on:
-  workflow_dispatch: # Taaki aap zaroorat padne par manually bhi run kar sakein
-  workflow_run:
-    workflows: ["1E. Generate Image"] # Jab 'Generate Image' workflow khatam hoga tab auto-trigger hoga
-    types:
-      - completed
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: repository-lock
+  cancel-in-progress: false
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   
 jobs:
   run-script:
-    runs-on: ubuntu-latest # Linux container fast aur efficient chalta hai
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
 
     steps:
       # 1. Repository ka code checkout karna

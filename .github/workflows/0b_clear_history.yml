@@ -3,6 +3,10 @@ name: 0B. Clear Workflow History
 on:
   workflow_dispatch:
 
+concurrency:
+  group: repository-lock
+  cancel-in-progress: false
+
 permissions:
   actions: write  # Needed to delete workflow runs
 

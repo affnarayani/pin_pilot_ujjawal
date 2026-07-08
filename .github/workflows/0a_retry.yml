@@ -5,6 +5,10 @@ on:
     - cron: '*/15 * * * *'
   workflow_dispatch:  # Allow manual triggering
 
+concurrency:
+  group: repository-lock
+  cancel-in-progress: false
+
 permissions:
   actions: write  # Needed to delete workflow runs
 

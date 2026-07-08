@@ -1,11 +1,13 @@
 name: 1D. Generate Content
 
 on:
+  schedule:
+    - cron: '*/15 * * * *'
   workflow_dispatch:
-  workflow_run:
-    workflows: ["1C. Post Post"]
-    types:
-      - completed
+
+concurrency:
+  group: repository-lock
+  cancel-in-progress: false
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -13,7 +15,6 @@ env:
 jobs:
   run-automation:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
 
     steps:
     - name: Checkout Repository

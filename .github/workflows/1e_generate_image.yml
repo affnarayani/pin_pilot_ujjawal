@@ -1,11 +1,13 @@
 name: 1E. Generate Image
 
 on:
-  workflow_dispatch: # Manual button activation support
-  workflow_run:
-    workflows: ["1D. Generate Content"]
-    types:
-      - completed
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: repository-lock
+  cancel-in-progress: false
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -13,8 +15,6 @@ env:
 jobs:
   run-image-automation:
     runs-on: ubuntu-latest
-    # Sirf tabhi chalega jab manual click ho YA content workflow successfully complete hua ho
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
 
     steps:
     - name: Checkout Repository
