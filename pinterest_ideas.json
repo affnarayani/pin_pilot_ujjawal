@@ -79,7 +79,16 @@
     "image_generated": true,
     "posted": true
   },
-  "Why Mental Clarity Changes Everything",
+  {
+    "title": "Why Mental Clarity Changes Everything",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Clear Your Mind in Minutes",
   "The Morning Routine for Mental Clarity",
   "Why Your Mind Feels Foggy All the Time",
