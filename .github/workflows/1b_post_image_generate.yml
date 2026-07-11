@@ -1,9 +1,11 @@
 name: 1B. Post Image Generate
 
-on:
-  schedule:
-    - cron: '*/15 * * * *'
-  workflow_dispatch:
+on: 
+  workflow_dispatch: 
+  workflow_run:
+    workflows: ["1A. Post Generate"]
+    types:
+      - completed
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -11,16 +13,11 @@ env:
 jobs:
   run-image-automation:
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    permissions:
+      contents: write
 
     steps:
-    - name: Turnstyle (Strict Queue Controller)
-      uses: softprops/turnstyle@v1
-      with:
-        poll-interval-seconds: 15
-        same-branch-only: false
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
     - name: Checkout Repository
       uses: actions/checkout@v5
       with:

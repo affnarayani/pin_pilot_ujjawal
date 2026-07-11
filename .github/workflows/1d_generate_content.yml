@@ -11,6 +11,8 @@ env:
 jobs:
   run-automation:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
     - name: Turnstyle (Strict Queue Controller)
