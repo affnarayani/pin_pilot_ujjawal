@@ -99,7 +99,16 @@
     "image_generated": true,
     "posted": true
   },
-  "The Morning Routine for Mental Clarity",
+  {
+    "title": "The Morning Routine for Mental Clarity",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "Why Your Mind Feels Foggy All the Time",
   "How to Achieve Mental Clarity Every Day",
   "The Foods That Destroy Mental Clarity",
