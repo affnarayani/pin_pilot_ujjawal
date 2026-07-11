@@ -198,6 +198,31 @@ def run():
         page = context.new_page()
         print("[OK] Cookies added successfully", flush=True)
 
+        layout_options = [
+            "Vertical step-by-step timeline (1, 2, 3) connected by a subtle dotted line",
+            "Side-by-side comparison matrix (This vs That split layout)",
+            "4-quadrant clean grid structure dividing the concepts into boxes",
+            "Central core concept with 4 radiating minimalist branches or arrows"
+        ]
+
+        color_options = [
+            "Deep dark obsidian background with crisp white and soft sage green accents.",
+            "Warm minimalist cream background with rich terracotta and charcoal grey accents.",
+            "Clean stark white background with sophisticated navy blue and soft gold accent highlights.",
+            "Soft muted beige background with deep chocolate brown text and burnt orange accents."
+        ]
+
+        font_options = [
+            "A bold, elegant Serif headline paired with a clean, high-readability Sans-Serif body font",
+            "A heavy, geometric technical Sans-Serif headline paired with a minimalist light Sans-Serif body font",
+            "An editorial-style Slab-Serif headline with clean Monospace supporting lines"
+        ]
+
+        # 2. Runtime par random element select karna
+        selected_layout = random.choice(layout_options)
+        selected_color = random.choice(color_options)
+        selected_font = random.choice(font_options)
+
         # Base strategic blueprint for prompt creation
         base_prompt = """
         You are an elite Pinterest Visual Strategist, Editorial Information Designer, UX Infographic Designer, Consumer Psychologist, and AI Image Prompt Engineer.
@@ -264,6 +289,24 @@ def run():
         Professional editorial quality
 
         ==================================================
+        LAYOUT STYLE
+        ==================================================
+
+        Use a professional editorial grid with a {layout_structure} format.
+
+        Consistent margins.
+
+        Consistent spacing.
+
+        Large white space.
+
+        Balanced composition.
+
+        Perfect alignment.
+
+        Premium visual rhythm.
+
+        ==================================================
         DESIGN GOAL
         ==================================================
 
@@ -303,7 +346,7 @@ def run():
 
         Requirements:
 
-        • Occupy approximately 25–35% of the upper canvas.
+        • Occupy approximately 25–35 percent of the upper canvas.
         • Large.
         • Bold.
         • Extremely readable.
@@ -426,7 +469,7 @@ def run():
         TYPOGRAPHY
         ==================================================
 
-        Typography should feel modern editorial.
+        Typography should feel modern editorial using {font_style} pairing.
 
         Use:
 
@@ -451,7 +494,7 @@ def run():
 
         Modern self-improvement aesthetic.
 
-        Soft neutral background.
+        {color_theme}
 
         Limited strategic accent colors.
 
@@ -460,24 +503,6 @@ def run():
         Calming, trustworthy and premium.
 
         Never oversaturate colors.
-
-        ==================================================
-        LAYOUT
-        ==================================================
-
-        Use a professional editorial grid.
-
-        Consistent margins.
-
-        Consistent spacing.
-
-        Large white space.
-
-        Balanced composition.
-
-        Perfect alignment.
-
-        Premium visual rhythm.
 
         ==================================================
         MOBILE READABILITY
@@ -591,7 +616,12 @@ def run():
             raise RuntimeError("❌ Textbox locator load nahi ho paya (All strategies failed).")
         
         # Step B: Enter wrapped dynamic prompt
-        formatted_base = base_prompt.format(subject_matter=subject_matter)
+        formatted_base = base_prompt.format(
+            subject_matter=subject_matter,
+            layout_structure=selected_layout,
+            color_theme=selected_color,
+            font_style=selected_font
+        )
         clean_base_prompt = " ".join(formatted_base.split())
         prompt_text = f"Generate a 8k image with a size strictly of 1024x1536 px, depicting the following scene: {clean_base_prompt}"
         print("[STEP] Filling hardcoded template wrapped prompt assembly...", flush=True)
