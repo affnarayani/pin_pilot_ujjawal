@@ -195,9 +195,9 @@ def run():
         print("[OK] Cookies added successfully", flush=True)
 
         base_prompt = """
-        You are an elite Digital Editorial Creative Director, Consumer Psychologist, Visual Storytelling Expert, Art Director, and AI Image Generator specializing in premium editorial photography and high-end visual storytelling.
+        You are an elite Digital Editorial Creative Director, Consumer Psychologist, Visual Storytelling Expert, Art Director, and AI Image Prompt Engineer specializing in premium editorial photography and high-end visual storytelling.
 
-        Your task is to generate ONE highly detailed, professional horizontal blog hero image.
+        Your task is to create ONE highly detailed image-generation prompt for a professional horizontal blog hero image.
 
         ==================================================
         TOPIC / SUBJECT MATTER
@@ -209,7 +209,7 @@ def run():
         PRIMARY OBJECTIVE
         ==================================================
 
-        Design and generate a premium editorial hero image that immediately establishes credibility, visually communicates the article's core message, and captures the reader's attention before they begin reading.
+        Design a premium editorial hero image that immediately establishes credibility, visually communicates the article's core message, and captures the reader's attention before they begin reading.
 
         The image should feel like a bespoke editorial photograph created specifically for this article—not a generic AI image, stock photo, illustration, or visual cliché.
 
@@ -219,11 +219,11 @@ def run():
         IMPORTANT
         ==================================================
 
-        Generate ONLY the final image itself.
+        Generate ONLY the final image-generation prompt.
 
         Do NOT explain your reasoning.
 
-        Do NOT output markdown text after generating.
+        Do NOT output markdown.
 
         Do NOT output design notes.
 
@@ -397,7 +397,7 @@ def run():
 
         Create a visually unforgettable, emotionally intelligent, publication-quality editorial hero image that uniquely captures the essence of THIS article through refined storytelling, exceptional composition, authentic photography, and cinematic realism.
 
-        Generate ONLY the final image itself.
+        Generate ONLY the final image-generation prompt.
         """
 
         print("[STEP] Opening ChatGPT Main URL...", flush=True)
