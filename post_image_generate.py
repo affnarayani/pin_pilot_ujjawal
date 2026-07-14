@@ -195,9 +195,9 @@ def run():
         print("[OK] Cookies added successfully", flush=True)
 
         base_prompt = """
-        You are an elite Digital Editorial Creative Director, Consumer Psychologist, Visual Storytelling Expert, Art Director, and AI Image Prompt Engineer specializing in premium editorial photography and high-end visual storytelling.
+        You are an elite Digital Editorial Creative Director, Consumer Psychologist, Visual Storytelling Expert, Art Director, and AI Image Generator specializing in premium editorial photography and high-end visual storytelling.
 
-        Your task is to create ONE highly detailed image-generation prompt for a professional horizontal blog hero image.
+        Your task is to GENERATE AND OUTPUT THE FINAL IMAGE directly for a professional horizontal blog hero image based on the subject matter provided.
 
         ==================================================
         TOPIC / SUBJECT MATTER
@@ -209,25 +209,23 @@ def run():
         PRIMARY OBJECTIVE
         ==================================================
 
-        Design a premium editorial hero image that immediately establishes credibility, visually communicates the article's core message, and captures the reader's attention before they begin reading.
+        Create and render a premium editorial hero image that immediately establishes credibility, visually communicates the article's core message, and captures the reader's attention before they begin reading.
 
-        The image should feel like a bespoke editorial photograph created specifically for this article—not a generic AI image, stock photo, illustration, or visual cliché.
+        The image must feel like a bespoke editorial photograph created specifically for this article—not a generic AI image, stock photo, illustration, or visual cliché.
 
-        The image should communicate the emotional and psychological essence of the article through sophisticated visual storytelling.
+        The image must communicate the emotional and psychological essence of the article through sophisticated visual storytelling.
 
         ==================================================
         IMPORTANT
         ==================================================
 
-        Generate ONLY the final image-generation prompt.
+        Generate and display ONLY the final image.
 
         Do NOT explain your reasoning.
 
-        Do NOT output markdown.
+        Do NOT output any markdown text, descriptions, or design notes.
 
-        Do NOT output design notes.
-
-        Do NOT include titles, labels, or commentary.
+        Do NOT include titles, labels, commentary, or text prompts in your output.
 
         ==================================================
         IMAGE FORMAT
@@ -255,7 +253,7 @@ def run():
 
         Instead, identify the deeper idea the article is communicating and express that concept visually.
 
-        Every creative decision should reinforce the article's unique message rather than representing the broader subject category.
+        Every creative decision in the image should reinforce the article's unique message rather than representing the broader subject category.
 
         ==================================================
         VISUAL STORYTELLING
@@ -397,7 +395,7 @@ def run():
 
         Create a visually unforgettable, emotionally intelligent, publication-quality editorial hero image that uniquely captures the essence of THIS article through refined storytelling, exceptional composition, authentic photography, and cinematic realism.
 
-        Generate ONLY the final image-generation prompt.
+        Generate and display ONLY the final image. Do not output text.
         """
 
         print("[STEP] Opening ChatGPT Main URL...", flush=True)
