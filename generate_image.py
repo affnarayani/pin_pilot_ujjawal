@@ -227,7 +227,7 @@ def run():
         base_prompt = """
         You are an elite Pinterest Visual Strategist, Editorial Information Designer, UX Infographic Designer, Consumer Psychologist, and AI Image Prompt Engineer.
 
-        Your task is to create ONE highly detailed image-generation prompt for a Pinterest-optimized vertical infographic.
+        Your task is to create ONE highly detailed image for a Pinterest-optimized vertical infographic.
 
         ==================================================
         TOPIC
@@ -249,7 +249,7 @@ def run():
         IMPORTANT
         ==================================================
 
-        Generate ONLY the final image-generation prompt.
+        Generate ONLY the final image.
 
         Do NOT explain your reasoning.
 
@@ -555,7 +555,7 @@ def run():
         FINAL QUALITY CHECK
         ==================================================
 
-        Before producing the final prompt ensure that:
+        Before producing the final image ensure that:
 
         ✓ The design immediately communicates the topic.
 
@@ -577,7 +577,7 @@ def run():
 
         ✓ The overall result resembles a top-performing Pinterest infographic created by an experienced designer.
 
-        Generate ONLY the final image-generation prompt.
+        Generate ONLY the final image.
         """
 
         print("[STEP] Opening ChatGPT Main URL...", flush=True)
