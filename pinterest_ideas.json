@@ -129,7 +129,16 @@
     "image_generated": true,
     "posted": true
   },
-  "The Foods That Destroy Mental Clarity",
+  {
+    "title": "The Foods That Destroy Mental Clarity",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Think Clearly When Stressed",
   "Why Mental Clutter Slows You Down",
   "How to Declutter Your Mind",
