@@ -119,7 +119,16 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Achieve Mental Clarity Every Day",
+  {
+    "title": "How to Achieve Mental Clarity Every Day",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "The Foods That Destroy Mental Clarity",
   "How to Think Clearly When Stressed",
   "Why Mental Clutter Slows You Down",
