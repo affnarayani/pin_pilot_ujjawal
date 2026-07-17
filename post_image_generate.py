@@ -194,209 +194,22 @@ def run():
         page = context.new_page()
         print("[OK] Cookies added successfully", flush=True)
 
-        base_prompt = """
-        You are an elite Digital Editorial Creative Director, Consumer Psychologist, Visual Storytelling Expert, Art Director, and AI Image Generator specializing in premium editorial photography and high-end visual storytelling.
-
-        Your task is to GENERATE AND OUTPUT THE FINAL IMAGE directly for a professional horizontal blog hero image based on the subject matter provided.
-
-        ==================================================
-        TOPIC / SUBJECT MATTER
-        ==================================================
-
-        {subject_matter}
-
-        ==================================================
-        PRIMARY OBJECTIVE
-        ==================================================
-
-        Create and render a premium editorial hero image that immediately establishes credibility, visually communicates the article's core message, and captures the reader's attention before they begin reading.
-
-        The image must feel like a bespoke editorial photograph created specifically for this article—not a generic AI image, stock photo, illustration, or visual cliché.
-
-        The image must communicate the emotional and psychological essence of the article through sophisticated visual storytelling.
-
-        ==================================================
-        IMPORTANT
-        ==================================================
-
-        Generate and display ONLY the final image.
-
-        Do NOT explain your reasoning.
-
-        Do NOT output any markdown text, descriptions, or design notes.
-
-        Do NOT include titles, labels, commentary, or text prompts in your output.
-
-        ==================================================
-        IMAGE FORMAT
-        ==================================================
-
-        Blog Post Hero Image
-
-        Landscape orientation.
-
-        16:9 aspect ratio.
-
-        Ultra-high resolution.
-
-        Wide editorial composition optimized for modern websites.
-
-        Ensure the composition remains visually balanced after responsive cropping across desktop, tablet, and mobile layouts.
-
-        ==================================================
-        ARTICLE INTERPRETATION
-        ==================================================
-
-        Carefully infer the article's true purpose, central psychological insight, emotional tone, intended audience, and desired reader transformation.
-
-        Do not simply visualize the topic.
-
-        Instead, identify the deeper idea the article is communicating and express that concept visually.
-
-        Every creative decision in the image should reinforce the article's unique message rather than representing the broader subject category.
-
-        ==================================================
-        VISUAL STORYTELLING
-        ==================================================
-
-        Tell a compelling visual story that communicates the article's message without relying on words.
-
-        Favor subtle symbolism, authentic moments, meaningful relationships between visual elements, and emotionally intelligent storytelling over literal representations.
-
-        The image should invite curiosity while remaining clear, believable, and emotionally resonant.
-
-        Every element within the frame should contribute to the narrative.
-
-        ==================================================
-        EDITORIAL STYLE
-        ==================================================
-
-        Create imagery that reflects the quality, sophistication, intentionality, and visual refinement expected from world-class editorial publications and premium commercial photography.
-
-        The final result should feel professionally art-directed, timeless, elegant, intelligent, and visually distinctive.
-
-        ==================================================
-        PHOTOGRAPHY STYLE
-        ==================================================
-
-        Photorealistic.
-
-        Natural lighting.
-
-        Realistic materials and textures.
-
-        Authentic lens characteristics.
-
-        Believable depth of field.
-
-        Organic compositions.
-
-        Natural human posture and expressions when people are present.
-
-        Subtle imperfections that enhance realism.
-
-        Avoid anything that appears artificially generated, overly polished, exaggerated, or visually synthetic.
-
-        ==================================================
-        SUBJECT SELECTION
-        ==================================================
-
-        Determine the strongest visual subject based entirely on the article.
-
-        The subject may be a person, multiple people, an environment, architecture, objects, or any meaningful visual element that best communicates the article's message.
-
-        Include people only when they genuinely strengthen the storytelling.
-
-        When people are present, their appearance, clothing, posture, expressions, age, and overall presence should naturally support the emotional tone and narrative of the article.
-
-        ==================================================
-        ENVIRONMENT
-        ==================================================
-
-        Choose an environment that naturally reinforces the article's message.
-
-        Every aspect of the setting—including location, atmosphere, lighting, weather, season, time of day, perspective, and spatial design—should strengthen the emotional impact and visual storytelling.
-
-        The environment should feel authentic rather than staged.
-
-        ==================================================
-        COMPOSITION
-        ==================================================
-
-        Use sophisticated editorial composition.
-
-        Create a clear visual hierarchy.
-
-        Guide the viewer's attention naturally toward the primary focal point.
-
-        Maintain visual balance throughout the frame.
-
-        Include generous negative space that can comfortably accommodate future headline placement without compromising the composition.
-
-        Avoid unnecessary visual clutter.
-
-        ==================================================
-        SYMBOLISM
-        ==================================================
-
-        Use symbolism only when it naturally enhances understanding of the article.
-
-        Visual metaphors should feel subtle, intelligent, and emotionally authentic.
-
-        Avoid obvious, forced, or overly literal symbolic representations.
-
-        ==================================================
-        COLOR
-        ==================================================
-
-        Use a refined, cohesive color palette that supports the emotional message of the article.
-
-        Color relationships should feel natural, balanced, and professionally graded.
-
-        Use contrast intentionally to establish hierarchy and emotional tone.
-
-        Avoid distracting, artificial, or overly stylized color treatments.
-
-        ==================================================
-        MOOD
-        ==================================================
-
-        Create an atmosphere that authentically supports the emotional experience the article intends to create.
-
-        The emotional tone should feel believable, nuanced, and psychologically appropriate rather than exaggerated or theatrical.
-
-        ==================================================
-        REALISM
-        ==================================================
-
-        Maintain a consistently high level of realism throughout the image.
-
-        Ensure believable anatomy, proportions, materials, lighting, reflections, perspective, textures, and physical interactions.
-
-        Avoid visual artifacts or inconsistencies that reduce credibility.
-
-        ==================================================
-        QUALITY
-        ==================================================
-
-        The image should resemble an award-winning editorial photograph captured by an experienced creative team with exceptional art direction and cinematic visual craftsmanship.
-
-        Every element should appear intentional, polished, and publication-ready.
-
-        ==================================================
-        NEGATIVE REQUIREMENTS
-        ==================================================
-
-        Avoid generic stock-photo aesthetics, visual clichés, repetitive compositions, unnecessary visual effects, unrealistic anatomy, distorted proportions, artificial facial features, distracting artifacts, embedded text, typography, logos, watermarks, interface elements, excessive post-processing, exaggerated color grading, or any element that reduces realism, sophistication, or editorial quality.
-
-        ==================================================
-        FINAL GOAL
-        ==================================================
-
-        Create a visually unforgettable, emotionally intelligent, publication-quality editorial hero image that uniquely captures the essence of THIS article through refined storytelling, exceptional composition, authentic photography, and cinematic realism.
-
-        Generate and display ONLY the final image. Do not output text.
-        """
+        base_prompt = (
+        "You are an elite Digital Editorial Creative Director specializing in premium editorial photography and visual storytelling. "
+        "Based on the provided {subject_matter}, your sole task is to generate and output a professional, wide editorial blog hero image. "
+        "The image must immediately establish credibility, visually communicate the article's psychological insight and emotional message, "
+        "and capture the reader's attention with sophisticated storytelling. It must feel like a bespoke, high-end editorial photograph "
+        "created specifically for this article—not a generic stock photo, illustration, or visual cliché. "
+        "The output should strictly follow a photorealistic style with natural lighting, realistic textures, and authentic depth of field. "
+        "The visual subject (person, environment, or objects) should naturally embody the core concept, including intelligent symbolism "
+        "where appropriate. Use sophisticated editorial composition with clear visual hierarchy, guided attention, and generous negative space. "
+        "The final image must be visually unforgettable, emotionally intelligent, and publication-ready, looking like an award-winning "
+        "piece of cinematic visual craftsmanship. "
+        "RESPOND ONLY WITH THE FINAL OPTIMIZED IMAGE PROMPT TEXT. Do not include any introduction, explanation, markdown, "
+        "design notes, text, titles, or book covers.\n\n"
+        "Format Requirement: Landscape orientation (16:9), ultra-high resolution, optimized for modern websites. "
+        "No text, logos, or watermarks. Ensure visual balance after cropping for different layouts."
+        )
 
         print("[STEP] Opening ChatGPT Main URL...", flush=True)
         page.goto("https://chatgpt.com/", wait_until="load")
