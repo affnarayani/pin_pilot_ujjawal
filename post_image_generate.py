@@ -195,20 +195,16 @@ def run():
         print("[OK] Cookies added successfully", flush=True)
 
         base_prompt = (
-        "You are an elite Digital Editorial Creative Director specializing in premium editorial photography and visual storytelling. "
-        "Based on the provided {subject_matter}, your sole task is to generate and output a professional, wide editorial blog hero image. "
-        "The image must immediately establish credibility, visually communicate the article's psychological insight and emotional message, "
-        "and capture the reader's attention with sophisticated storytelling. It must feel like a bespoke, high-end editorial photograph "
-        "created specifically for this article—not a generic stock photo, illustration, or visual cliché. "
-        "The output should strictly follow a photorealistic style with natural lighting, realistic textures, and authentic depth of field. "
-        "The visual subject (person, environment, or objects) should naturally embody the core concept, including intelligent symbolism "
-        "where appropriate. Use sophisticated editorial composition with clear visual hierarchy, guided attention, and generous negative space. "
-        "The final image must be visually unforgettable, emotionally intelligent, and publication-ready, looking like an award-winning "
-        "piece of cinematic visual craftsmanship. "
-        "RESPOND ONLY WITH THE FINAL OPTIMIZED IMAGE PROMPT TEXT. Do not include any introduction, explanation, markdown, "
-        "design notes, text, titles, or book covers.\n\n"
-        "Format Requirement: Landscape orientation (16:9), ultra-high resolution, optimized for modern websites. "
-        "No text, logos, or watermarks. Ensure visual balance after cropping for different layouts."
+            "You are an elite Digital Editorial Creative Director and AI Image Generator. "
+            "Based on the provided topic - {subject_matter}, your ONLY task is to directly generate and render the final visual image. "
+            "Do NOT write any text prompt, description, explanation, markdown, or code in your response. "
+            "Directly output the final image that fits these editorial standards:\n\n"
+            "1. STYLE & COMPOSITION: Premium, photorealistic editorial photography. Landscape (16:9 aspect ratio) blog hero image. "
+            "Features natural lighting, authentic depth of field, and generous negative space for headline placement.\n"
+            "2. STORYTELLING: Create an emotionally resonant, sophisticated visual metaphor of the subject matter. "
+            "Avoid clichés, stock photo aesthetics, and overly polished synthetic looks.\n"
+            "3. RULES: Strictly NO text, logos, book covers, watermarks, or user interface elements in the visual. "
+            "Render only the final high-resolution image directly."
         )
 
         print("[STEP] Opening ChatGPT Main URL...", flush=True)
