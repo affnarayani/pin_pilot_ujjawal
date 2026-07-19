@@ -146,11 +146,29 @@
     "post_posted": true,
     "url": "https://mindtobetter.blogspot.com/2026/07/how-to-think-clearly-when-stressed.html",
     "content_generated": true,
-    "image_generated": false,
-    "posted": false
+    "image_generated": true,
+    "posted": true
   },
-  "Why Mental Clutter Slows You Down",
-  "How to Declutter Your Mind",
+  {
+    "title": "Why Mental Clutter Slows You Down",
+    "post_generated": true,
+    "post_image_generated": true,
+    "post_posted": true,
+    "url": "https://mindtobetter.blogspot.com/2026/07/why-mental-clutter-slows-you-down.html",
+    "content_generated": true,
+    "image_generated": true,
+    "posted": true
+  },
+  {
+    "title": "How to Declutter Your Mind",
+    "post_generated": true,
+    "post_image_generated": true,
+    "post_posted": true,
+    "url": "https://mindtobetter.blogspot.com/2026/07/how-to-declutter-your-mind-and-create.html",
+    "content_generated": true,
+    "image_generated": true,
+    "posted": true
+  },
   "The Daily Habits for a Clearer Mind",
   "How to Improve Your Thinking Speed",
   "Why Rest is the Secret to Mental Clarity",
