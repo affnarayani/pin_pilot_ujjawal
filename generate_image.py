@@ -225,7 +225,7 @@ def run():
 
         # Base strategic blueprint for prompt creation
         base_prompt = """
-        You are an elite Pinterest Visual Strategist, Editorial Information Designer, UX Infographic Designer, Consumer Psychologist, and AI Image Prompt Engineer.
+        You are an elite Pinterest Visual Strategist, Editorial Information Designer, UX Infographic Designer, Consumer Psychologist, and AI Image Engineer.
 
         Your task is to create ONE highly detailed image for a Pinterest-optimized vertical infographic.
 
@@ -239,7 +239,7 @@ def run():
         PRIMARY OBJECTIVE
         ==================================================
 
-        Design a Pinterest pin that immediately stops scrolling, communicates value within seconds, encourages users to save it, and motivates them to click for more information.
+        Design a Pinterest pin image that immediately stops scrolling, communicates value within seconds, encourages users to save it, and motivates them to click for more information.
 
         The final image must look like a professionally designed Pinterest infographic created by an experienced editorial designer—not by AI.
 
