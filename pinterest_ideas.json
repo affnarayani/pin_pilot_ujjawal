@@ -189,7 +189,16 @@
     "image_generated": true,
     "posted": true
   },
-  "Why Rest is the Secret to Mental Clarity",
+  {
+    "title": "Why Rest is the Secret to Mental Clarity",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Remove Mental Blocks",
   "The Connection Between Clarity and Confidence",
   "How to Think Better Every Single Day",
