@@ -259,7 +259,16 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Stop Mental Fog Permanently",
+  {
+    "title": "How to Stop Mental Fog Permanently",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "Why Journaling Creates Mental Clarity",
   "How to Think Logically Under Pressure",
   "The Link Between Hydration and Mental Clarity",
