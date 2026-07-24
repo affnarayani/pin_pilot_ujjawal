@@ -289,7 +289,16 @@
     "image_generated": true,
     "posted": true
   },
-  "The Link Between Hydration and Mental Clarity",
+  {
+    "title": "The Link Between Hydration and Mental Clarity",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Train Your Brain for Clarity",
   "Why Silence is the Ultimate Clarity Tool",
   "How to Make Clear Decisions Daily",
