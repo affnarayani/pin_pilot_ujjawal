@@ -369,7 +369,16 @@
     "image_generated": true,
     "posted": true
   },
-  "The Science Behind Mental Clarity",
+  {
+    "title": "The Science Behind Mental Clarity",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Think More Clearly as You Age",
   "Why Clutter Kills Mental Clarity",
   "How to Build a Clear Mind Habit",
