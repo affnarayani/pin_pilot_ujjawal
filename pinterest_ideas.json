@@ -359,7 +359,16 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Reset Your Mind When Overwhelmed",
+  {
+    "title": "How to Reset Your Mind When Overwhelmed",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "The Science Behind Mental Clarity",
   "How to Think More Clearly as You Age",
   "Why Clutter Kills Mental Clarity",
