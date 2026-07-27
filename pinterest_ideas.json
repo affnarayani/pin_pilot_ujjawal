@@ -399,7 +399,16 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Build a Clear Mind Habit",
+  {
+    "title": "How to Build a Clear Mind Habit",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "The Mental Clarity Exercises That Actually Work",
   "How to Eliminate Brain Fog Naturally",
   "Why Walking Improves Mental Clarity",
