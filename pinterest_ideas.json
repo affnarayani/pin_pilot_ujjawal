@@ -429,7 +429,16 @@
     "image_generated": true,
     "posted": true
   },
-  "Why Walking Improves Mental Clarity",
+  {
+    "title": "Why Walking Improves Mental Clarity",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Think Without Distraction",
   "The Mental Clarity Benefits of Meditation",
   "How to Have a Productive Clear Mind Morning",
