@@ -509,7 +509,16 @@
     "image_generated": true,
     "posted": true
   },
-  "Why Less Information Means More Clarity",
+  {
+    "title": "Why Less Information Means More Clarity",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Stop Mental Overload",
   "The Clarity Mindset and How to Build It",
   "How to Think Clearly When Emotions Run High",
