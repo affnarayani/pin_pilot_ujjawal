@@ -529,7 +529,16 @@
     "image_generated": true,
     "posted": true
   },
-  "The Clarity Mindset and How to Build It",
+  {
+    "title": "The Clarity Mindset and How to Build It",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Think Clearly When Emotions Run High",
   "Why Solitude Creates Mental Clarity",
   "How to Have Clear Thoughts Every Morning",
