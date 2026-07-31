@@ -96,6 +96,9 @@ jobs:
         else
           echo "[OK] Changes detected. Committing and pushing updates..."
           git commit -m "Automated: Update generated header image and pipeline states [skip ci]"
-          git pull origin ${GITHUB_REF_NAME} --rebase
+          
+          # Conflict hone par workflow wali latest file ko preference di jayegi (-X theirs)
+          git pull origin ${GITHUB_REF_NAME} --rebase -X theirs || git rebase --skip
+          
           git push origin ${GITHUB_REF_NAME}
         fi
