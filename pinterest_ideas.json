@@ -679,7 +679,16 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Concentrate for Hours Without Fatigue",
+  {
+    "title": "How to Concentrate for Hours Without Fatigue",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "Why Notifications Kill Your Productivity",
   "How to Build a Distraction Free Environment",
   "The Link Between Sleep and Focus",
