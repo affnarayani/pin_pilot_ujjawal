@@ -699,7 +699,16 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Build a Distraction Free Environment",
+  {
+    "title": "How to Build a Distraction Free Environment",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "The Link Between Sleep and Focus",
   "How to Regain Focus After Being Distracted",
   "Why Your Phone Is Ruining Your Concentration",
