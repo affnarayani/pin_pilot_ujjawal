@@ -719,7 +719,16 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Regain Focus After Being Distracted",
+  {
+    "title": "How to Regain Focus After Being Distracted",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "Why Your Phone Is Ruining Your Concentration",
   "How to Improve Focus Naturally",
   "The Best Time of Day for Deep Focus",
