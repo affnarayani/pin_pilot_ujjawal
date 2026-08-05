@@ -729,7 +729,16 @@
     "image_generated": true,
     "posted": true
   },
-  "Why Your Phone Is Ruining Your Concentration",
+  {
+    "title": "Why Your Phone Is Ruining Your Concentration",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Improve Focus Naturally",
   "The Best Time of Day for Deep Focus",
   "How to Stay Focused on Long Term Goals",
