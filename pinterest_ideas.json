@@ -769,7 +769,16 @@
     "image_generated": true,
     "posted": true
   },
-  "Why Boredom is Good for Your Focus",
+  {
+    "title": "Why Boredom is Good for Your Focus",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Build Focus Like a Muscle",
   "The Focus Destroying Habits to Stop Now",
   "How to Work With Full Concentration",
