@@ -95,7 +95,7 @@ jobs:
     - name: Commit and Push Changes (If updated)
       run: |
         # Pipeline files aur dynamic state files dono ko track karne ke liye
-        git add article.json pinterest_ideas.json
+        git add article.json pinterest_ideas.json status.json
         
         if git diff --staged --quiet; then
           echo "[INFO] No changes detected (Content might have been already posted or execution skipped). Skipping push."
