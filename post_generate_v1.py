@@ -35,9 +35,6 @@ if not encrypted_files:
 CHATGPT_COOKIES_FILE = random.choice(encrypted_files)
 print(f"[OK] Randomly selected cookie file: {CHATGPT_COOKIES_FILE.name}", flush=True)
 
-STATUS_FILE = Path("status.json")
-DEFAULT_SAVE_PIN_PERCENTAGE = 30
-
 PBKDF2_ITERATIONS = 200_000
 
 USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
@@ -139,101 +136,6 @@ def upload_to_tmpfiles(screenshot_path):
         print(f"[WARNING] Upload Failed: {response.status_code}")
         return None
 
-
-# =========================
-# STATUS.JSON (save/click ratio) — this script OWNS the decision
-# =========================
-def load_or_init_status():
-    """
-    Loads status.json, creating/repairing it with safe defaults if missing or
-    invalid. save_pin_percentage=0 is a fully valid explicit setting (means
-    100% click pins) and must NOT be treated as "unset".
-    """
-    if STATUS_FILE.exists():
-        try:
-            with STATUS_FILE.open("r", encoding="utf-8") as f:
-                status = json.load(f)
-            if not isinstance(status, dict):
-                raise ValueError("status.json root is not an object")
-        except Exception as e:
-            print(f"[WARNING] status.json corrupt/unreadable ({e}). Reinitializing with defaults.", flush=True)
-            status = {}
-    else:
-        print("[INFO] status.json not found. Creating with defaults.", flush=True)
-        status = {}
-
-    # save_pin_percentage: validate, but explicitly allow 0 as a real value.
-    raw_save_pct = status.get("save_pin_percentage")
-    if raw_save_pct is None or not isinstance(raw_save_pct, (int, float)) or isinstance(raw_save_pct, bool):
-        save_pct = DEFAULT_SAVE_PIN_PERCENTAGE
-    else:
-        save_pct = raw_save_pct
-
-    # Clamp into a sane 0-100 range without discarding a valid 0.
-    if save_pct < 0 or save_pct > 100:
-        print(f"[WARNING] save_pin_percentage={save_pct} is out of range (0-100). Resetting to default {DEFAULT_SAVE_PIN_PERCENTAGE}.", flush=True)
-        save_pct = DEFAULT_SAVE_PIN_PERCENTAGE
-
-    save_pct = int(save_pct)
-
-    status["save_pin_percentage"] = save_pct
-    status["click_pin_percentage"] = 100 - save_pct
-
-    counts = status.get("counts")
-    if not isinstance(counts, dict):
-        counts = {}
-    status["counts"] = {
-        "total_pins": int(counts.get("total_pins", 0) or 0),
-        "save_pins": int(counts.get("save_pins", 0) or 0),
-        "click_pins": int(counts.get("click_pins", 0) or 0),
-    }
-
-    status.setdefault("current_pin_type", None)
-
-    return status
-
-
-def save_status(status):
-    with STATUS_FILE.open("w", encoding="utf-8") as f:
-        json.dump(status, f, indent=2, ensure_ascii=False)
-
-
-def decide_pin_type(status):
-    """
-    Decides 'save' or 'click' for the NEW topic about to enter the pipeline,
-    using a catch-up ratio rule against save_pin_percentage, then commits the
-    decision (updates counts + current_pin_type) into status.
-
-    save_pin_percentage == 0   -> always 'click' (0 is a valid, explicit setting)
-    save_pin_percentage == 100 -> always 'save'
-    otherwise                  -> 'save' if the actual save ratio so far is
-                                   still below the target, else 'click'
-    """
-    save_pct = status["save_pin_percentage"]
-    counts = status["counts"]
-
-    if save_pct <= 0:
-        pin_type = "click"
-    elif save_pct >= 100:
-        pin_type = "save"
-    else:
-        total = counts["total_pins"]
-        current_save_ratio = (counts["save_pins"] / total * 100) if total > 0 else 0.0
-        pin_type = "save" if current_save_ratio < save_pct else "click"
-
-    counts["total_pins"] += 1
-    counts[f"{pin_type}_pins"] += 1
-    status["current_pin_type"] = pin_type
-
-    actual_pct = (counts["save_pins"] / counts["total_pins"] * 100) if counts["total_pins"] > 0 else 0.0
-    print(
-        f"[STATUS] target save%={save_pct} | actual so far: save={counts['save_pins']}/{counts['total_pins']} "
-        f"({actual_pct:.1f}%) | Decided pin_type = '{pin_type}' for this topic.",
-        flush=True,
-    )
-
-    return pin_type
-
 # =========================
 # MAIN
 # =========================
@@ -296,16 +198,6 @@ def run():
         sys.exit(0)
 
     print(f"[OK] Last pipeline verified complete. Starting next topic: '{subject_matter}' at array index [{target_index}]", flush=True)
-
-    # ========================================================
-    # DECIDE save vs click PIN TYPE FOR THIS NEW TOPIC
-    # ========================================================
-    # This is the ONLY place in the whole pipeline where the ratio decision is
-    # made and the counters advance. generate_content.py and generate_image.py
-    # further down the pipeline only READ status.json's current_pin_type.
-    status = load_or_init_status()
-    pin_type = decide_pin_type(status)
-    save_status(status)
 
     # Folders and file management for Markdown Post output
     post_dir = Path("posts")

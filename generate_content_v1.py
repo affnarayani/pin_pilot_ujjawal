@@ -34,8 +34,6 @@ if not encrypted_files:
 CHATGPT_COOKIES_FILE = random.choice(encrypted_files)
 print(f"[OK] Randomly selected cookie file: {CHATGPT_COOKIES_FILE.name}", flush=True)
 
-STATUS_FILE = Path("status.json")
-
 PBKDF2_ITERATIONS = 200_000
 
 USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
@@ -146,31 +144,6 @@ def upload_to_tmpfiles(screenshot_path):
     else:
         print(f"[WARNING] Upload Failed: {response.status_code}")
         return None
-
-
-# =========================
-# STATUS.JSON (read-only here — post_generate.py owns the decision)
-# =========================
-def read_pin_type(default="click"):
-    """
-    Reads the pin_type ('save' or 'click') that post_generate.py decided and
-    persisted for the item currently in flight. This script never decides or
-    mutates the ratio itself — it only consumes the decision.
-    """
-    if not STATUS_FILE.exists():
-        print(f"[WARNING] status.json not found. Defaulting pin_type to '{default}'.", flush=True)
-        return default
-    try:
-        with STATUS_FILE.open("r", encoding="utf-8") as f:
-            status = json.load(f)
-        pin_type = status.get("current_pin_type")
-        if pin_type not in ("save", "click"):
-            print(f"[WARNING] status.json has invalid/missing current_pin_type ('{pin_type}'). Defaulting to '{default}'.", flush=True)
-            return default
-        return pin_type
-    except Exception as e:
-        print(f"[WARNING] Could not read status.json ({e}). Defaulting pin_type to '{default}'.", flush=True)
-        return default
 
 # =========================
 # MAIN
@@ -297,120 +270,6 @@ def run():
             
         custom_random_wait(15, 30)
 
-        # ========================================================
-        # PIN TYPE (save vs click) — decided once by post_generate.py
-        # and persisted in status.json. This script only reads it.
-        # ========================================================
-        pin_type = read_pin_type()
-        print(f"[OK] Pin type for this topic (from status.json): '{pin_type}'", flush=True)
-
-        if pin_type == "save":
-            title_rules = (
-                "- Target length: 60-85 characters.\n"
-                "- Never exceed 95 characters.\n"
-                "- Naturally include the complete input topic exactly once.\n"
-                "- You MAY add words before and/or after the topic.\n"
-                "- Front-load the strongest searchable keyword whenever natural.\n"
-                "- Optimize for Pinterest Search first.\n"
-                "- Optimize for CTR second.\n"
-                "- Make users curious.\n"
-                "- Promise a clear, complete benefit — this pin is meant to be self-contained and save-worthy, so the title MAY fully describe what the pin delivers.\n"
-                "- Human sounding only.\n"
-                "- Avoid clickbait.\n"
-                "- Avoid generic AI phrases.\n"
-                "- No emojis.\n"
-                "- No hashtags.\n"
-                "- No quotation marks."
-            )
-            description_rules = (
-                "- Target length: 350-600 characters.\n"
-                "- Never exceed 700 characters.\n"
-                "- First sentence must immediately communicate value.\n"
-                "- Use a compelling hook.\n"
-                "- Naturally reinforce the primary keyword.\n"
-                "- Naturally include several semantic Pinterest search keywords.\n"
-                "- Avoid keyword stuffing.\n"
-                "- Avoid repeating identical phrases.\n"
-                "- Use synonyms naturally.\n"
-                "- Address a real user pain point.\n"
-                "- Explain the practical benefit.\n"
-                "- Build curiosity.\n"
-                "- Make the content feel complete and save-worthy on its own — the reader should feel this pin alone is worth keeping.\n"
-                "- End with ONE natural, save-oriented CTA.\n"
-                "- CTA examples:\n"
-                "  • Save this pin for later.\n"
-                "  • Explore the complete guide.\n"
-                "  • Learn the full framework.\n"
-                "  • Read the complete method.\n"
-                "  • Discover the complete system.\n"
-                "- Educational tone preferred over promotional tone.\n"
-                "- Never sound spammy.\n"
-                "- No emojis.\n"
-                "- Hashtags are optional. Use at most 3 only if they genuinely improve discoverability."
-            )
-            sync_rules = (
-                "A separate image-generation step will run AFTER this one, using ONLY the JSON you output here — it has no other context. "
-                "This is a SAVE-type pin, so there is no curiosity gap to maintain — the image is allowed to fully reveal the content. "
-                "You must still output two extra fields, but used differently here:\n\n"
-                "- 'image_teaser_points': an array of 3-5 short strings covering ALL the main points of this topic (not a partial subset) — these become the full content blocks on the image.\n"
-                "- 'hidden_hook': leave this as an empty string \"\" — nothing needs to be withheld for a save-type pin.\n"
-            )
-        else:  # pin_type == "click"
-            title_rules = (
-                "- Target length: 60-85 characters.\n"
-                "- Never exceed 95 characters.\n"
-                "- Naturally include the complete input topic exactly once.\n"
-                "- You MAY add words before and/or after the topic.\n"
-                "- Front-load the strongest searchable keyword whenever natural.\n"
-                "- Optimize for Pinterest Search first.\n"
-                "- Optimize for CTR second.\n"
-                "- Make users curious.\n"
-                "- Promise a clear benefit WITHOUT revealing the full answer, method, or number of steps.\n"
-                "- OPEN LOOP RULE: the title must create a question in the reader's mind that only the linked article answers (e.g. name a specific mistake, a specific number of tips, or a 'what/why/how' the reader still needs explained). Never phrase the title so the reader already knows the full content.\n"
-                "- Prefer angles such as: a numbered list without stating what the items are, a mistake/myth callout, a 'the one thing/rule/reason' framing, or a question.\n"
-                "- Human sounding only.\n"
-                "- Avoid clickbait.\n"
-                "- Avoid generic AI phrases.\n"
-                "- No emojis.\n"
-                "- No hashtags.\n"
-                "- No quotation marks."
-            )
-            description_rules = (
-                "- Target length: 350-600 characters.\n"
-                "- Never exceed 700 characters.\n"
-                "- First sentence must immediately communicate value.\n"
-                "- Use a compelling hook.\n"
-                "- Naturally reinforce the primary keyword.\n"
-                "- Naturally include several semantic Pinterest search keywords.\n"
-                "- Avoid keyword stuffing.\n"
-                "- Avoid repeating identical phrases.\n"
-                "- Use synonyms naturally.\n"
-                "- Address a real user pain point.\n"
-                "- Explain the practical benefit.\n"
-                "- Build curiosity.\n"
-                "- Make the content feel save-worthy.\n"
-                "- CLICK HOOK RULE: include ONE specific detail that exists ONLY on the blog and is NOT shown on the pin image itself — e.g. a bonus tip beyond what the image lists, a specific number/framework name, a checklist, a template, or a deeper 'why it works' explanation. This must read as a genuine reason to tap through, not filler.\n"
-                "- End with ONE natural CTA that pushes toward the click, not just the save.\n"
-                "- CTA examples (prefer these over save-only phrasing):\n"
-                "  • Tap to read the full guide.\n"
-                "  • Full breakdown (with the bonus tip) on the blog.\n"
-                "  • Read the complete method →\n"
-                "  • See the full framework here.\n"
-                "  • Get the free checklist on the blog.\n"
-                "- Only use a pure save-CTA (e.g. 'Save this pin for later') if the pin is explicitly a quote/reference-style pin with no companion article value to add — otherwise always CTA toward the click.\n"
-                "- Educational tone preferred over promotional tone.\n"
-                "- Never sound spammy.\n"
-                "- No emojis.\n"
-                "- Hashtags are optional. Use at most 3 only if they genuinely improve discoverability."
-            )
-            sync_rules = (
-                "A separate image-generation step will run AFTER this one, using ONLY the JSON you output here — it has no other context. "
-                "To keep the pin image and this description in sync (so the image withholds the SAME specific detail this description promises), you must output two extra fields:\n\n"
-                "- 'image_teaser_points': an array of 2-4 short strings. Each is ONLY the heading/label of a tip (the 'what'), with NO explanation of how or why. These are the only points allowed to appear on the pin image.\n"
-                "- 'hidden_hook': ONE sentence describing the specific detail, number, mechanism, or bonus tip that must NEVER appear on the pin image, and must ONLY be resolved by reading the blog. This must be the exact same detail your description's CTA/hook is dangling — not a different one.\n\n"
-                "Consistency rule: whatever you tease as 'still to be revealed' in the description's CLICK HOOK must be the same thing described in 'hidden_hook'. Do not invent two different withheld details.\n"
-            )
-
         # Construction of algorithmic contextual optimization prompt blueprint
         prompt = (
             f"IMPORTANT:\n"
@@ -460,14 +319,51 @@ def run():
             f"========================================\n"
 
             f"Requirements:\n"
-            f"{title_rules}\n\n"
+            f"- Target length: 60-85 characters.\n"
+            f"- Never exceed 95 characters.\n"
+            f"- Naturally include the complete input topic exactly once.\n"
+            f"- You MAY add words before and/or after the topic.\n"
+            f"- Front-load the strongest searchable keyword whenever natural.\n"
+            f"- Optimize for Pinterest Search first.\n"
+            f"- Optimize for CTR second.\n"
+            f"- Make users curious.\n"
+            f"- Promise a clear benefit.\n"
+            f"- Human sounding only.\n"
+            f"- Avoid clickbait.\n"
+            f"- Avoid generic AI phrases.\n"
+            f"- No emojis.\n"
+            f"- No hashtags.\n"
+            f"- No quotation marks.\n\n"
 
             f"========================================\n"
             f"DESCRIPTION\n"
             f"========================================\n"
 
             f"Requirements:\n"
-            f"{description_rules}\n\n"
+            f"- Target length: 350-600 characters.\n"
+            f"- Never exceed 700 characters.\n"
+            f"- First sentence must immediately communicate value.\n"
+            f"- Use a compelling hook.\n"
+            f"- Naturally reinforce the primary keyword.\n"
+            f"- Naturally include several semantic Pinterest search keywords.\n"
+            f"- Avoid keyword stuffing.\n"
+            f"- Avoid repeating identical phrases.\n"
+            f"- Use synonyms naturally.\n"
+            f"- Address a real user pain point.\n"
+            f"- Explain the practical benefit.\n"
+            f"- Build curiosity.\n"
+            f"- Make the content feel save-worthy.\n"
+            f"- End with ONE natural CTA.\n"
+            f"- CTA examples:\n"
+            f"  • Save this pin for later.\n"
+            f"  • Explore the complete guide.\n"
+            f"  • Learn the full framework.\n"
+            f"  • Read the complete method.\n"
+            f"  • Discover the complete system.\n"
+            f"- Educational tone preferred over promotional tone.\n"
+            f"- Never sound spammy.\n"
+            f"- No emojis.\n"
+            f"- Hashtags are optional. Use at most 3 only if they genuinely improve discoverability.\n\n"
 
             f"========================================\n"
             f"ALT TEXT\n"
@@ -566,12 +462,6 @@ def run():
             f"If any category scores below 9/10, improve the output before returning it.\n\n"
 
             f"========================================\n"
-            f"IMAGE-CONTENT SYNC CONTRACT (CRITICAL)\n"
-            f"========================================\n"
-
-            f"{sync_rules}\n"
-
-            f"========================================\n"
             f"OUTPUT FORMAT\n"
             f"========================================\n"
 
@@ -579,9 +469,7 @@ def run():
             f'  "title": "...",\n'
             f'  "description": "...",\n'
             f'  "alt_text": "...",\n'
-            f'  "selected_board": "...",\n'
-            f'  "image_teaser_points": ["...", "...", "..."],\n'
-            f'  "hidden_hook": "..."\n'
+            f'  "selected_board": "..."\n'
             f'}}'
         )
 
@@ -672,10 +560,6 @@ def run():
                 if parsed_json.get("selected_board") not in ALLOWED_BOARDS:
                     print(f"[WARNING] Invalid board string parsed: '{parsed_json.get('selected_board')}'. Appending arbitrary safe index variant.", flush=True)
                     parsed_json["selected_board"] = random.choice(ALLOWED_BOARDS)
-
-                # Record which pin_type this content was generated for, so the
-                # image-generation step can cross-check it against status.json
-                parsed_json["pin_type"] = pin_type
 
                 print("[STEP] Saving formatted data inside article.json...", flush=True)
                 with article_file.open("w", encoding="utf-8") as f:

@@ -35,8 +35,6 @@ if not encrypted_files:
 CHATGPT_COOKIES_FILE = random.choice(encrypted_files)
 print(f"[OK] Randomly selected cookie file: {CHATGPT_COOKIES_FILE.name}", flush=True)
 
-STATUS_FILE = Path("status.json")
-
 IMAGE_DIR = Path("image")
 IMAGE_DIR.mkdir(exist_ok=True)
 
@@ -147,31 +145,6 @@ def upload_to_tmpfiles(screenshot_path):
         print(f"[WARNING] Upload Failed: {response.status_code}")
         return None
 
-
-# =========================
-# STATUS.JSON (read-only here — post_generate.py owns the decision)
-# =========================
-def read_pin_type(default="click"):
-    """
-    Reads the pin_type ('save' or 'click') that post_generate.py decided and
-    persisted for the item currently in flight. This script never decides or
-    mutates the ratio itself — it only consumes the decision.
-    """
-    if not STATUS_FILE.exists():
-        print(f"[WARNING] status.json not found. Defaulting pin_type to '{default}'.", flush=True)
-        return default
-    try:
-        with STATUS_FILE.open("r", encoding="utf-8") as f:
-            status = json.load(f)
-        pin_type = status.get("current_pin_type")
-        if pin_type not in ("save", "click"):
-            print(f"[WARNING] status.json has invalid/missing current_pin_type ('{pin_type}'). Defaulting to '{default}'.", flush=True)
-            return default
-        return pin_type
-    except Exception as e:
-        print(f"[WARNING] Could not read status.json ({e}). Defaulting pin_type to '{default}'.", flush=True)
-        return default
-
 # =========================
 # MAIN
 # =========================
@@ -207,50 +180,6 @@ def run():
         sys.exit(0)
 
     print(f"[OK] Selected Target Subject Matter: '{subject_matter}' at index [{target_index}]", flush=True)
-
-    # ========================================================
-    # LOAD article.json — SHARED CONTRACT FROM generate_content.py
-    # ========================================================
-    # generate_content.py runs first for this same topic and writes article.json
-    # with the exact title/teaser points/hidden hook it used. We MUST reuse these
-    # exact values here, otherwise the image and the description will each guess
-    # a different "withheld detail" and the curiosity gap won't line up.
-    article_file = Path("article.json")
-    generated_title = None
-    image_teaser_points = []
-    hidden_hook = None
-    article_pin_type = None
-
-    if article_file.exists():
-        try:
-            with article_file.open("r", encoding="utf-8") as f:
-                article_data = json.load(f)
-            generated_title = article_data.get("title")
-            image_teaser_points = article_data.get("image_teaser_points") or []
-            hidden_hook = article_data.get("hidden_hook")
-            article_pin_type = article_data.get("pin_type")
-            print(f"[OK] Loaded article.json contract -> teaser_points={image_teaser_points}, hidden_hook='{hidden_hook}', pin_type='{article_pin_type}'", flush=True)
-        except Exception as article_err:
-            print(f"[WARNING] Could not parse article.json, falling back to raw topic only: {article_err}", flush=True)
-    else:
-        print("[WARNING] article.json not found. Image will be generated WITHOUT sync to the description's hidden hook.", flush=True)
-
-    # ========================================================
-    # PIN TYPE (save vs click) — decided once by post_generate.py,
-    # persisted in status.json. This script only reads it (never mutates it).
-    # ========================================================
-    pin_type = read_pin_type()
-    print(f"[OK] Pin type for this topic (from status.json): '{pin_type}'", flush=True)
-
-    if article_pin_type and article_pin_type != pin_type:
-        print(f"[WARNING] pin_type mismatch! status.json says '{pin_type}' but article.json (written by generate_content.py) says '{article_pin_type}'. "
-              f"This usually means status.json's save/click ratio was changed mid-pipeline for this topic. "
-              f"Trusting article.json's value to stay consistent with the already-generated title/description.", flush=True)
-        pin_type = article_pin_type
-
-    # Prefer the polished, AI-generated title over the raw idea string when available
-    if generated_title:
-        subject_matter = generated_title
 
     print("[START] Script started", flush=True)
     cookies = load_cookies(Path(CHATGPT_COOKIES_FILE))
@@ -321,12 +250,6 @@ def run():
         ==================================================
 
         {subject_matter}
-
-        ==================================================
-        LOCKED CONTENT PLAN (DO NOT DEVIATE)
-        ==================================================
-
-        {content_plan}
 
         ==================================================
         PRIMARY OBJECTIVE
@@ -452,8 +375,6 @@ def run():
 
         The headline should stop scrolling before explaining.
 
-        {headline_rule}
-
         ==================================================
         HERO VISUAL
         ==================================================
@@ -484,7 +405,22 @@ def run():
         CONTENT STRUCTURE
         ==================================================
 
-        {content_structure_block}
+        Create an infographic containing:
+
+        • One strong headline
+
+        • One short subtitle
+
+        • Three to five content blocks
+
+        Each block should contain:
+
+        • short heading
+        • one or two concise supporting lines
+
+        Each supporting line should remain short enough to read comfortably on a phone screen.
+
+        Never create long paragraphs.
 
         ==================================================
         CONTENT DENSITY
@@ -534,7 +470,14 @@ def run():
         CTA
         ==================================================
 
-        {cta_block}
+        Place one subtle but visible CTA at the bottom.
+
+        Examples:
+
+        • Save this Pin
+        • Read the Full Guide
+        • Explore More
+        • Learn More
 
         Only ONE CTA.
 
@@ -648,8 +591,6 @@ def run():
 
         ✓ The design feels human-made.
 
-        {quality_check_extra}
-
         ✓ The overall result resembles a top-performing Pinterest infographic created by an experienced designer.
 
         Generate ONLY the final image.
@@ -692,112 +633,9 @@ def run():
         else:
             raise RuntimeError("❌ Textbox locator load nahi ho paya (All strategies failed).")
         
-        # Step B: Build pin_type-conditional prompt blocks
-        if pin_type == "save":
-            # SAVE-type pin: fully self-contained, no curiosity gap, save-oriented CTA.
-            if image_teaser_points:
-                plan_lines = ["Show ALL of these points on the image (full reveal — this is a SAVE-type pin, not a teaser):"]
-                for pt in image_teaser_points:
-                    plan_lines.append(f"- {pt}")
-                content_plan = "\n        ".join(plan_lines)
-            else:
-                content_plan = "No locked plan was provided — choose 3-5 strong points yourself and explain each one fully. This is a SAVE-type pin, so nothing needs to be withheld."
-
-            headline_rule = (
-                "This is a SAVE-type pin: the headline MAY fully state the benefit/promise. "
-                "It does not need to leave a question unanswered — clarity and completeness are more important than curiosity here."
-            )
-
-            content_structure_block = (
-                "Create an infographic containing:\n\n"
-                "        • One strong headline\n\n"
-                "        • One short subtitle\n\n"
-                "        • Three to five content blocks covering ALL the main points of the topic\n\n"
-                "        Each block should contain:\n\n"
-                "        • short heading\n"
-                "        • one or two concise supporting lines that fully explain the point (this pin is meant to be a complete, standalone reference worth saving)\n\n"
-                "        Each supporting line should remain short enough to read comfortably on a phone screen.\n\n"
-                "        Never create long paragraphs."
-            )
-
-            cta_block = (
-                "Place one subtle but visible CTA at the bottom that encourages saving and returning to this pin.\n\n"
-                "        Prefer examples like:\n\n"
-                "        • Save This Pin\n"
-                "        • Save & Come Back Anytime\n"
-                "        • Pin This for Later\n\n"
-                "        This pin is meant to be a complete, standalone reference, so a save-oriented CTA is correct here."
-            )
-
-            quality_check_extra = "✓ The image fully delivers the promised value on its own, making it complete and worth saving."
-
-        else:  # pin_type == "click"
-            if image_teaser_points or hidden_hook:
-                plan_lines = []
-                if image_teaser_points:
-                    plan_lines.append("Show ONLY these points on the image (as short headings, without full explanation):")
-                    for pt in image_teaser_points:
-                        plan_lines.append(f"- {pt}")
-                if hidden_hook:
-                    plan_lines.append(f"NEVER reveal this on the image (it is exclusive to the blog): {hidden_hook}")
-                content_plan = "\n        ".join(plan_lines)
-            else:
-                content_plan = "No locked plan was provided — choose 2-3 strong points yourself and deliberately withhold one clear, specific detail for the blog."
-
-            headline_rule = (
-                "OPEN LOOP RULE: The headline must create curiosity, not resolve it. It should name the topic/promise but must NOT "
-                "summarize the full answer (e.g. avoid headlines that already state the complete method). A reader should finish the "
-                "headline still wanting to know \"how exactly\" — that \"how exactly\" lives on the blog, not on this image."
-            )
-
-            content_structure_block = (
-                "Create an infographic containing:\n\n"
-                "        • One strong headline\n\n"
-                "        • One short subtitle\n\n"
-                "        • Two to four content blocks (NOT the full list — see CURIOSITY GAP RULE below)\n\n"
-                "        Each block should contain:\n\n"
-                "        • short heading\n"
-                "        • ONE brief supporting line that names WHAT to do, without fully explaining HOW or WHY\n\n"
-                "        Each supporting line should remain short enough to read comfortably on a phone screen.\n\n"
-                "        Never create long paragraphs.\n\n"
-                "        ==================================================\n"
-                "        CURIOSITY GAP RULE (CRITICAL FOR CLICK-THROUGH)\n"
-                "        ==================================================\n\n"
-                "        Use ONLY the points listed under LOCKED CONTENT PLAN above as your content blocks — do not add extra tips of your own, "
-                "and do not include more than what is listed there. If LOCKED CONTENT PLAN did not provide specific points, fall back to showing "
-                "only 2-3 of the strongest points for the topic and add a small text element such as \"+ more inside\".\n\n"
-                "        Do NOT fully explain any single point. Give the heading/label of the tip (the \"what\") as provided, but leave the "
-                "mechanism, the number, the exact method, or the reasoning (\"the how/why\") unanswered — that must only be resolved by reading "
-                "the blog post.\n\n"
-                "        If a \"hidden hook\" was provided in the LOCKED CONTENT PLAN, that specific detail must NEVER appear anywhere in the "
-                "image — not in the headline, not in any content block, not in the transformation section. It exists exclusively on the blog.\n\n"
-                "        The image should function as a compelling table of contents, not as a standalone answer. A viewer who reads only the "
-                "image should still have a clear, specific reason to tap through."
-            )
-
-            cta_block = (
-                "Place one subtle but visible CTA at the bottom that drives the reader to TAP THROUGH, not just save.\n\n"
-                "        Prefer examples like:\n\n"
-                "        • Read the Full Guide →\n"
-                "        • See All [N] Tips on the Blog\n"
-                "        • Get the Full Breakdown\n"
-                "        • Tap for the Complete Method\n\n"
-                "        Avoid using \"Save this Pin\" as the CTA text on the image itself — saving should happen naturally because the content "
-                "is good, but the on-image CTA text should point toward the linked article, since the CURIOSITY GAP RULE above depends on the "
-                "reader wanting to click for the rest."
-            )
-
-            quality_check_extra = "✓ The image does NOT fully answer the topic on its own — it leaves a specific, nameable reason to click through to the blog."
-
-        print(f"[OK] Using '{pin_type}'-style image prompt blocks.", flush=True)
-
+        # Step B: Enter wrapped dynamic prompt
         formatted_base = base_prompt.format(
             subject_matter=subject_matter,
-            content_plan=content_plan,
-            headline_rule=headline_rule,
-            content_structure_block=content_structure_block,
-            cta_block=cta_block,
-            quality_check_extra=quality_check_extra,
             layout_structure=selected_layout,
             color_theme=selected_color,
             font_style=selected_font
