@@ -172,31 +172,6 @@ def read_pin_type(default="click"):
         print(f"[WARNING] Could not read status.json ({e}). Defaulting pin_type to '{default}'.", flush=True)
         return default
 
-
-BLOG_POST_FILE = Path("posts/post.md")
-
-
-def read_blog_post():
-    """
-    Reads the actual blog article that post_generate.py already wrote for this
-    topic. The title/description/hook this script generates MUST be grounded
-    in this real content — otherwise the pin can promise a detail ("hidden
-    hook") that the linked article never actually delivers, breaking trust
-    and hurting click-through/save behaviour long-term.
-    """
-    if not BLOG_POST_FILE.exists():
-        print(f"[WARNING] posts/post.md not found. Content will be generated WITHOUT grounding in the actual article body.", flush=True)
-        return None
-    try:
-        text = BLOG_POST_FILE.read_text(encoding="utf-8").strip()
-        if not text:
-            print(f"[WARNING] posts/post.md is empty. Content will be generated WITHOUT grounding in the actual article body.", flush=True)
-            return None
-        return text
-    except Exception as e:
-        print(f"[WARNING] Could not read posts/post.md ({e}). Content will be generated WITHOUT grounding.", flush=True)
-        return None
-
 # =========================
 # MAIN
 # =========================
@@ -329,15 +304,6 @@ def run():
         pin_type = read_pin_type()
         print(f"[OK] Pin type for this topic (from status.json): '{pin_type}'", flush=True)
 
-        # ========================================================
-        # BLOG ARTICLE CONTENT — ground the pin copy in what post_generate.py
-        # actually wrote, so the "hidden hook" is a REAL detail that exists
-        # in the linked article, not an invented one.
-        # ========================================================
-        blog_post_content = read_blog_post()
-        if blog_post_content:
-            print(f"[OK] Loaded posts/post.md ({len(blog_post_content)} chars) — pin copy will be grounded in the real article.", flush=True)
-
         if pin_type == "save":
             title_rules = (
                 "- Target length: 60-85 characters.\n"
@@ -387,8 +353,7 @@ def run():
                 "This is a SAVE-type pin, so there is no curiosity gap to maintain — the image is allowed to fully reveal the content. "
                 "You must still output two extra fields, but used differently here:\n\n"
                 "- 'image_teaser_points': an array of 3-5 short strings covering ALL the main points of this topic (not a partial subset) — these become the full content blocks on the image.\n"
-                "- 'hidden_hook': leave this as an empty string \"\" — nothing needs to be withheld for a save-type pin.\n\n"
-                "GROUNDING RULE: 'image_teaser_points' must be pulled from the ACTUAL headings/points that appear in the BLOG ARTICLE CONTENT provided below — do not invent points the article doesn't actually cover. If the article is not provided, choose points consistent with the topic."
+                "- 'hidden_hook': leave this as an empty string \"\" — nothing needs to be withheld for a save-type pin.\n"
             )
         else:  # pin_type == "click"
             title_rules = (
@@ -443,8 +408,7 @@ def run():
                 "To keep the pin image and this description in sync (so the image withholds the SAME specific detail this description promises), you must output two extra fields:\n\n"
                 "- 'image_teaser_points': an array of 2-4 short strings. Each is ONLY the heading/label of a tip (the 'what'), with NO explanation of how or why. These are the only points allowed to appear on the pin image.\n"
                 "- 'hidden_hook': ONE sentence describing the specific detail, number, mechanism, or bonus tip that must NEVER appear on the pin image, and must ONLY be resolved by reading the blog. This must be the exact same detail your description's CTA/hook is dangling — not a different one.\n\n"
-                "Consistency rule: whatever you tease as 'still to be revealed' in the description's CLICK HOOK must be the same thing described in 'hidden_hook'. Do not invent two different withheld details.\n\n"
-                "GROUNDING RULE (CRITICAL): both 'image_teaser_points' and 'hidden_hook' must be REAL content that actually appears in the BLOG ARTICLE CONTENT provided below. Never promise a detail, number, or technique the article does not actually cover — a reader who clicks through must find exactly what was implied, or this destroys trust and hurts saves/follows going forward. Pick 'hidden_hook' from a genuinely specific paragraph, tip, or section of the article (e.g. a named technique, a number the article explains, a step buried mid-article) — not a vague generic tease. If no article content is provided below, keep the hook conservative and generic rather than inventing specifics."
+                "Consistency rule: whatever you tease as 'still to be revealed' in the description's CLICK HOOK must be the same thing described in 'hidden_hook'. Do not invent two different withheld details.\n"
             )
 
         # Construction of algorithmic contextual optimization prompt blueprint
@@ -468,13 +432,6 @@ def run():
 
             f"INPUT TOPIC\n"
             f"{subject_matter}\n\n"
-
-            f"========================================\n"
-            f"BLOG ARTICLE CONTENT (this is the actual article the pin links to)\n"
-            f"========================================\n"
-            f"{blog_post_content if blog_post_content else '[Not available — no article content was found. Keep title/description/hook general rather than inventing specifics.]'}\n\n"
-            f"Everything you write — title, description, image_teaser_points, and especially hidden_hook — must accurately reflect "
-            f"what is actually written in this article. Do not promise anything the article does not deliver.\n\n"
 
             f"========================================\n"
             f"INTERNAL ANALYSIS (DO NOT OUTPUT)\n"
