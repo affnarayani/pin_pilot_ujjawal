@@ -929,7 +929,16 @@
     "image_generated": true,
     "posted": true
   },
-  "Why Quiet Environments Boost Concentration",
+  {
+    "title": "Why Quiet Environments Boost Concentration",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Think Without Getting Distracted",
   "The Daily Focus Reset Technique",
   "How to Stop Mind Wandering During Work",
