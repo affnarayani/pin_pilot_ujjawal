@@ -1029,7 +1029,16 @@
     "image_generated": true,
     "posted": true
   },
-  "The Focus Routine for Creative Work",
+  {
+    "title": "The Focus Routine for Creative Work",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Silence Mental Noise for Deep Work",
   "Why Breaks Actually Improve Your Focus",
   "How to End Every Day With Focused Clarity",
