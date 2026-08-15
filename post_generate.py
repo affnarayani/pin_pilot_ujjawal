@@ -349,7 +349,7 @@ def run():
         print("[OK] Cookies added successfully", flush=True)
 
         print("[STEP] Opening ChatGPT Main URL...", flush=True)
-        page.goto("https://chatgpt.com/?temporary-chat=true", wait_until="load")
+        page.goto("https://chatgpt.com/", wait_until="load")
         print("[OK] URL opened successfully (Logged In)", flush=True)
 
         # 30 to 60 seconds random wait after page load
