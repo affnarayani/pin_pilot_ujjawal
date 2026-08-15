@@ -1089,7 +1089,16 @@
     "image_generated": true,
     "posted": true
   },
-  "The Science of Habit Formation",
+  {
+    "title": "The Science of Habit Formation",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Break a Bad Habit Permanently",
   "Why Small Habits Create Big Results",
   "How to Start a New Habit Without Willpower",
