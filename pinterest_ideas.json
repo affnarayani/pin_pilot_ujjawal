@@ -1149,7 +1149,16 @@
     "image_generated": true,
     "posted": true
   },
-  "Why Your Environment Shapes Your Habits",
+  {
+    "title": "Why Your Environment Shapes Your Habits",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Replace Bad Habits With Good Ones",
   "The 1 Percent Rule for Building Better Habits",
   "How to Make Good Habits Automatic",
