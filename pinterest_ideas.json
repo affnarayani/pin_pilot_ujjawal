@@ -1129,7 +1129,16 @@
     "image_generated": true,
     "posted": true
   },
-  "The Habit Loop and How to Hack It",
+  {
+    "title": "The Habit Loop and How to Hack It",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Build a Morning Routine That Works",
   "Why Your Environment Shapes Your Habits",
   "How to Replace Bad Habits With Good Ones",
