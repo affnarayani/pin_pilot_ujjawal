@@ -1189,7 +1189,16 @@
     "image_generated": true,
     "posted": true
   },
-  "Why Consistency Beats Motivation Every Time",
+  {
+    "title": "Why Consistency Beats Motivation Every Time",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Track Your Habits Effectively",
   "The Habit Stacking Method Explained",
   "How to Build an Evening Routine",
