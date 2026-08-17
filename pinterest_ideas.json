@@ -1199,7 +1199,16 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Track Your Habits Effectively",
+  {
+    "title": "How to Track Your Habits Effectively",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "The Habit Stacking Method Explained",
   "How to Build an Evening Routine",
   "Why Identity is the Key to Lasting Habits",
