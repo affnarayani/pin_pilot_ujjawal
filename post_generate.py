@@ -413,7 +413,7 @@ def run():
             f"INPUT TOPIC TITLE\n"
             f"'{subject_matter}'\n\n"
 
-            f"METADATA FRONTMATTER REQUIREMENTS\n"
+            f"CRITICALLY AND STRICTLY SUPER IMPORTANT METADATA FRONTMATTER REQUIREMENTS\n"
             f"The article must begin exactly with a YAML frontmatter block structured like this. "
             f"You must dynamically analyze the content to determine the most fitting category, read time, and relevant tags (all tags must strictly be formatted in Title Case):\n"
             f"---\n"
