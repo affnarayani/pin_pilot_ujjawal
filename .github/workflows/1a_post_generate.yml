@@ -2,12 +2,12 @@ name: 1A. Post Generate
 
 on:
   schedule:
-    - cron: '0 4 * * *'
-    - cron: '4 7 * * *'
-    - cron: '49 7 * * *'
-    - cron: '22 6 * * *'
-    - cron: '27 4 * * *'
-    - cron: '2 10 * * *'
+    - cron: '13 13 * * *'
+    - cron: '53 17 * * *'
+    - cron: '49 18 * * *'
+    - cron: '54 15 * * *'
+    - cron: '25 20 * * *'
+    - cron: '30 18 * * *'
   workflow_dispatch:
 
 concurrency:
