@@ -438,6 +438,9 @@ def run():
         # Algorithmic Prompt Design for full markdown post generation
         prompt = (
             f"CRITICALLY AND STRICTLY IMPORTANT:\n"
+            f"Respond directly inside this normal chat conversation as a plain text message. "
+            f"Do NOT open, create, or switch to canvas, a document view, a side panel, or any other separate writing/editor tool for this response. "
+            f"The entire response must be a single normal chat message.\n"
             f"Return ONLY ONE complete comprehensive article wrapped inside a single ```markdown code block```.\n"
             f"Do NOT output explanations, conversational introduction, greetings, or notes outside the markdown block.\n"
             f"Do NOT wrap the article in any custom container/directive syntax such as ':::writing{{...}}', ':::note', or any other ':::' block. "
