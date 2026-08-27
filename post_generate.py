@@ -576,7 +576,7 @@ def run():
         # ============================================
         # STABLE 15-SECOND POLLING LIVE STREAM CHECK
         # ============================================
-        print("[STEP] Waiting for generated markdown code block to complete writing (15s checks)...", flush=True)
+        print("[STEP] Waiting for generated markdown code block to complete writing (30s checks)...", flush=True)
         code_block_locator = (
             page.locator("#code-block-viewer pre")
             .or_(page.get_by_role("textbox", name="Edit code"))
@@ -591,34 +591,21 @@ def run():
                 print("[OK] Code block visible, parsing live text size variations...", flush=True)
                 
                 last_length = 0
-                stable_reads = 0
-                REQUIRED_STABLE_READS = 2  # length must be unchanged across this many consecutive checks
                 max_check_cycles = 25  
                 
                 for cycle in range(max_check_cycles):
-                    time.sleep(15)
+                    time.sleep(30)
                     
                     current_text = code_block_locator.first.inner_text().strip()
                     current_length = len(current_text)
-                    ends_with_fence = current_text.endswith("```")
                     
                     print(
                         f"[STREAM INFO] Cycle {cycle+1}: Previous Length = {last_length}, "
-                        f"Current Length = {current_length}, Ends With Closing Fence = {ends_with_fence}",
+                        f"Current Length = {current_length}",
                         flush=True,
                     )
                     
                     if current_length > 0 and current_length == last_length:
-                        stable_reads += 1
-                    else:
-                        stable_reads = 0
-                    
-                    # Only trust completion once the length has been stable across multiple
-                    # consecutive checks AND the closing ``` fence has actually rendered.
-                    # A single stable reading can be a false positive caused by streaming
-                    # lag/pauses, which previously caused abruptly-truncated articles to be
-                    # saved as if they were finished.
-                    if stable_reads >= REQUIRED_STABLE_READS and ends_with_fence:
                         markdown_content = current_text
                         print("[OK] Markdown post generation is fully finished and finalized.", flush=True)
                         break
