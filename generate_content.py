@@ -704,12 +704,16 @@ def run():
         if json_content:
             try:
                 print("[STEP] Parsing content as JSON...", flush=True)
-                if json_content.startswith("```json"):
-                    json_content = json_content.split("```json", 1)[1]
-                if json_content.endswith("```"):
-                    json_content = json_content.rsplit("```", 1)[0]
                 
-                parsed_json = json.loads(json_content.strip())
+                # Direct JSON object extraction via Regex
+                json_match = re.search(r'```(?:json)?\s*(\{[\s\S]*?\})\s*```', json_content)
+                if json_match:
+                    clean_json_str = json_match.group(1)
+                else:
+                    fallback_match = re.search(r'\{[\s\S]*\}', json_content)
+                    clean_json_str = fallback_match.group(0) if fallback_match else json_content.strip()
+
+                parsed_json = json.loads(clean_json_str)
                 
                 # Strict structural data synchronization constraints enforcement
                 # parsed_json["title"] = subject_matter
