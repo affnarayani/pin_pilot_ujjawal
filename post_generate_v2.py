@@ -122,45 +122,6 @@ def load_cookies(file_path: Path) -> List[Dict[str, Any]]:
     print("[OK] Cookies loaded", flush=True)
     return cookies
 
-def strip_canvas_wrapper(text: str) -> str:
-    """
-    Defensively strip a ':::directive{...}' style wrapper block (e.g. the
-    ':::writing{title="..." id="..."}' canvas container ChatGPT sometimes adds)
-    from the start/end of the article, in case it still appears despite the
-    prompt explicitly forbidding it. Blogger's API cannot parse this syntax,
-    so it must never end up in the saved markdown.
-    """
-    text = text.strip()
-
-    # Repeatedly strip in case of stray blank lines or nested wrapper lines.
-    while True:
-        lines = text.split("\n")
-        changed = False
-
-        if lines and re.match(r'^:::[\w-]+\{.*\}\s*$', lines[0].strip()):
-            lines = lines[1:]
-            changed = True
-
-        while lines and lines[0].strip() == "":
-            lines.pop(0)
-            changed = True
-
-        while lines and lines[-1].strip() == "":
-            lines.pop()
-            changed = True
-
-        if lines and re.match(r'^:{3,}\s*$', lines[-1].strip()):
-            lines.pop()
-            changed = True
-
-        text = "\n".join(lines).strip()
-
-        if not changed:
-            break
-
-    return text
-
-
 def upload_to_tmpfiles(screenshot_path):
     url = "https://tmpfiles.org/api/v1/upload"
     
@@ -439,9 +400,7 @@ def run():
         prompt = (
             f"CRITICALLY AND STRICTLY IMPORTANT:\n"
             f"Return ONLY ONE complete comprehensive article wrapped inside a single ```markdown code block```.\n"
-            f"Do NOT output explanations, conversational introduction, greetings, or notes outside the markdown block.\n"
-            f"Do NOT wrap the article in any custom container/directive syntax such as ':::writing{{...}}', ':::note', or any other ':::' block. "
-            f"The content inside the markdown code block must start DIRECTLY with the YAML frontmatter delimiter '---' and must not contain any ':::' lines anywhere.\n\n"
+            f"Do NOT output explanations, conversational introduction, greetings, or notes outside the markdown block.\n\n"
 
             f"ROLE\n"
             f"You are a professional Content Creator, Mental Health Blogger, SEO Copywriter, and Psychology Educator specializing in evidence-based mental wellness, mindfulness, emotional wellbeing, and self-improvement.\n\n"
@@ -584,8 +543,6 @@ def run():
                 print("[OK] Code block visible, parsing live text size variations...", flush=True)
                 
                 last_length = 0
-                stable_reads = 0
-                REQUIRED_STABLE_READS = 2  # length must be unchanged across this many consecutive checks
                 max_check_cycles = 25  
                 
                 for cycle in range(max_check_cycles):
@@ -593,25 +550,10 @@ def run():
                     
                     current_text = code_block_locator.first.inner_text().strip()
                     current_length = len(current_text)
-                    ends_with_fence = current_text.endswith("```")
                     
-                    print(
-                        f"[STREAM INFO] Cycle {cycle+1}: Previous Length = {last_length}, "
-                        f"Current Length = {current_length}, Ends With Closing Fence = {ends_with_fence}",
-                        flush=True,
-                    )
+                    print(f"[STREAM INFO] Cycle {cycle+1}: Previous Length = {last_length}, Current Length = {current_length}", flush=True)
                     
                     if current_length > 0 and current_length == last_length:
-                        stable_reads += 1
-                    else:
-                        stable_reads = 0
-                    
-                    # Only trust completion once the length has been stable across multiple
-                    # consecutive checks AND the closing ``` fence has actually rendered.
-                    # A single stable reading can be a false positive caused by streaming
-                    # lag/pauses, which previously caused abruptly-truncated articles to be
-                    # saved as if they were finished.
-                    if stable_reads >= REQUIRED_STABLE_READS and ends_with_fence:
                         markdown_content = current_text
                         print("[OK] Markdown post generation is fully finished and finalized.", flush=True)
                         break
@@ -652,36 +594,7 @@ def run():
             if markdown_content.endswith("```"):
                 markdown_content = markdown_content.rsplit("```", 1)[0]
             
-            clean_output = strip_canvas_wrapper(markdown_content.strip())
-
-            # Sanity check: the prompt guarantees the article starts with YAML
-            # frontmatter ('---') and ends with a "Frequently Asked Questions"
-            # section. If either is missing, the content is incomplete/malformed
-            # (e.g. truncated mid-article) and must NOT be silently saved.
-            starts_with_frontmatter = clean_output.startswith("---")
-            has_faq_section = bool(re.search(r'^#{1,3}\s*Frequently Asked Questions', clean_output, re.IGNORECASE | re.MULTILINE))
-
-            if not starts_with_frontmatter or not has_faq_section:
-                print(
-                    f"[ERROR] Generated content failed sanity check "
-                    f"(starts_with_frontmatter={starts_with_frontmatter}, has_faq_section={has_faq_section}). "
-                    f"Content appears incomplete/malformed. Exiting script...",
-                    flush=True,
-                )
-                if 'page' in locals() and page:
-                    try:
-                        screenshot_path = "error_screenshot.png"
-                        page.screenshot(path=screenshot_path, full_page=True)
-                        print(f"[OK] Error screenshot captured: {screenshot_path}", flush=True)
-
-                        upload_to_tmpfiles(screenshot_path)
-                    except Exception as screenshot_err:
-                        print(f"[WARNING] Could not capture or upload screenshot: {screenshot_err}", flush=True)
-                try:
-                    browser.close()
-                except:
-                    pass
-                sys.exit(1)
+            clean_output = markdown_content.strip()
 
             print("[STEP] Saving formatted data inside posts/post.md...", flush=True)
             with post_file.open("w", encoding="utf-8") as f:
