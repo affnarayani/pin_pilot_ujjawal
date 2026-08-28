@@ -592,11 +592,7 @@ def run():
         # STABLE 15-SECOND POLLING LIVE STREAM CHECK
         # ============================================
         print("[STEP] Waiting for generated markdown code block to complete writing (30s checks)...", flush=True)
-        code_block_locator = (
-            page.locator("#code-block-viewer pre")
-            .or_(page.get_by_role("textbox", name="Edit code"))
-            .or_(page.locator("pre"))
-        )
+        code_block_locator = page.locator('#code-block-viewer pre').or_(page.get_by_role('textbox', name='Edit code'))
         
         markdown_content = None
         for attempt in range(1, 6):
@@ -653,6 +649,11 @@ def run():
         # Markdown cleaning and output file stream modification
         if markdown_content:
             print("[STEP] Formatting content data...", flush=True)
+
+            print(f"[DEBUG] RAW markdown_content length: {len(markdown_content)}", flush=True)
+            print(f"[DEBUG] RAW markdown_content first 80 chars (repr): {repr(markdown_content[:80])}", flush=True)
+            print(f"[DEBUG] RAW markdown_content last 80 chars (repr): {repr(markdown_content[-80:])}", flush=True)
+
             if markdown_content.startswith("```markdown"):
                 markdown_content = markdown_content.split("```markdown", 1)[1]
             elif markdown_content.startswith("```"):
@@ -662,6 +663,10 @@ def run():
                 markdown_content = markdown_content.rsplit("```", 1)[0]
             
             clean_output = strip_canvas_wrapper(markdown_content.strip())
+
+            print(f"[DEBUG] CLEAN clean_output length: {len(clean_output)}", flush=True)
+            print(f"[DEBUG] CLEAN clean_output first 80 chars (repr): {repr(clean_output[:80])}", flush=True)
+            print(f"[DEBUG] CLEAN clean_output last 80 chars (repr): {repr(clean_output[-80:])}", flush=True)
 
             # Sanity check: the prompt guarantees the article starts with YAML
             # frontmatter ('---') and ends with a "Frequently Asked Questions"
