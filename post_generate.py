@@ -122,6 +122,21 @@ def load_cookies(file_path: Path) -> List[Dict[str, Any]]:
     print("[OK] Cookies loaded", flush=True)
     return cookies
 
+INVISIBLE_CHARS_PATTERN = re.compile(r'[\ufeff\u200b\u200c\u200d\u2060\u00ad]')
+
+
+def clean_invisible_chars(text: str) -> str:
+    """
+    Remove invisible/zero-width unicode characters (BOM, zero-width space,
+    zero-width non-joiner/joiner, word joiner, soft hyphen) that can silently
+    get prepended or scattered into text extracted from ChatGPT's canvas /
+    contenteditable "Edit code" box. These are invisible when the text is
+    pasted or viewed normally, but they break strict checks like
+    text.startswith("---") on the frontmatter delimiter.
+    """
+    return INVISIBLE_CHARS_PATTERN.sub('', text)
+
+
 def strip_canvas_wrapper(text: str) -> str:
     """
     Defensively strip a ':::directive{...}' style wrapper block (e.g. the
@@ -606,7 +621,7 @@ def run():
                     )
                     
                     if current_length > 0 and current_length == last_length:
-                        markdown_content = current_text
+                        markdown_content = clean_invisible_chars(current_text)
                         print("[OK] Markdown post generation is fully finished and finalized.", flush=True)
                         break
                         
