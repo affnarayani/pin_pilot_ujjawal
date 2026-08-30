@@ -1319,7 +1319,16 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Make Exercise a Non Negotiable Habit",
+  {
+    "title": "How to Make Exercise a Non Negotiable Habit",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "The Daily Habits of High Achievers",
   "How to Build Reading Into Your Daily Routine",
   "Why Keystone Habits Change Everything",
