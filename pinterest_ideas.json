@@ -1399,7 +1399,16 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Build a Journaling Habit",
+  {
+    "title": "How to Build a Journaling Habit",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "The Habits That Destroy Mental Health",
   "How to Build Habits That Support Your Goals",
   "Why Willpower is Not Enough for Lasting Change",
