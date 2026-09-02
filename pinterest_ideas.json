@@ -1409,7 +1409,16 @@
     "image_generated": true,
     "posted": true
   },
-  "The Habits That Destroy Mental Health",
+  {
+    "title": "The Habits That Destroy Mental Health",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Build Habits That Support Your Goals",
   "Why Willpower is Not Enough for Lasting Change",
   "How to Create a Habit System That Works",
