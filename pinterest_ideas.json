@@ -1589,7 +1589,16 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Shift From Scarcity to Abundance",
+  {
+    "title": "How to Shift From Scarcity to Abundance",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "The Mindset of Highly Successful People",
   "Why Fixed Mindset Keeps You Stuck",
   "How to Build Mental Toughness",
