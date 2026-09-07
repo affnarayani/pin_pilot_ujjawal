@@ -1579,7 +1579,16 @@
     "image_generated": true,
     "posted": true
   },
-  "Why Your Mindset Determines Your Results",
+  {
+    "title": "Why Your Mindset Determines Your Results",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Shift From Scarcity to Abundance",
   "The Mindset of Highly Successful People",
   "Why Fixed Mindset Keeps You Stuck",
