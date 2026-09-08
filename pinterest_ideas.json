@@ -1619,7 +1619,16 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Build Mental Toughness",
+  {
+    "title": "How to Build Mental Toughness",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "The Morning Mindset Reset Routine",
   "How to Stop Thinking Like a Victim",
   "Why Your Beliefs Create Your Reality",
