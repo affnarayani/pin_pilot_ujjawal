@@ -1609,7 +1609,16 @@
     "image_generated": true,
     "posted": true
   },
-  "Why Fixed Mindset Keeps You Stuck",
+  {
+    "title": "Why Fixed Mindset Keeps You Stuck",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Build Mental Toughness",
   "The Morning Mindset Reset Routine",
   "How to Stop Thinking Like a Victim",
