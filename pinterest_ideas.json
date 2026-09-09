@@ -1649,7 +1649,16 @@
     "image_generated": true,
     "posted": true
   },
-  "Why Your Beliefs Create Your Reality",
+  {
+    "title": "Why Your Beliefs Create Your Reality",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Develop Unshakeable Confidence",
   "The Mindset Shift That Changes Everything",
   "How to Think Like a Winner",
