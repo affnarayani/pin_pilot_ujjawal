@@ -1629,7 +1629,16 @@
     "image_generated": true,
     "posted": true
   },
-  "The Morning Mindset Reset Routine",
+  {
+    "title": "The Morning Mindset Reset Routine",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Stop Thinking Like a Victim",
   "Why Your Beliefs Create Your Reality",
   "How to Develop Unshakeable Confidence",
