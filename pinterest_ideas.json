@@ -1639,7 +1639,16 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Stop Thinking Like a Victim",
+  {
+    "title": "How to Stop Thinking Like a Victim",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "Why Your Beliefs Create Your Reality",
   "How to Develop Unshakeable Confidence",
   "The Mindset Shift That Changes Everything",
