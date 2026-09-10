@@ -1679,7 +1679,16 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Think Like a Winner",
+  {
+    "title": "How to Think Like a Winner",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "Why Self Doubt is a Learned Behavior",
   "How to Overcome a Negative Mindset",
   "The Difference Between Winners and Losers Mindset",
