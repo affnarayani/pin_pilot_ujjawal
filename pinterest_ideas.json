@@ -1659,7 +1659,16 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Develop Unshakeable Confidence",
+  {
+    "title": "How to Develop Unshakeable Confidence",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "The Mindset Shift That Changes Everything",
   "How to Think Like a Winner",
   "Why Self Doubt is a Learned Behavior",
