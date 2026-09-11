@@ -1709,7 +1709,16 @@
     "image_generated": true,
     "posted": true
   },
-  "The Difference Between Winners and Losers Mindset",
+  {
+    "title": "The Difference Between Winners and Losers Mindset",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Build Resilience Through Mindset",
   "Why Your Inner Dialogue Shapes Your Life",
   "How to Stop Limiting Yourself",
