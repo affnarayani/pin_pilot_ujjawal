@@ -1699,7 +1699,16 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Overcome a Negative Mindset",
+  {
+    "title": "How to Overcome a Negative Mindset",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "The Difference Between Winners and Losers Mindset",
   "How to Build Resilience Through Mindset",
   "Why Your Inner Dialogue Shapes Your Life",
