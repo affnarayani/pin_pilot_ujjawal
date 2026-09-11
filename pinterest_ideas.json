@@ -1729,7 +1729,16 @@
     "image_generated": true,
     "posted": true
   },
-  "Why Your Inner Dialogue Shapes Your Life",
+  {
+    "title": "Why Your Inner Dialogue Shapes Your Life",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Stop Limiting Yourself",
   "The Power of Believing in Yourself",
   "How to Develop a Champion Mindset",
