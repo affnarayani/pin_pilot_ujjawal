@@ -1759,7 +1759,16 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Develop a Champion Mindset",
+  {
+    "title": "How to Develop a Champion Mindset",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "Why Gratitude Rewires Your Brain",
   "How to Think Bigger About Your Life",
   "The Mindset Habits of Elite Performers",
