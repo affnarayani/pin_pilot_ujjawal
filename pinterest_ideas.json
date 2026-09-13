@@ -1779,7 +1779,16 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Think Bigger About Your Life",
+  {
+    "title": "How to Think Bigger About Your Life",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "The Mindset Habits of Elite Performers",
   "How to Stop Playing Small",
   "Why Discomfort is the Path to Growth",
