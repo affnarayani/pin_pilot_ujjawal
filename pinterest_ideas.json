@@ -1829,7 +1829,16 @@
     "image_generated": true,
     "posted": true
   },
-  "The Self Sabotage Patterns to Break Now",
+  {
+    "title": "The Self Sabotage Patterns to Break Now",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Reprogram Your Subconscious Mind",
   "Why Your Past Does Not Define Your Future",
   "How to Develop Long Term Thinking",
