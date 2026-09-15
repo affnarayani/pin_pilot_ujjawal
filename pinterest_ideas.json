@@ -1859,7 +1859,16 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Develop Long Term Thinking",
+  {
+    "title": "How to Develop Long Term Thinking",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "The Mindset Blocks That Prevent Success",
   "How to Stop Comparing Yourself to Others",
   "Why Failure is the Best Teacher",
