@@ -1899,7 +1899,16 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Build Confidence From the Inside Out",
+  {
+    "title": "How to Build Confidence From the Inside Out",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "The Power of a Calm and Focused Mind",
   "How to Develop Patience as a Superpower",
   "Why Mindset Work is the Ultimate Investment",
