@@ -2,9 +2,9 @@
   "save_pin_percentage": 30,
   "click_pin_percentage": 70,
   "counts": {
-    "total_pins": 113,
+    "total_pins": 114,
     "save_pins": 34,
-    "click_pins": 79
+    "click_pins": 80
   },
   "current_pin_type": "click"
 }
