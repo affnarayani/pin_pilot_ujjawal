@@ -1909,7 +1909,16 @@
     "image_generated": true,
     "posted": true
   },
-  "The Power of a Calm and Focused Mind",
+  {
+    "title": "The Power of a Calm and Focused Mind",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Develop Patience as a Superpower",
   "Why Mindset Work is the Ultimate Investment",
   "How to Stop Seeking External Validation",
