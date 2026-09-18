@@ -1949,7 +1949,16 @@
     "image_generated": true,
     "posted": true
   },
-  "The Daily Mindset Practice for Success",
+  {
+    "title": "The Daily Mindset Practice for Success",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Build Mental Strength Every Day",
   "Why Your Comfort Zone is Your Enemy",
   "How to Embrace Uncertainty With Confidence",
