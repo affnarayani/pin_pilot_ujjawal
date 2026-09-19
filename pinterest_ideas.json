@@ -1969,7 +1969,16 @@
     "image_generated": true,
     "posted": true
   },
-  "Why Your Comfort Zone is Your Enemy",
+  {
+    "title": "Why Your Comfort Zone is Your Enemy",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Embrace Uncertainty With Confidence",
   "The Mindset Reset for Hard Days",
   "How to Stop Being Afraid of Success",
