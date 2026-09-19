@@ -2009,7 +2009,16 @@
     "image_generated": true,
     "posted": true
   },
-  "Why Ego Is Holding You Back",
+  {
+    "title": "Why Ego Is Holding You Back",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Build a Warrior Mindset",
   "The Mindset of People Who Never Give Up",
   "How to Stop Making Excuses",
