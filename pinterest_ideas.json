@@ -2019,7 +2019,16 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Build a Warrior Mindset",
+  {
+    "title": "How to Build a Warrior Mindset",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "The Mindset of People Who Never Give Up",
   "How to Stop Making Excuses",
   "Why Ownership Mindset Changes Everything",
