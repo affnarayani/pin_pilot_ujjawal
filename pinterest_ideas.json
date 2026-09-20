@@ -2049,7 +2049,16 @@
     "image_generated": true,
     "posted": true
   },
-  "Why Ownership Mindset Changes Everything",
+  {
+    "title": "Why Ownership Mindset Changes Everything",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Think Your Way to a Better Life",
   "How to Build Self Discipline From Zero",
   "Why Motivation Fades but Discipline Stays",
