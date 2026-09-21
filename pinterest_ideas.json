@@ -2059,7 +2059,16 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Think Your Way to a Better Life",
+  {
+    "title": "How to Think Your Way to a Better Life",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Build Self Discipline From Zero",
   "Why Motivation Fades but Discipline Stays",
   "The Self Discipline Habits of High Achievers",
