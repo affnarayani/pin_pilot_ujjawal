@@ -2149,7 +2149,16 @@
     "image_generated": true,
     "posted": true
   },
-  "Why Discipline is the Ultimate Freedom",
+  {
+    "title": "Why Discipline is the Ultimate Freedom",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Build Willpower Like a Muscle",
   "The Daily Discipline Practices That Work",
   "How to Stop Taking the Easy Way Out",
