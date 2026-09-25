@@ -2159,7 +2159,16 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Build Willpower Like a Muscle",
+  {
+    "title": "How to Build Willpower Like a Muscle",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "The Daily Discipline Practices That Work",
   "How to Stop Taking the Easy Way Out",
   "Why Delayed Gratification Leads to Success",
