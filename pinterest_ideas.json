@@ -2169,7 +2169,16 @@
     "image_generated": true,
     "posted": true
   },
-  "The Daily Discipline Practices That Work",
+  {
+    "title": "The Daily Discipline Practices That Work",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Stop Taking the Easy Way Out",
   "Why Delayed Gratification Leads to Success",
   "How to Stay Consistent When Unmotivated",
