@@ -582,7 +582,7 @@ def run():
         custom_random_wait(15, 30)
 
         print("[STEP] Locating and clicking send button...", flush=True)
-        send_button = page.get_by_test_id('send-button')
+        send_button = page.get_by_test_id('send-button').or_(page.get_by_role('button', name='Send'))
         send_button.click()
         
         # Initial processing wait allocation
