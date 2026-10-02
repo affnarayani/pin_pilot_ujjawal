@@ -411,7 +411,7 @@ def run():
 
         # Verification of active authenticated status
         print("[STEP] Checking login success via profile button...", flush=True)
-        profile_button = page.get_by_role('button', name=list(map(lambda x: x.compile(r'.*Free, open'), [__import__('re')]))[0])
+        profile_button = page.get_by_role('button', name=list(map(lambda x: x.compile(r'.*Free, open'), [__import__('re')]))[0]).or_(page.get_by_role('button', name='Open profile menu'))
         
         if profile_button.count() > 0:
             print(f"[OK] LOGIN SUCCESS: Profile button found -> '{profile_button.first.get_attribute('aria-label') or 'User Account'}'", flush=True)
@@ -429,7 +429,7 @@ def run():
         print("[STEP] Locating chat textbox...", flush=True)
         
         # Fallback Strategy for Textbox Locators
-        textbox = page.get_by_role('textbox', name='Chat with ChatGPT')
+        textbox = page.get_by_role('textbox', name='Chat with ChatGPT').or_(page.get_by_role('textbox', name='Ask ChatGPT'))
         
         if textbox.count() == 0:
             print("[INFO] Fallback 1: Searching for 'Ask anything' paragraph inside textbox context...", flush=True)
