@@ -328,7 +328,7 @@ def run():
             if not found_share and attempt == 5:
                 print("[INFO] 5 retries complete ho gaye. Image nahi mili, chat_box mein 'Continue Generating Prompt' bhej rahe hain...", flush=True)
                 try:
-                    chat_box = page.get_by_role('textbox', name='Chat with ChatGPT')
+                    chat_box = page.get_by_role('textbox', name='Chat with ChatGPT').or_(page.get_by_role('textbox', name='Ask ChatGPT'))
                     if chat_box.count() == 0:
                         chat_box = page.locator('div[contenteditable="true"]').filter(has=page.locator('p', has_text='Describe or edit an image')).first
                     if chat_box.count() == 0:
