@@ -2259,7 +2259,16 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Build Discipline Around Your Weaknesses",
+  {
+    "title": "How to Build Discipline Around Your Weaknesses",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "Why Self Discipline Starts the Night Before",
   "How to Train Your Brain for Self Control",
   "The Discipline Routine for Busy People",
