@@ -2249,7 +2249,16 @@
     "image_generated": true,
     "posted": true
   },
-  "The Link Between Discipline and Self Respect",
+  {
+    "title": "The Link Between Discipline and Self Respect",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Build Discipline Around Your Weaknesses",
   "Why Self Discipline Starts the Night Before",
   "How to Train Your Brain for Self Control",
