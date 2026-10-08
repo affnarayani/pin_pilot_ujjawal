@@ -1,16 +1,14 @@
 {
-    "title": "Self-Discipline: Why Self Discipline Starts the Night Before",
-    "description": "Self-discipline becomes easier when tomorrow's choices are prepared tonight. Learn how a simple evening routine can reduce decision fatigue, remove distractions, protect sleep, and make productive habits easier to start. From choosing one priority to preparing your environment and setting a shutdown point, these practical steps reduce morning friction without relying on constant willpower. Save this pin for later.",
-    "alt_text": "Infographic showing how self-discipline starts the night before, with evening planning, a clear priority, prepared surroundings, fewer distractions, and protected sleep.",
-    "selected_board": "Focus & Mental Discipline",
+    "title": "How to Train Your Brain for Self-Control: The Pause That Changes Choices",
+    "description": "Learn how to train your brain for self-control without relying on willpower alone. Discover practical ways to manage impulses, emotional reactions, procrastination, distractions, and tempting habits by using mindful pauses, environment design, and if-then plans. The guide also explains the two-week self-control training plan and how to turn setbacks into useful feedback. Tap to read the full guide.",
+    "alt_text": "Infographic about how to train your brain for self-control, showing a person pausing before reacting, with visual cues for mindful awareness, environment design, and intentional choices.",
+    "selected_board": "Self-Improvement Psychology",
     "image_teaser_points": [
-        "Reduce reliance on willpower",
-        "Choose tomorrow's priority and first action",
-        "Prepare your environment to reduce friction",
-        "Set a shutdown point and protect sleep",
-        "Use a simple five-minute evening reset"
+        "Train the Pause",
+        "Design Your Environment",
+        "Use If-Then Plans",
+        "Track Your Triggers"
     ],
-    "hidden_hook": "",
-    "pin_type": "save",
-    "url": "https://mindtobetter.blogspot.com/2026/10/why-self-discipline-starts-night-before.html"
+    "hidden_hook": "The article includes a practical two-week self-control training plan that combines one target behavior, a specific trigger, an if-then response, added friction, a brief pause, and weekly pattern review.",
+    "pin_type": "click"
 }
