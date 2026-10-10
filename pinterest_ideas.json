@@ -2319,7 +2319,16 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Develop Discipline in Every Area of Life",
+  {
+    "title": "How to Develop Discipline in Every Area of Life",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "The Science of Self Control and How to Use It",
   "How to Build Discipline Without Burning Out",
   "Why Discipline is a Form of Self Love",
