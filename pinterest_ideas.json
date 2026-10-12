@@ -2349,7 +2349,16 @@
     "image_generated": true,
     "posted": true
   },
-  "Why Discipline is a Form of Self Love",
+  {
+    "title": "Why Discipline is a Form of Self Love",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "How to Stop Impulse Decisions",
   "The Discipline Mindset and How to Build It",
   "How to Do Difficult Things Daily",
