@@ -2359,7 +2359,16 @@
     "image_generated": true,
     "posted": true
   },
-  "How to Stop Impulse Decisions",
+  {
+    "title": "How to Stop Impulse Decisions",
+    "post_generated": true,
+    "post_image_generated": false,
+    "post_posted": false,
+    "url": "",
+    "content_generated": false,
+    "image_generated": false,
+    "posted": false
+  },
   "The Discipline Mindset and How to Build It",
   "How to Do Difficult Things Daily",
   "Why Soft Life Kills Your Discipline",
