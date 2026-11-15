@@ -40,41 +40,41 @@ jobs:
 
     - name: Install and Start Cloudflare WARP (TUN Global Mode)
       run: |
-        # 1. Repository aur GPG Key set karein
+        # 1. Set up repository and GPG key
         curl -fsSL https://pkg.cloudflareclient.com/pubkey.gpg | sudo gpg --yes --dearmor --output /usr/share/keyrings/cloudflare-warp-archive-keyring.gpg
         echo "deb [signed-by=/usr/share/keyrings/cloudflare-warp-archive-keyring.gpg] https://pkg.cloudflareclient.com/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/cloudflare-client.list
         
-        # 2. Install
+        # 2. Install Cloudflare WARP
         sudo apt-get update && sudo apt-get install -y cloudflare-warp
         
-        # 3. Start Service
+        # 3. Start service
         sudo systemctl start warp-svc
         sleep 2
         
-        # 4. Register (New CLI Syntax compatible)
+        # 4. Register client
         warp-cli --accept-tos registration new || warp-cli registration new
         
-        # 5. STRICT FIX: Mode ko PROXY se badal kar TUN (Standard VPN) karein
-        # Yeh pure GitHub runner ka internet traffic WARP se routing kar dega
+        # 5. Set mode to WARP (full tunnel)
+        # Route all runner traffic through WARP
         warp-cli --accept-tos mode warp || warp-cli mode warp
         
         # 6. Connect
         warp-cli --accept-tos connect || warp-cli connect
         sleep 5
         
-        # 7. Verify ki pure system ka IP change hua ya nahi
+        # 7. Verify network trace
         curl https://cloudflare.com/cdn-cgi/trace
 
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install playwright playwright-stealth cryptography python-dotenv requests
+        pip install -r requirements.txt
         playwright install chromium --with-deps
 
     - name: Run Image Script
       env:
         DECRYPT_KEY: ${{ secrets.DECRYPT_KEY }}
-        IMGBBB_API_KEY: ${{ secrets.IMGBBB_API_KEY }}
+        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       run: |
         python generate_image.py
 
@@ -83,13 +83,13 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: playwright-image-error
-        path: error_screenshot.png
+        path: error/error_screenshot.png
         if-no-files-found: ignore
 
     - name: Commit and Push Generated Image & States
       run: |
-        # Sirf wahi files add hongi jo pipeline ke liye actual mein important hain
-        git add image/pin.png pinterest_ideas.json status.json
+        # Track pipeline, state, and config files
+        git add pinterest_image/pin.png json/pinterest_ideas.json json/status.json locators/changed_locators.json locators/chatgpt_locators.txt locators/pinterest_locators.txt json/config.json
         
         if git diff --staged --quiet; then
           echo "[INFO] No changes detected in image or states. Skipping push."

@@ -1,5 +1,7 @@
-.env
+﻿.env
 /temp/
-encrypt.py
 .venv/
-token.json
+__pycache__/
+*.pyc
+json/token.json
+error/error_screenshot.png

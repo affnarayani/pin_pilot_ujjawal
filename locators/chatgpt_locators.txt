@@ -1,0 +1,36 @@
+﻿# ============================================================
+# ChatGPT Platform Locators (chatgpt.com)
+# Format: locator_name = page.<playwright_expression>
+# Duplicate names: first entry is primary, subsequent same-named entries are fallbacks.
+# All expressions are checked immediately; first match wins (no long timeout wait).
+# Suggested locators from changed_locators.json are appended below primary when auto-correct is applied.
+# ============================================================
+
+# --- Chat composer / input ---
+chatgpt_textbox = page.get_by_role('textbox', name='Chat with ChatGPT').or_(page.get_by_role('textbox', name='Ask ChatGPT'))
+chatgpt_textbox = page.locator('div[contenteditable="true"]').filter(has=page.locator('p', has_text='Ask anything')).first
+chatgpt_textbox = page.locator('#prompt-textarea')
+
+# --- Send prompt button ---
+chatgpt_send_button = page.get_by_test_id('send-button').or_(page.get_by_role('button', name='Send'))
+
+# --- Authentication / profile indicator ---
+chatgpt_profile_button = page.get_by_role('button', name='Open profile menu')
+
+# --- Continue/login interstitial button ---
+chatgpt_continue_button = page.get_by_role('button', name='Continue')
+
+# --- Generated code/content block for copy/read operations ---
+chatgpt_code_block = page.locator('#code-block-viewer pre').or_(page.get_by_role('textbox', name='Edit code')).or_(page.locator('pre'))
+chatgpt_code_block = page.locator('#code-block-viewer pre').or_(page.get_by_role('textbox', name='Edit code')).or_(page.get_by_role('code'))
+
+# --- Create image tool/button (when shown) ---
+chatgpt_create_image_button = page.get_by_role('button', name='Create an image', exact=True)
+
+# --- Image generation result actions ---
+chatgpt_share_image_button = page.get_by_role('button', name='Share this image')
+chatgpt_share_image_button = page.get_by_role('button', name='Share generated image')
+
+chatgpt_download_button = page.get_by_role('button', name='Download')
+chatgpt_download_button = page.get_by_role('button', name='Download file')
+chatgpt_download_button = page.locator('button:has(svg.lucide-download)')

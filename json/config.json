@@ -1,0 +1,16 @@
+{
+  "headless": true,
+  "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+  "min_random_wait": 15,
+  "max_random_wait": 30,
+  "min_random_wait_long": 30,
+  "max_random_wait_long": 60,
+  "min_random_wait_short": 3,
+  "max_random_wait_short": 5,
+  "max_retries": 10,
+  "chatgpt_url": "https://chatgpt.com/",
+  "auto_correct_locator": false,
+  "save_pin_percentage_default": 30,
+  "onlyfiles_upload_expire_seconds": 172800,
+  "error_screenshot_path": "error/error_screenshot.png"
+}

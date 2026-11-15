@@ -1,0 +1,30 @@
+﻿# ============================================================
+# Pinterest Platform Locators (pinterest.com)
+# Format: locator_name = page.<playwright_expression>
+# Duplicate names: first entry is primary, subsequent same-named entries are fallbacks.
+# All expressions are checked immediately; first match wins (no long timeout wait).
+# ============================================================
+
+# --- Pin builder fields ---
+pinterest_title_textbox = page.get_by_role('textbox', name='Add your title')
+pinterest_description_combobox = page.get_by_role('combobox', name='Tell everyone what your Pin').locator('div').nth(2)
+pinterest_add_alt_text_button = page.get_by_role('button', name='Add alt text')
+pinterest_alt_text_textbox = page.get_by_role('textbox', name='Explain what people can see').or_(page.locator("textarea[id^='pin-draft-alttext-']")).or_(page.locator("//textarea[starts-with(@id, 'pin-draft-alttext-')]"))
+pinterest_destination_link_textbox = page.get_by_role('textbox', name='Add a destination link')
+
+# --- Media upload ---
+pinterest_media_upload_input = page.locator('input[data-test-id^="media-upload-input-"]')
+
+# --- Publishing options ---
+pinterest_publish_immediately_radio = page.get_by_role('radio', name='Publish immediately')
+pinterest_mark_ai_modified_checkbox = page.get_by_role('checkbox', name='Mark as AI-Modified Content')
+
+# --- Board selection ---
+pinterest_board_dropdown_button = page.locator('[data-test-id="board-dropdown-select-button"]')
+pinterest_board_save_button = page.locator('[data-test-id="board-dropdown-save-button"]')
+pinterest_board_anxiety_mental_peace_button = page.get_by_role('button', name='Anxiety & Mental Peace Publish')
+pinterest_board_calm_mind_habits_button = page.get_by_role('button', name='Calm Mind Habits Publish')
+pinterest_board_focus_mental_discipline_button = page.get_by_role('button', name='Focus & Mental Discipline')
+pinterest_board_mental_clarity_button = page.get_by_role('button', name='Mental Clarity Publish')
+pinterest_board_overthinking_help_button = page.get_by_role('button', name='Overthinking Help Publish')
+pinterest_board_self_improvement_psychology_button = page.get_by_role('button', name='Self-Improvement Psychology')

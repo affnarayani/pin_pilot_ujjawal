@@ -18,93 +18,93 @@ jobs:
       contents: write
 
     steps:
-      # 1. Repository ka code checkout karna
+      # 1. Checkout repository code
       - name: Checkout repository code
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
           token: ${{ secrets.PAT_TOKEN_ALL }}
 
-      # 2. Python Environment setup karna
+      # 2. Set up Python environment
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: '3.11'
           cache: 'pip'
 
-      # 3. Git configuration setup karna
+      # 3. Configure Git
       - name: Configure Git
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      # 4. Latest changes pull karna conflicts se bachne ke liye
+      # 4. Pull latest changes
       - name: Pull Latest Changes (Maintain Persistence)
         run: |
           git pull origin HEAD --rebase
 
       - name: Install and Start Cloudflare WARP (TUN Global Mode)
         run: |
-          # 1. Repository aur GPG Key set karein
+          # 1. Set up repository and GPG key
           curl -fsSL https://pkg.cloudflareclient.com/pubkey.gpg | sudo gpg --yes --dearmor --output /usr/share/keyrings/cloudflare-warp-archive-keyring.gpg
           echo "deb [signed-by=/usr/share/keyrings/cloudflare-warp-archive-keyring.gpg] https://pkg.cloudflareclient.com/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/cloudflare-client.list
           
-          # 2. Install
+          # 2. Install Cloudflare WARP
           sudo apt-get update && sudo apt-get install -y cloudflare-warp
           
-          # 3. Start Service
+          # 3. Start service
           sudo systemctl start warp-svc
           sleep 2
           
-          # 4. Register (New CLI Syntax compatible)
+          # 4. Register client
           warp-cli --accept-tos registration new || warp-cli registration new
           
-          # 5. STRICT FIX: Mode ko PROXY se badal kar TUN (Standard VPN) karein
-          # Yeh pure GitHub runner ka internet traffic WARP se routing kar dega
+          # 5. Set mode to WARP (full tunnel)
+          # Route all runner traffic through WARP
           warp-cli --accept-tos mode warp || warp-cli mode warp
           
           # 6. Connect
           warp-cli --accept-tos connect || warp-cli connect
           sleep 5
           
-          # 7. Verify ki pure system ka IP change hua ya nahi
+          # 7. Verify network trace
           curl https://cloudflare.com/cdn-cgi/trace
 
 # 5. Required Python Packages/Dependencies install karna (No HF)
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install playwright playwright-stealth python-dotenv cryptography requests
+          pip install -r requirements.txt
 
-      # 6. Playwright ke Chromium browser aur uski system dependencies install karna
+      # 6. Install Playwright Chromium and system dependencies
       - name: Install Playwright Chromium and system dependencies
         run: |
           playwright install chromium --with-deps
 
-# 7. Post Pin Script ko run karna aur Environment Secret paas karna
+# 7. Run post pin script
       - name: Execute Automation Script
         env:
           DECRYPT_KEY: ${{ secrets.DECRYPT_KEY }}
-          IMGBBB_API_KEY: ${{ secrets.IMGBBB_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           python post_pin.py
 
-      # 8. Agar script fail hoti hai, toh error_screenshot.png ko upload karna
+      # 8. Upload error screenshot if script fails
       - name: Upload Error Screenshot if script fails
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-post-error
-          path: error_screenshot.png # Script ke crash screenshot name se match kar diya hai
+          path: error/error_screenshot.png
           if-no-files-found: ignore
           retention-days: 7
 
-      # 9. Agar script successful ho, to state tracker file ko commit aur push karna
+      # 9. Commit and push updated pipeline states
       - name: Commit and Push updated pipeline states
         if: success()
         run: |
-          # Script post hone ke baad pinterest_ideas.json mein changes save karti hai
-          git add article.json pinterest_ideas.json
+          # Script updates pipeline state in json/pinterest_ideas.json
+          git add json/article.json json/pinterest_ideas.json locators/changed_locators.json locators/chatgpt_locators.txt locators/pinterest_locators.txt json/config.json
           
           if git diff --staged --quiet; then
             echo "[INFO] No changes detected in state file. Skipping push."
