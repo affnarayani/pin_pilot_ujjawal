@@ -95,7 +95,7 @@ jobs:
     - name: Commit and Push Changes (If updated)
       run: |
         # Track pipeline, state, and config files
-        git add blogspot_post/post.md json/pinterest_ideas.json json/status.json locators/changed_locators.json locators/chatgpt_locators.txt locators/pinterest_locators.txt json/config.json
+        git add -A
         
         if git diff --staged --quiet; then
           echo "[INFO] No changes detected (Content might have been already posted or execution skipped). Skipping push."
