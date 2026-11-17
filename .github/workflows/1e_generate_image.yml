@@ -89,7 +89,7 @@ jobs:
     - name: Commit and Push Generated Image & States
       run: |
         # Track pipeline, state, and config files
-        git add pinterest_image/pin.png json/pinterest_ideas.json json/status.json locators/changed_locators.json locators/chatgpt_locators.txt locators/pinterest_locators.txt json/config.json
+        git add -A
         
         if git diff --staged --quiet; then
           echo "[INFO] No changes detected in image or states. Skipping push."
