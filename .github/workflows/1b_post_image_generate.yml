@@ -89,7 +89,7 @@ jobs:
     - name: Commit and Push Generated Image & States
       run: |
         # Track pipeline, state, and config files
-        git add blogspot_image/post.png json/pinterest_ideas.json locators/changed_locators.json locators/chatgpt_locators.txt locators/pinterest_locators.txt json/config.json
+        git add -A
         
         if git diff --staged --quiet; then
           echo "[INFO] No changes detected in image or states. Skipping push."
@@ -98,7 +98,7 @@ jobs:
           git commit -m "Automated: Update generated header image and pipeline states [skip ci]"
           
           # Prefer workflow changes on conflict (-X theirs)
-          git pull origin ${GITHUB_REF_NAME} --rebase -X theirs || git rebase --skip
+          git pull origin ${GITHUB_REF_NAME} --rebase
           
           git push origin ${GITHUB_REF_NAME}
         fi
