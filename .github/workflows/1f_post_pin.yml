@@ -104,7 +104,7 @@ jobs:
         if: success()
         run: |
           # Script updates pipeline state in json/pinterest_ideas.json
-          git add json/article.json json/pinterest_ideas.json locators/changed_locators.json locators/chatgpt_locators.txt locators/pinterest_locators.txt json/config.json
+          git add -A
           
           if git diff --staged --quiet; then
             echo "[INFO] No changes detected in state file. Skipping push."
