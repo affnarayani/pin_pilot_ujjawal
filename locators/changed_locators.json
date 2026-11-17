@@ -1,1 +1,8 @@
-[]
+[
+  {
+    "platform": "chatgpt",
+    "locator_name": "chatgpt_continue_button",
+    "broke_locator": "page.get_by_role('button', name='Continue')",
+    "suggested_locator": "page.locator('button:has-text(\"Continue\")')"
+  }
+]
